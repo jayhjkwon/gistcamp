@@ -5,7 +5,7 @@
 	$ bower install
 	$ supervisor app
 
-** bower and supervisor can be installed via npm **
+**bower and supervisor can be installed via npm**
 
 
 
