@@ -53,7 +53,7 @@ module.exports = function (grunt) {
                     yuicompress: 'true'
                 },
                 files  : {
-                    './public/styles/app-dev.min.css': './public/styles/style.less'
+                    './public/styles/app.min.css': './public/styles/style.less'
                 }
             }
         }
