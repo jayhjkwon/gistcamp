@@ -1,5 +1,6 @@
 define(function(require){
 	var
+		$ = require('jquery'),
 		Marionette = require('marionette'),
 		topTemplate = require('hbs!templates/topTemplate'),
 		App = require('application'),
