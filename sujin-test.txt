@@ -1,3 +1,1 @@
-<<<<<<< HEAD
 test test
->>>>>>> de3ae9b7cbca6e1381afa33e888af818011ee5d9
