@@ -1,4 +1,4 @@
 {
-	"directory"	: "public-dev/vendor",
+	"directory"	: "public/vendor",
 	"json"		: "bower.json"
 }
