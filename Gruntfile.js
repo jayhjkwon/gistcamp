@@ -29,11 +29,47 @@ module.exports = function (grunt) {
         requirejs: {
             compile: {
                 options: {
-                    baseUrl       : '.public/js',
-                    mainConfigFile: '.public/js/require-config.js',
-                    out           : './js/app.min.js',
-                    include       : ['require-config'],
-                    optimize      : 'none'
+                    /* #1. one giant file optimization */
+                    baseUrl       : './public/js',
+                    mainConfigFile: './public/js/require-config.js',                    
+                    include       : ['../vendor/requirejs/require'],
+                    name          : 'app',
+                    optimize      : 'uglify2',
+                    out           : './public/js/app.min.js',
+
+                    /* 
+                        #2. multipage optimization, in this option all files in public-dev directory will be moved to public directory 
+                        In order to get benefit this approach(lazy loading), each view should be included (using require() function) in each action method in controller, rather than declared and included on top of the source code.
+                    */
+                    /*appDir  : "public-dev",
+                    dir     : "public",
+                    mainConfigFile : 'public-dev/js/require-config.js',
+                    baseUrl : "js", 
+                    modules : [
+                        {
+                            name: "app",
+                            include: ['jquery', 'domReady', 'underscore', 'backbone', 
+                            'marionette', 'handlebars', 'hbs', 'i18nprecompile', 
+                            'json2', 'application', 'controller', 'router', 
+                            'models/models']
+                        },
+                        {
+                            name: 'views/topView',
+                            exclude: ['app']
+                        },
+                        {
+                            name: 'views/userView',
+                            exclude: ['app']
+                        },
+                        {
+                            name: 'views/testView',         
+                            exclude: ['app']
+                        }
+                    ],
+                    fileExclusionRegExp : /.less$/ ,   // no include *.less
+                    removeCombined: true,
+                    optimize: 'uglify',
+                    skipDirOptimize: true*/
                 }
             }
         },
@@ -44,19 +80,21 @@ module.exports = function (grunt) {
                     paths      : ['./public/styles']
                 },
                 files: {
-                    './public/styles/app-dev.min.css': './public/styles/style.less'
+                    './public/styles/app.min.css': './public/styles/style.less'
                 }
             },
             production: {
                 options: {
-                    paths      : ['./public/styles'],
+                    paths      : ['./publi/styles'],
                     yuicompress: 'true'
                 },
                 files  : {
                     './public/styles/app.min.css': './public/styles/style.less'
                 }
             }
-        }
+        },
+
+        // clean: ['./public/styles/style.less']
     });
 
     // Load tasks from NPM
@@ -64,8 +102,10 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-requirejs');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    // grunt.loadNpmTasks('grunt-contrib-clean');
 
     // register task.
-    grunt.registerTask('default', ['qunit', 'requirejs', 'less']);
-
+    // grunt.registerTask('default', ['qunit', 'requirejs', 'less']);
+    // grunt.registerTask('default', ['requirejs', 'less:production', 'clean']);
+    grunt.registerTask('default', ['requirejs', 'less:production']);
 };

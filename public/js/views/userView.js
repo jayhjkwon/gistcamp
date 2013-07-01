@@ -8,9 +8,6 @@ define(function(require){
 		UserList = require('models/userList'),
 		App = require('application');
 
-/*define(['marionette', 'hbs!templates/userTemplate', './userItemView', './noItemsView', 'models/user', 'models/userList', 'app'],
- function(Marionette, userTemplate, UserItemView, NoItemsView, User, UserList, App){		*/
-
 	var
 		UserView = Marionette.CompositeView.extend({
 			itemView : UserItemView,

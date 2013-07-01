@@ -2,7 +2,9 @@ var express = require('express')
   , routes = require('./routes')
   , user = require('./routes/rest/user')
   , http = require('http')
-  , path = require('path');
+  , path = require('path')
+  , config = require('./infra/config')
+  ;
 
 var app = express();
 
@@ -11,11 +13,11 @@ var allowCrossDomain = function(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
-
     next();
 };
 
 // all environments
+app.set('env', config.options.env);
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
@@ -34,6 +36,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
+/*if ('development' == app.get('env')) {
+  app.use(express.errorHandler());
+  app.use(require('less-middleware')({ src: __dirname + '/public-dev' }));
+  app.use(express.static(path.join(__dirname, 'public-dev')));
+}else if ('production' == app.get('env')) {
+  app.use(require('less-middleware')({ src: __dirname + '/public' }));
+  app.use(express.static(path.join(__dirname, 'public')));
+}*/
 
 app.get('/', routes.index);
 app.get('/rest/users', user.getUserList);
