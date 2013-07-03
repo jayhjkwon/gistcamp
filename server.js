@@ -18,7 +18,7 @@ var allowCrossDomain = function(req, res, next) {
 
 // all environments
 app.set('env', config.options.env);
-app.set('port', process.env.npm_config_port || 3000);
+app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.use(express.favicon());
