@@ -77,19 +77,20 @@ module.exports = function (grunt) {
         less: {
             development: {
                 options: {
-                    paths      : ['./public/styles']
+                    paths      : ['./public/styles'],
+                    yuicompress: 'false'
                 },
                 files: {
-                    './public/styles/app.min.css': './public/styles/style.less'
+                    './public/styles/app.min.css': './public/styles/app.less'
                 }
             },
             production: {
                 options: {
-                    paths      : ['./publi/styles'],
+                    paths      : ['./public/styles'],
                     yuicompress: 'true'
                 },
                 files  : {
-                    './public/styles/app.min.css': './public/styles/style.less'
+                    './public/styles/app.min.css': './public/styles/app.less'
                 }
             }
         },
