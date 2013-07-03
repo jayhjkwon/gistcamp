@@ -1,3 +1,6 @@
+### auto generated css from less ###
+public/styles/*.css
+
 ### bower ###
 vendor
 
