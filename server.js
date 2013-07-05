@@ -16,6 +16,7 @@ var allowCrossDomain = function(req, res, next) {
     next();
 };
 
+
 // all environments
 app.set('env', config.options.env);
 app.set('port', process.env.PORT || 3000);
