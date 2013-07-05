@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/styles/app.min.css' />
+  </head>
+  <body>
+  	<div id="top"></div>  	
+  	<div id="content"></div>
+	
+    <% if (devMode === 'development') { %>
+      <script src="vendor/requirejs/require.js"></script>  
+      <script type="text/javascript">
+          require(['js/require-config'], function (config) {
+              require(['app']);
+          });
+      </script>
+      <script src="http://localhost:35729/livereload.js"></script>
+    <% }else{ %> 
+      <script src="js/app.min.js"></script>  
+    <% } %>
+
+  </body>
+</html>
+
+
