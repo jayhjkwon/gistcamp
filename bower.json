@@ -1,0 +1,17 @@
+{
+    "name"        : "gistcamp",
+    "version"     : "0.0.1",
+    "dependencies": {
+        "jquery"            : "*",
+        "bootstrap"         : "*",
+        "underscore"        : "*",
+        "backbone"          : "*",
+        "marionette"        : "*",
+        "font-awesome"      : "*",
+        "toastr"            : "*",
+        "requirejs"         : "*",
+        "require-handlebars-plugin" : "*",
+        "requirejs-domready":"*",
+        "handlebars.js"     : "*"
+    }
+}
