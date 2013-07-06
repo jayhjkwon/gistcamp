@@ -1,4 +1,4 @@
-define(function(require){
+/*define(function(require){
 	var
 		$ = require('jquery'),
 		Marionette = require('marionette'),
@@ -26,6 +26,22 @@ define(function(require){
 			closeViews : function(){
 				this.router.navigate('', {trigger: true});	
 			}
+		})
+	;
+
+	return TopView;
+});*/
+
+
+define(function(require){
+	var
+		$ = require('jquery'),
+		Marionette = require('marionette'),
+		topTemplate = require('hbs!templates/topTemplate'),
+
+		TopView = Marionette.ItemView.extend({
+			className: 'navbar-inner',
+			template: topTemplate
 		})
 	;
 

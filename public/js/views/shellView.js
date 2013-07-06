@@ -3,9 +3,17 @@ define(function(require){
 		Marionette = require('marionette'),
 		shellTemplate = require('hbs!templates/shellTemplate'),		
 		ShellView = Marionette.Layout.extend({
-			template: shellTemplate
+			initialize: function(){
+				console.log('ShellView Initialized')
+			},
+			template: shellTemplate,
+			regions: {
+			    top: '#top',
+			    main: '#main',
+			    footer: '#footer'
+			}
 		})
 	;
 
-	return ShellView;
+	return new ShellView;	// note that returning instance of ShellView so that only one instance will be created 
 });

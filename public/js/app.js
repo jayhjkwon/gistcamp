@@ -37,8 +37,13 @@
 define(function(require){
 	var 
 		$ = require('jquery'),
+		Backbone = require('backbone'),
 		Marionette = require('marionette'),
-		ShellView = require('views/shellView')
+		Application = require('application'),
+		Router = require('router'),
+		shellView = require('views/shellView'),
+		TopView = require('views/topView'),
+		FooterView = require('views/footerView')
 	;
 
 	require('bootstrap');
@@ -50,9 +55,29 @@ define(function(require){
 
 
 	$(function(){
-		var shellView = new ShellView;
-		var el = shellView.render().el;
-		$('body').html(el);
+		var 
+			el = shellView.render().el
+		;
+		
+		Application.addInitializer(function(options){
+			shellView.top.show(new TopView);
+			shellView.footer.show(new FooterView);
+			$('body').html(el);
+		});
+
+		Application.on('initialize:after', function(options){
+			var router = new Router;
+			Backbone.history.start({pushState: false});
+		});
+
+		Application.start();
+
+
+
+
+
+
+
 
 		$('.gist-list').niceScroll({cursorcolor: '#eee'});
 		$('.center').niceScroll({cursorcolor: '#eee'});
