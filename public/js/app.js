@@ -36,7 +36,9 @@
 
 define(function(require){
 	var 
-		$ = require('jquery')
+		$ = require('jquery'),
+		Marionette = require('marionette'),
+		ShellView = require('views/shellView')
 	;
 
 	require('bootstrap');
@@ -48,6 +50,12 @@ define(function(require){
 
 
 	$(function(){
+		var $body = $('body');
+		var shellView = new ShellView;
+		var el = shellView.render().el;
+		$('body').html(el);
+		console.log(el);
+
 		$('.gist-list').niceScroll({cursorcolor: '#eee'});
 		$('.center').niceScroll({cursorcolor: '#eee'});
 		$('.comments-wrapper').niceScroll({cursorcolor: '#eee'});
