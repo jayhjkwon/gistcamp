@@ -32,10 +32,13 @@ module.exports = function (grunt) {
                     /* #1. one giant file optimization */
                     baseUrl       : './public/js',
                     mainConfigFile: './public/js/require-config.js',                    
-                    include       : ['../vendor/requirejs/require'],
-                    name          : 'app',
-                    optimize      : 'uglify2',
                     out           : './public/js/app.min.js',
+                    name          : 'app',
+                    include       : ['require-config'],
+                    exclude       : ['jquery', '../vendor/requirejs/require'],
+                    // optimize      : 'uglify2',
+                    optimize      : 'none',
+                    
 
                     /* 
                         #2. multipage optimization, in this option all files in public-dev directory will be moved to public directory 
