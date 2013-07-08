@@ -1,66 +1,9 @@
-/*require(['jquery', 'backbone', 'views/topView', 'controller', 'router', 'handlebars', 'application'], 
-	function($, Backbone, TopView, Controller, Router, Handlebars, App){
-	$(function(){
-		App.addRegions({
-			topRegion  : '#top',
-			contentRegion : '#content'
-		});
-
-		App.addInitializer(function(options){
-			var topView = new TopView;	
-			App.topRegion.show(topView);			
-		});
-
-		App.contentRegion.on('show', function(view){
-			view.$el.css({
-				display    : 'none',
-	            marginLeft : 20,
-	            marginRight: -20,
-	            opacity    : 0});
-			view.$el.css({display: 'block'}).animate({
-	            marginLeft : 0,
-	            marginRight: 0,
-	            opacity    : 1}, 500, 'swing');
-		});
-
-		App.on('initialize:after', function(options){
-			var router = new Router;
-			Backbone.history.start({pushState: false});
-		});
-
-		App.start();
-	});
-});*/
-
-
-
-/*require(function(require){
-	var 
-		$ = require('jquery'),
-		Backbone = require('backbone'),
-		Marionette = require('marionette'),
-		Application = require('application'),
-		Router = require('router'),
-		shellView = require('views/shellView'),
-		TopView = require('views/topView'),
-		FooterView = require('views/footerView')
-	;
-
-	require('bootstrap');
-	require('prettify');
-	require('nicescroll');
-	require('autoGrow');
-	require('scrollTo');
-	require('bootmetroPivot');*/
-
 require(['jquery', 'application', 'router', 'views/shellView', 'views/topView', 'views/footerView', 
 	'bootstrap', 'prettify', 'nicescroll', 'autoGrow', 'scrollTo', 'bootmetroPivot'], 
 	function($, Application, Router, shellView, TopView, FooterView){
 
 	$(function(){
-		var 
-			el = shellView.render().el
-		;
+		var el = shellView.render().el;
 		
 		Application.addInitializer(function(options){
 			shellView.top.show(new TopView);

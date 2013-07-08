@@ -5,7 +5,11 @@
     <link rel="stylesheet" href="vendor/bootstrap/docs/assets/css/bootstrap.css">
     <link rel="stylesheet" href="vendor/bootstrap/docs/assets/js/google-code-prettify/prettify.css">
     <link rel='stylesheet' href="vendor/font-awesome/css/font-awesome.min.css">
-    <link rel='stylesheet' href='styles/app.min.css' />
+    <% if (devMode === 'development') { %>
+      <link rel='stylesheet' href='styles/app.min.css' />
+    <% }else{ %> 
+      <link rel='stylesheet' href='styles/app.min.css?v=<%= appVersion %>' />
+    <% } %>
     <script src="vendor/modernizr/modernizr.js"></script>
   </head>
   <body> 	
@@ -18,9 +22,8 @@
       </script>
       <script src="http://localhost:35729/livereload.js"></script>
     <% }else{ %> 
-      <script src="js/app.min.js"></script>
+      <script src="js/app.min.js?v=<%= appVersion %>"></script>
     <% } %>
-
   </body>
 </html>
 

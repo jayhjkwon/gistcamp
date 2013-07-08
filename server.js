@@ -3,7 +3,7 @@ var express = require('express')
   , user = require('./routes/rest/user')
   , http = require('http')
   , path = require('path')
-  , config = require('./infra/config')
+  , config = require('./infra/config')  
   ;
 
 var app = express();
