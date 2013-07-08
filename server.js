@@ -36,14 +36,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
-/*if ('development' == app.get('env')) {
-  app.use(express.errorHandler());
-  app.use(require('less-middleware')({ src: __dirname + '/public-dev' }));
-  app.use(express.static(path.join(__dirname, 'public-dev')));
-}else if ('production' == app.get('env')) {
-  app.use(require('less-middleware')({ src: __dirname + '/public' }));
-  app.use(express.static(path.join(__dirname, 'public')));
-}*/
 
 app.get('/', routes.index);
 app.get('/rest/users', user.getUserList);
