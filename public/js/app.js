@@ -34,7 +34,7 @@
 
 
 
-define(function(require){
+/*require(function(require){
 	var 
 		$ = require('jquery'),
 		Backbone = require('backbone'),
@@ -51,8 +51,11 @@ define(function(require){
 	require('nicescroll');
 	require('autoGrow');
 	require('scrollTo');
-	require('bootmetroPivot');
+	require('bootmetroPivot');*/
 
+require(['jquery', 'application', 'router', 'views/shellView', 'views/topView', 'views/footerView', 
+	'bootstrap', 'prettify', 'nicescroll', 'autoGrow', 'scrollTo', 'bootmetroPivot'], 
+	function($, Application, Router, shellView, TopView, FooterView){
 
 	$(function(){
 		var 

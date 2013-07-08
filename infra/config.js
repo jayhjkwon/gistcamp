@@ -1,4 +1,4 @@
 exports.options = {
-	// env : 'development',
-	env : 'production'
+	env : 'development',
+	// env : 'production'
 };

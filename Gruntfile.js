@@ -29,57 +29,12 @@ module.exports = function (grunt) {
         requirejs: {
             compile: {
                 options: {
-                    /* #1. one giant file optimization */
-                    // baseUrl       : './public/js',
-                    // mainConfigFile: './public/js/require-config.js',                    
-                    // out           : './public/js/app.min.js',
-                    // name          : 'app',
-                    // include       : ['require-config'],
-                    // exclude       : ['jquery', '../vendor/requirejs/require'],
-                    // // optimize      : 'uglify2',
-                    // optimize      : 'none',
-
                     baseUrl       : './public/js',
                     mainConfigFile: './public/js/require-config.js',                    
-                    include       : ['../vendor/requirejs/require'],
-                    name          : 'app',
-                    optimize      : 'uglify2',
                     out           : './public/js/app.min.js',
-                    
-
-                    /* 
-                        #2. multipage optimization, in this option all files in public-dev directory will be moved to public directory 
-                        In order to get benefit this approach(lazy loading), each view should be included (using require() function) in each action method in controller, rather than declared and included on top of the source code.
-                    */
-                    /*appDir  : "public-dev",
-                    dir     : "public",
-                    mainConfigFile : 'public-dev/js/require-config.js',
-                    baseUrl : "js", 
-                    modules : [
-                        {
-                            name: "app",
-                            include: ['jquery', 'domReady', 'underscore', 'backbone', 
-                            'marionette', 'handlebars', 'hbs', 'i18nprecompile', 
-                            'json2', 'application', 'controller', 'router', 
-                            'models/models']
-                        },
-                        {
-                            name: 'views/topView',
-                            exclude: ['app']
-                        },
-                        {
-                            name: 'views/userView',
-                            exclude: ['app']
-                        },
-                        {
-                            name: 'views/testView',         
-                            exclude: ['app']
-                        }
-                    ],
-                    fileExclusionRegExp : /.less$/ ,   // no include *.less
-                    removeCombined: true,
-                    optimize: 'uglify',
-                    skipDirOptimize: true*/
+                    name          : 'app',
+                    include       : ['../vendor/requirejs/require', 'require-config'],
+                    optimize      : 'uglify2',
                 }
             }
         },
