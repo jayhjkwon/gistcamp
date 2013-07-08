@@ -30,14 +30,21 @@ module.exports = function (grunt) {
             compile: {
                 options: {
                     /* #1. one giant file optimization */
+                    // baseUrl       : './public/js',
+                    // mainConfigFile: './public/js/require-config.js',                    
+                    // out           : './public/js/app.min.js',
+                    // name          : 'app',
+                    // include       : ['require-config'],
+                    // exclude       : ['jquery', '../vendor/requirejs/require'],
+                    // // optimize      : 'uglify2',
+                    // optimize      : 'none',
+
                     baseUrl       : './public/js',
                     mainConfigFile: './public/js/require-config.js',                    
-                    out           : './public/js/app.min.js',
+                    include       : ['../vendor/requirejs/require'],
                     name          : 'app',
-                    include       : ['require-config'],
-                    exclude       : ['jquery', '../vendor/requirejs/require'],
-                    // optimize      : 'uglify2',
-                    optimize      : 'none',
+                    optimize      : 'uglify2',
+                    out           : './public/js/app.min.js',
                     
 
                     /* 
