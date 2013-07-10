@@ -46,7 +46,8 @@ module.exports = function (grunt) {
                     yuicompress: 'false'
                 },
                 files: {
-                    './public/styles/app.min.css': './public/styles/app.less'
+                    './public/styles/app.min.css': './public/styles/app.less',
+                    './public/styles/welcome.min.css': './public/styles/welcome.less'
                 }
             },
             production: {
@@ -55,12 +56,19 @@ module.exports = function (grunt) {
                     yuicompress: 'true'
                 },
                 files  : {
-                    './public/styles/app.min.css': './public/styles/app.less'
+                    './public/styles/app.min.css': './public/styles/app.less',
+                    './public/styles/welcome.min.css': './public/styles/welcome.less'
                 }
             }
         },
 
-        // clean: ['./public/styles/style.less']
+        uglify: {
+            welcome: {
+                files: {
+                    './public/js/welcome.min.js': ['./public/js/welcome.js', './public/vendor/jquery/jquery.js']
+                }
+            }
+        }
     });
 
     // Load tasks from NPM
@@ -68,10 +76,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-requirejs');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    // grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
 
     // register task.
-    // grunt.registerTask('default', ['qunit', 'requirejs', 'less']);
-    // grunt.registerTask('default', ['requirejs', 'less:production', 'clean']);
-    grunt.registerTask('default', ['requirejs', 'less:production']);
+    grunt.registerTask('default', ['requirejs', 'less:production', 'uglify']);
 };

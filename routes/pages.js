@@ -5,7 +5,15 @@ var
 
 exports.index = function(req, res){
   res.render('index', { 
-  	title: 'Express',
+  	title: 'Welcome to GistCamp',
+  	devMode: config.options.env,
+  	appVersion: packageJson.version
+  });
+};
+
+exports.welcome = function(req, res){
+  res.render('welcome', { 
+  	title: 'Welcome to GistCamp',
   	devMode: config.options.env,
   	appVersion: packageJson.version
   });

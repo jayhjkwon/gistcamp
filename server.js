@@ -1,21 +1,12 @@
 var express = require('express')
-  , routes = require('./routes')
-  , user = require('./routes/rest/user')
+  , pages = require('./routes/pages')
+  , user = require('./routes/api/user')
   , http = require('http')
   , path = require('path')
   , config = require('./infra/config')  
   ;
 
 var app = express();
-
-//CORS middleware
-var allowCrossDomain = function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
-    next();
-};
-
 
 // all environments
 app.set('env', config.options.env);
@@ -28,7 +19,6 @@ app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.cookieParser('your secret here'));
 app.use(express.session());
-// app.use(allowCrossDomain);
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -37,7 +27,11 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.get('/', routes.index);
+// web pages
+app.get('/', pages.index); // redirect to welcome page if no session
+app.get('/welcome', pages.welcome);
+
+// restful services
 app.get('/rest/users', user.getUserList);
 app.get('/rest/users/:id', user.getUser);
 app.post('/rest/users', user.save);
