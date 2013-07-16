@@ -1,5 +1,5 @@
 require(['jquery', 'application', 'router', 'views/shellView', 'views/topView', 'views/footerView', 
-	'bootstrap', 'prettify', 'nicescroll', 'autoGrow', 'scrollTo', 'bootmetroPivot'], 
+	'bootstrap', 'prettify', 'nicescroll', 'autoGrow', 'scrollTo'], 
 	function($, Application, Router, shellView, TopView, FooterView){
 
 	$(function(){
@@ -61,15 +61,20 @@ require(['jquery', 'application', 'router', 'views/shellView', 'views/topView', 
 		  	
 		});	
 
-	    $('#pivot').pivot();
+	    $('.carousel').carousel({
+	    	interval: false
+	    });
 
 	    $('.pivot-headers a').click(function(e){
 	    	e.preventDefault();
 	    	// $('.center').niceScroll();
+
+	    	$('.pivot-headers a').removeClass('active');
+	    	$(this).addClass('active');
 	    });
 
 	    // listen to slide event completion
-	    $('.pivot').on('slid', function(){
+	    $('#pivot').on('slid', function(){
 	    	// Check for scrollbars resize (when content or position have changed)
 	    	$('.center').getNiceScroll().resize();
 	    });

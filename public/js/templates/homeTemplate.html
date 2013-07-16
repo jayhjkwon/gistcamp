@@ -194,16 +194,16 @@
 
   <div class="center">
     <div class="files">
-            <div id="pivot" class="pivot slide">
+            <div id="pivot" class="carousel slide">
                 <div class="pivot-headers">
-                  <a href="#pivot" data-pivot-index="0" class="active">index.html</a>
-                  <a href="#pivot" data-pivot-index="1">app.config</a>
-                  <a href="#pivot" data-pivot-index="2">web.xml</a>
-                  <a href="#pivot" data-pivot-index="3">viewmodel.coffee</a>
+                  <a href="#pivot" data-slide-to="0" class="active">index.html</a>
+                  <a href="#pivot" data-slide-to="1" >app.config</a>
+                  <a href="#pivot" data-slide-to="2" >web.xml</a>
+                  <a href="#pivot" data-slide-to="3" >viewmodel.coffee</a>
                 </div>
-                <div class="pivot-items">
-                <div id="pivot-item-1" class="pivot-item active">
-                      <pre class="prettyprint linenums">
+                <div class="carousel-inner">
+                  <div class="item active">
+                    <pre class="prettyprint linenums">
 $ ->
 toastr.options = 
 positionClass   : 'toast-bottom-right'
@@ -221,8 +221,8 @@ clearInterval(counter) if i is 3
 prettyPrint()
                       </pre>
                     </div>
-                    <div id="pivot-item-2" class="pivot-item">
-                 <pre class="prettyprint linenums">
+                  <div class="item">
+                    <pre class="prettyprint linenums">
 $(function(){
 var app = new Backbone.Marionette.Application();
 app.addRegions({main : '#main'});
@@ -266,7 +266,7 @@ Backbone.history.start({pushState : true});
 });
           </pre>
               </div>
-              <div id="pivot-item-3" class="pivot-item">
+              <div class="item">
                  <pre class="prettyprint linenums">
 public class FilterConfig
 {
@@ -279,7 +279,7 @@ public class FilterConfig
 }
             </pre>
               </div>
-              <div id="pivot-item-4" class="pivot-item">
+              <div class="item">
                  <pre class="prettyprint linenums">
 $ ->
 toastr.options = 
