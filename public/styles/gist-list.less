@@ -18,7 +18,38 @@ header {
 	left:0;
 	right:0;
 	min-width:970px;
-	// background-color: yellow;
+
+	// add focus image on selected menu
+	&.navbar .nav > li.active {
+		position: relative;
+		&:before{
+			content:'';
+			position:absolute;
+			top:0;
+			right:0;
+			border-width: 8px 0 0 8px;
+			border-style:solid;
+			border-color:darken(#ccc,30%) darken(#fff, 30%);
+		}
+	}
+
+	// override navbar-inverse in bootstrap
+	&.navbar-inverse .navbar-inner {
+	  background-color: #1b1b1b;
+	  background-image: -moz-linear-gradient(top, #333, #222);
+	  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#333), to(#222));
+	  background-image: -webkit-linear-gradient(top, #333, #222);
+	  background-image: -o-linear-gradient(top, #333, #222);
+	  background-image: linear-gradient(to bottom, #333, #222);
+	  background-repeat: repeat-x;
+	  border-color: #252525;
+	  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff222222', endColorstr='#ff111111', GradientType=0);
+	}
+
+	&.navbar-inverse .divider-vertical {
+	  border-right-color: #333;
+	  border-left-color: #222;
+	}
 }
 
 #main {
@@ -102,7 +133,7 @@ footer {
 	box-shadow:none !important;
 }
 body {
-	font-family: 'Roboto', sans-serif !important;
+	// font-family: 'Roboto', sans-serif !important;
 	// font-family: 'Nanum Gothic', sans-serif !important;
 	// font-family: 'Nanum Gothic Coding', monospace !important;
 	.area {
