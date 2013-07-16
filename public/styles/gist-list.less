@@ -248,15 +248,23 @@ header {
 
 
 /* center */
-.pivot-headers a.active {
-	border-bottom: solid 3px #008641;
-	font-weight: 500 !important;
-}
 
 .pivot-headers {
-	// margin-bottom:20px !important;
+	margin:10px 0 15px 0;
 	a {
-		margin-right: 20px !important;
+		margin-right: 15px;
+		color:#555;
+		font-size:16px;
+		font-weight: 300;
+		&.active{
+			border-bottom: solid 3px #008641;
+			font-weight: bold;		
+		}
+		&:hover{
+			text-decoration: none !important;
+			// font-weight: 600;	
+			color:#222;
+		}
 	}
 }
 

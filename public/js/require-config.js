@@ -14,8 +14,7 @@ require.config({
 	    prettify       : '../vendor/bootstrap/docs/assets/js/google-code-prettify/prettify',
 	    nicescroll     : '../vendor/jquery-nicescroll/jquery.nicescroll',
 	    autoGrow       : '../vendor/autogrow-textarea/jquery.autogrowtextarea',
-	    scrollTo       : '../vendor/jquery.scrollTo/jquery.scrollTo',
-	    bootmetroPivot : '../vendor/bootmetro/scripts/bootmetro-pivot'
+	    scrollTo       : '../vendor/jquery.scrollTo/jquery.scrollTo'
 	},
 	shim: {
 		underscore: {
@@ -42,9 +41,6 @@ require.config({
         	deps: ['jquery']
         },
         scrollTo: {
-        	deps: ['jquery']
-        },
-        bootmetroPivot: {
         	deps: ['jquery']
         }
 	},
