@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="vendor/bootstrap/docs/assets/js/google-code-prettify/prettify.css">
     <link rel='stylesheet' href="vendor/font-awesome/css/font-awesome.min.css">
     <% if (devMode === 'development') { %>
-      <link rel='stylesheet' href='styles/app.min.css' />
+      <link rel='stylesheet' href='styles/app.min.css?modified_time=<%= (new Date()).getTime() %>' />
     <% }else{ %> 
       <link rel='stylesheet' href='styles/app.min.css?v=<%= appVersion %>' />
     <% } %>

@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="vendor/bootstrap/docs/assets/css/bootstrap.css">
     <link rel='stylesheet' href="vendor/font-awesome/css/font-awesome.min.css">
     <% if (devMode === 'development') { %>
-      <link rel='stylesheet' href='styles/welcome.min.css' />
+      <link rel='stylesheet' href='styles/welcome.min.css?modified_time=<%= (new Date()).getTime() %>' />
     <% }else{ %> 
       <link rel='stylesheet' href='styles/welcome.min.css?v=<%= appVersion %>' />
     <% } %>
