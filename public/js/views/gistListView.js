@@ -1,12 +1,14 @@
 define(function(require){
 	var
-		$ = require('jquery'),
-		_ = require('underscore'),
-		Marionette = require('marionette'),
-		gistListTemplate = require('hbs!templates/gistListTemplate'),
-		Application = require('application'),
-		constants = require('constants'),		
-		nicescroll = require('nicescroll'),
+		$ 				= require('jquery'),
+		_ 				= require('underscore'),
+		Marionette 		= require('marionette'),
+		gistListTemplate= require('hbs!templates/gistListTemplate'),
+		Application 	= require('application'),
+		constants 		= require('constants'),		
+		nicescroll 		= require('nicescroll'),
+		bootstrap 		= require('bootstrap'),
+		prettify 		= require('prettify'),
 
 		GistListView = Marionette.Layout.extend({
 			currentSelectedMenu : '',
@@ -29,7 +31,8 @@ define(function(require){
 			template : gistListTemplate,
 
 			events : {
-				'click .gist-item' : 'onGistItemSelected'
+				'click .gist-item' : 'onGistItemSelected',
+				'click .pivot-headers a' : 'onFileNameClicked'
 			},
 
 			onGistItemSelected : function(e){
@@ -44,6 +47,16 @@ define(function(require){
 				$('.gist-list').niceScroll({cursorcolor: '#eee'});
 				$('.center').niceScroll({cursorcolor: '#eee'});
 				$('.comments-wrapper').niceScroll({cursorcolor: '#eee'});
+
+				$('.carousel').carousel({interval: false});
+
+				prettyPrint();	
+			},
+
+			onFileNameClicked : function(e){
+				e.preventDefault();
+		    	$('.pivot-headers a').removeClass('active');
+		    	$(e.currentTarget).addClass('active');
 			},
 
 			onMenuChanged: function(){
