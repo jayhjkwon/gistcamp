@@ -1,33 +1,40 @@
 define(function(require){
 	var 
 		Marionette = require('marionette'),
-		App = require('application'),
-		gistListView = require('views/gistListView'),
-		shellView = require('views/shellView')
+		Application = require('application'),
+		GistListView = require('views/gistListView'),
+		shellView = require('views/shellView'),
+		constants = require('constants')
 	;
 
 	var
 		Controller = Marionette.Controller.extend({
 			home : function(){
-				shellView.main.show(new gistListView);
+				Application.vent.trigger(constants.MENU_SELECTED,'home');
+				shellView.main.show(new GistListView);
 			},
 			following : function(){
-				shellView.main.close();
+				Application.vent.trigger(constants.MENU_SELECTED,'following');
+				shellView.main.show(new GistListView);
 			},
 			myGists : function(){
-				shellView.main.close();
+				Application.vent.trigger(constants.MENU_SELECTED,'mygists');
+				shellView.main.show(new GistListView);
 			},
 			starred : function(){
-				
+				Application.vent.trigger(constants.MENU_SELECTED,'starred');	
+				shellView.main.show(new GistListView);
 			},
 			forked : function(){
-				
+				Application.vent.trigger(constants.MENU_SELECTED,'forked');
+				shellView.main.show(new GistListView);
 			},
 			tagged : function(){
-				
+				Application.vent.trigger(constants.MENU_SELECTED,'tagged');
+				shellView.main.show(new GistListView);
 			},
 			newGist : function(){
-				
+				Application.vent.trigger(constants.MENU_SELECTED,'newgist');
 			}
 		})
 	;

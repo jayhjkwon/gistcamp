@@ -1,13 +1,13 @@
 require(['jquery', 'application', 'router', 'views/shellView', 'views/topView', 'views/footerView', 
 	'bootstrap', 'prettify', 'nicescroll', 'autoGrow', 'scrollTo'], 
-	function($, Application, Router, shellView, TopView, FooterView){
+	function($, Application, Router, shellView, topView, footerView){
 
 	$(function(){
 		var el = shellView.render().el;
 		
 		Application.addInitializer(function(options){
-			shellView.top.show(new TopView);
-			shellView.footer.show(new FooterView);
+			shellView.top.show(topView);
+			shellView.footer.show(footerView);
 			$('body').html(el);
 		});
 
@@ -25,9 +25,9 @@ require(['jquery', 'application', 'router', 'views/shellView', 'views/topView', 
 
 
 
-		$('.gist-list').niceScroll({cursorcolor: '#eee'});
-		$('.center').niceScroll({cursorcolor: '#eee'});
-		$('.comments-wrapper').niceScroll({cursorcolor: '#eee'});
+		// $('.gist-list').niceScroll({cursorcolor: '#eee'});
+		// $('.center').niceScroll({cursorcolor: '#eee'});
+		// $('.comments-wrapper').niceScroll({cursorcolor: '#eee'});
 
 		$('.btn-comments').tooltip();
 
