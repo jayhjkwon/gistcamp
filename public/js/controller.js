@@ -2,15 +2,14 @@ define(function(require){
 	var 
 		Marionette = require('marionette'),
 		App = require('application'),
-		HomeView = require('views/homeView'),
-		shellView = require('views/shellView'),
-		HomeView = require('views/homeView')
+		gistListView = require('views/gistListView'),
+		shellView = require('views/shellView')
 	;
 
 	var
 		Controller = Marionette.Controller.extend({
 			home : function(){
-				shellView.main.show(new HomeView);
+				shellView.main.show(new gistListView);
 			},
 			following : function(){
 				shellView.main.close();
