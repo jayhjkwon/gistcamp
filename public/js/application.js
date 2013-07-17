@@ -1,6 +1,6 @@
 define(function(require){
 	var Marionette = require('marionette');
-	var Application = new Marionette.Application();
+	// var Application = new Marionette.Application();
 
-	return Application;
+	return new Marionette.Application();
 });
