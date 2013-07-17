@@ -10,29 +10,29 @@ define(function(require){
 	var
 		Controller = Marionette.Controller.extend({
 			home : function(){
-				Application.vent.trigger(constants.MENU_SELECTED,'home');
 				shellView.main.show(new GistListView({currentSelectedMenu: 'home'}));
+				Application.vent.trigger(constants.MENU_SELECTED,'home');
 			},
 			following : function(){
-				Application.vent.trigger(constants.MENU_SELECTED,'following');
 				shellView.main.show(new GistListView({currentSelectedMenu: 'following'}));
+				Application.vent.trigger(constants.MENU_SELECTED,'following');				
 			},
 			myGists : function(){
-				Application.vent.trigger(constants.MENU_SELECTED,'mygists');
 				shellView.main.show(new GistListView({currentSelectedMenu: 'mygists'}));
+				Application.vent.trigger(constants.MENU_SELECTED,'mygists');
 			},
 			starred : function(){
-				Application.vent.trigger(constants.MENU_SELECTED,'starred');	
 				shellView.main.show(new GistListView({currentSelectedMenu: 'starred'}));
+				Application.vent.trigger(constants.MENU_SELECTED,'starred');
 			},
 			forked : function(){
-				Application.vent.trigger(constants.MENU_SELECTED,'forked');
 				shellView.main.show(new GistListView({currentSelectedMenu: 'forked'}));
+				Application.vent.trigger(constants.MENU_SELECTED,'forked');
 			},
 			tagged : function(tag){
 				// console.log(tag);
-				Application.vent.trigger(constants.MENU_SELECTED,'tagged');
 				shellView.main.show(new GistListView({currentSelectedMenu: 'tagged', tag: tag}));
+				Application.vent.trigger(constants.MENU_SELECTED,'tagged');				
 			},
 			newGist : function(){
 				Application.vent.trigger(constants.MENU_SELECTED,'newgist');

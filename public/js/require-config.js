@@ -48,7 +48,7 @@ require.config({
 	hbs : {
 		templateExtension : 'html',
 	    disableI18n : true
-	},
-    urlArgs: 'modified_time=' +  (new Date()).getTime()
+	}/*,
+    urlArgs: 'modified_time=' +  (new Date()).getTime()*/
 });
 

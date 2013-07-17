@@ -15,11 +15,13 @@ define(function(require){
 				var self = this;
 				console.log('GistListView initialized');
 
+				_.bindAll(this, 'onClose');
+
 				if (this.options.currentSelectedMenu)
 					self.currentSelectedMenu = this.options.currentSelectedMenu;
-				console.log('currentSelectedMenu= ' + self.currentSelectedMenu);
+					console.log('currentSelectedMenu= ' + self.currentSelectedMenu);
 				if (this.options.tag)
-					console.log('tag= ' + this.options.tag);				
+					console.log('tag= ' + this.options.tag);	
 			},
 
 			className: 'main-content',
@@ -37,9 +39,19 @@ define(function(require){
 			},
 
 			onDomRefresh: function(){
+				// Application.vent.on(constants.MENU_SELECTED, this.onMenuChanged);
+
 				$('.gist-list').niceScroll({cursorcolor: '#eee'});
 				$('.center').niceScroll({cursorcolor: '#eee'});
 				$('.comments-wrapper').niceScroll({cursorcolor: '#eee'});
+			},
+
+			onMenuChanged: function(){
+				console.log('onMenuChanged');
+			},
+
+			onClose: function(){
+				// Application.vent.off(constants.MENU_SELECTED, this.onMenuChanged);	
 			}
 		})
 	;
