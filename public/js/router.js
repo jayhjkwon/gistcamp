@@ -5,13 +5,13 @@ define(function(require){
 
 		Router = Marionette.AppRouter.extend({
 			appRoutes: {
-				''          : 'home',
-				'following' : 'following',
-				'mygists'   : 'myGists',
-				'starred'   : 'starred',
-				'forked'    : 'forked',
-				'tagged'    : 'tagged',
-				'newgist'   : 'newGist'
+				''            : 'home',
+				'following'   : 'following',
+				'mygists'     : 'myGists',
+				'starred'     : 'starred',
+				'forked'      : 'forked',
+				'tagged/:tag' : 'tagged',
+				'newgist'     : 'newGist'
 			},
 
 			controller: new Controller

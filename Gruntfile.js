@@ -11,7 +11,7 @@ module.exports = function (grunt) {
                 files : ['./public/styles/**/*.less']
             },
             js : {
-                files : ['./public/js/**/*.js']
+                files : ['./public/js/**/*.js', './public/js/views/**/*.js', './public/js/models/**/*.js']
             },
             html : {
                 files : ['./public/js/templates/**/*.html']

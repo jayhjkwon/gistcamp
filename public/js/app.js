@@ -79,12 +79,12 @@ require(['jquery', 'application', 'router', 'views/shellView', 'views/topView', 
 	    	$('.center').getNiceScroll().resize();
 	    });
 
-	    $('.gist-item').click(function(){
+	    /*$('.gist-item').click(function(){
 			$('.gist-item').removeClass('selected');
 			$(this).toggleClass('selected');
 
 			$('.comments-badge').hide().show(500);
-		});	
+		});*/	
 
 		prettyPrint();	
 
