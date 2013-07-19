@@ -4,7 +4,7 @@ define(function(require){
 		User = require('./user'),
 		
 		UserList = Backbone.Collection.extend({
-			urlRoot : '/rest/users',
+			urlRoot : '/api/users',
 			url 	: function(){
 						return this.urlRoot;
 					},

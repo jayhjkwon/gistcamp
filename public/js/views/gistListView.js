@@ -30,6 +30,10 @@ define(function(require){
 			
 			template : gistListTemplate,
 
+			regions : {
+				gistItemList : '#gist-item-list'
+			},
+
 			events : {
 				'click .gist-item' : 'onGistItemSelected',
 				'click .pivot-headers a' : 'onFileNameClicked'

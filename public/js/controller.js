@@ -3,6 +3,7 @@ define(function(require){
 		Marionette = require('marionette'),
 		Application = require('application'),
 		GistListView = require('views/gistListView'),
+		GistItemListView = require('views/gistItemListView'),
 		shellView = require('views/shellView'),
 		constants = require('constants')
 	;
@@ -10,7 +11,14 @@ define(function(require){
 	var
 		Controller = Marionette.Controller.extend({
 			home : function(){
-				shellView.main.show(new GistListView({currentSelectedMenu: 'home'}));
+				var gistListView = new GistListView({currentSelectedMenu: 'home'});
+				shellView.main.show(gistListView);
+
+				var gistItemListView = new GistItemListView;
+				gistItemListView.getGistList();
+				
+				gistListView.gistItemList.show(gistItemListView);
+
 				Application.vent.trigger(constants.MENU_SELECTED,'home');
 			},
 			following : function(){

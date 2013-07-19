@@ -3,7 +3,8 @@ var express = require('express')
   , user = require('./routes/api/user')
   , http = require('http')
   , path = require('path')
-  , config = require('./infra/config')  
+  , config = require('./infra/config')
+  , gist = require('./routes/api/gist')
   ;
 
 var app = express();
@@ -32,10 +33,11 @@ app.get('/', pages.index); // redirect to welcome page if no session
 app.get('/welcome', pages.welcome);
 
 // restful services
-app.get('/rest/users', user.getUserList);
-app.get('/rest/users/:id', user.getUser);
-app.post('/rest/users', user.save);
-app.delete('/rest/users/:id', user.removeUser);
+app.get('/api/users', user.getUserList);
+app.get('/api/users/:id', user.getUser);
+app.post('/api/users', user.save);
+app.delete('/api/users/:id', user.removeUser);
+app.get('/api/gist/list', gist.getGistList);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
