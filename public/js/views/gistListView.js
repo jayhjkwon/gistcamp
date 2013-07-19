@@ -35,7 +35,6 @@ define(function(require){
 			},
 
 			events : {
-				'click .gist-item' : 'onGistItemSelected',
 				'click .pivot-headers a' : 'onFileNameClicked'
 			},
 

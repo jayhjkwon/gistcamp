@@ -14,7 +14,7 @@ var client = github.client();
 
 exports.getGistList = function(req, res){
 	var ghgist = client.gist();
-	ghgist.list(function(err, data){
+	ghgist.list({page:1, per_page:100}, function(err, data){
 		res.send(data);
 	});	
 };

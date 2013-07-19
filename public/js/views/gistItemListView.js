@@ -5,6 +5,7 @@ define(function(require){
 		Backbone		= require('backbone'),
 		Marionette 		= require('marionette'),
 		nicescroll 		= require('nicescroll'),
+		Handlebars      = require('handlebars'),
 		GistItemView	= require('./gistItemView'),
 		NoItemsView		= require('./NoItemsView'),
 		GistItemList	= require('models/gistItemList'),
@@ -15,6 +16,7 @@ define(function(require){
 			emptyView: NoItemsView,
 			collection: new GistItemList,
 			initialize: function(){
+				
 			},
 			getGistList: function(){
 				var self = this;
@@ -26,7 +28,15 @@ define(function(require){
 			},
 			setFirstItemSelected: function(){
 		    	$('.gist-item').first().addClass('selected');
-		    }
+		    },
+		    events : {
+				'click .gist-item' : 'onGistItemSelected'
+			},
+			onGistItemSelected : function(e){
+				$('.gist-item').removeClass('selected');
+				$(e.currentTarget).addClass('selected');
+				$('.comments-badge').hide().show(500);
+			}
 		})
 	;
 

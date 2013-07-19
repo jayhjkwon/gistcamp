@@ -47,7 +47,11 @@ require.config({
 	},
 	hbs : {
 		templateExtension : 'html',
-	    disableI18n : true
+	    disableI18n : true,
+        helperPathCallback: function(name){
+            // set path for handlebar helpers
+            return 'templates/helpers/' + name;
+        }
 	}/*,
     urlArgs: 'modified_time=' +  (new Date()).getTime()*/
 });

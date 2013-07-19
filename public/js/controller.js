@@ -1,11 +1,11 @@
 define(function(require){
 	var 
-		Marionette = require('marionette'),
-		Application = require('application'),
-		GistListView = require('views/gistListView'),
-		GistItemListView = require('views/gistItemListView'),
-		shellView = require('views/shellView'),
-		constants = require('constants')
+		Marionette 			= require('marionette'),
+		Application 		= require('application'),
+		GistListView 		= require('views/gistListView'),
+		GistItemListView 	= require('views/gistItemListView'),
+		shellView 			= require('views/shellView'),		
+		constants 			= require('constants')
 	;
 
 	var
