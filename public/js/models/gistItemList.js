@@ -4,9 +4,8 @@ define(function(require){
 		GistItem 		= require('./gistItem'),
 		GistItemList	= Backbone.Collection.extend({
 			model: GistItem,
-			urlRoot : '/api/gist/list',
-			url 	: function(){
-				return this.urlRoot;
+			url : function(){
+				return '/api/gist/list';
 			}
 		})
 	;

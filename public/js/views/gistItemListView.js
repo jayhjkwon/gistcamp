@@ -21,7 +21,7 @@ define(function(require){
 			getGistList: function(){
 				var self = this;
 				var gistItemList = new GistItemList;
-				gistItemList.fetch().done(function(data){
+				gistItemList.fetch({ data: $.param({page:100})}).done(function(data){
 					self.collection.set(data);
 					self.setFirstItemSelected();
 				});
