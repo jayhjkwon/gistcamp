@@ -21,9 +21,10 @@ define(function(require){
 			getGistList: function(){
 				var self = this;
 				var gistItemList = new GistItemList;
-				gistItemList.fetch({ data: $.param({page:100})}).done(function(data){
-					self.collection.set(data);
+				gistItemList.fetch({ data: $.param({page:100})}).done(function(res){
+					self.collection.set(res.data);
 					self.setFirstItemSelected();
+					console.log('has next page : ' + res.hasNextPage);
 				});
 			},
 			setFirstItemSelected: function(){

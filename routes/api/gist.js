@@ -16,15 +16,9 @@ exports.getGistList = function(req, res){
 		per_page: 30
 	},
 	function(err, data){
-		res.send(data);
-
-		console.log('hasNextPage : ' + github.hasNextPage(data));
-
-		/*if(github.hasNextPage(data)){
-			github.getNextPage(data, function(err, data){
-				res.send(data);
-				console.dir(data);
-			});
-		}*/
+		res.send({
+			data: data, 
+			hasNextPage: github.hasNextPage(data)
+		});
 	});
 };
