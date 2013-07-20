@@ -65,7 +65,7 @@ module.exports = function (grunt) {
         uglify: {
             welcome: {
                 files: {
-                    './public/js/welcome.min.js': ['./public/js/welcome.js', './public/vendor/jquery/jquery.js']
+                    './public/js/welcome.min.js': ['./public/vendor/jquery/jquery.js', './public/js/welcome.js']
                 }
             }
         }

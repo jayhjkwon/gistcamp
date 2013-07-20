@@ -4,7 +4,6 @@ define(function(require){
 		_ 				= require('underscore'),
 		Backbone		= require('backbone'),
 		Marionette 		= require('marionette'),
-		nicescroll 		= require('nicescroll'),
 		Handlebars      = require('handlebars'),
 		GistItemView	= require('./gistItemView'),
 		NoItemsView		= require('./NoItemsView'),

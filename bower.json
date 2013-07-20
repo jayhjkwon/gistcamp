@@ -12,12 +12,12 @@
     "requirejs": "*",
     "require-handlebars-plugin": "*",
     "requirejs-domready": "*",
-    "handlebars.js": "*",
-    "autogrow-textarea": "*",
-    "jquery-nicescroll": "*",
+    "handlebars.js": "*",    
     "modernizr": "~2.6.2",
     "jquery.scrollTo": "~1.4.5",
     "bootmetro": "*",
+    "jquery-nicescroll": "*",
+    "autogrow-textarea": "*",
     "infinite-scroll": "latest"
   }
 }

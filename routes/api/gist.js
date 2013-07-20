@@ -13,7 +13,7 @@ var github = new GitHubApi({
 exports.getGistList = function(req, res){
 	github.gists.getAll({
 		page: req.param('page') || 1,
-		per_page: 30
+		per_page: 10
 	},
 	function(err, data){
 		res.send({

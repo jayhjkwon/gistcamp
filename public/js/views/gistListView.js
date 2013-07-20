@@ -17,7 +17,7 @@ define(function(require){
 				var self = this;
 				console.log('GistListView initialized');
 
-				_.bindAll(this, 'onClose');
+				_.bindAll(this, 'onClose', 'onDomRefresh');
 
 				if (this.options.currentSelectedMenu)
 					self.currentSelectedMenu = this.options.currentSelectedMenu;
@@ -35,13 +35,15 @@ define(function(require){
 			},
 
 			events : {
-				'click .pivot-headers a' : 'onFileNameClicked'
+				'click .pivot-headers a' : 'onFileNameClicked',
+				'scroll .gist-list' : 'onScroll'
 			},
 
-			onGistItemSelected : function(e){
-				$('.gist-item').removeClass('selected');
-				$(e.currentTarget).addClass('selected');
-				$('.comments-badge').hide().show(500);
+			onScroll : function(){
+				var w = $('.gist-list');
+				if(w.scrollTop() + w.height() == $('.gist-item-container').height()) {
+			       alert("bottom!");
+			    }
 			},
 
 			onDomRefresh: function(){
@@ -53,7 +55,16 @@ define(function(require){
 
 				$('.carousel').carousel({interval: false});
 
-				prettyPrint();	
+				prettyPrint();
+
+				this.delegateEvents();
+
+				/*var w = $('.gist-list');
+				w.scroll(function() {
+					if(w.scrollTop() + w.height() >= $('.gist-item-container').height()) {
+				       alert("bottom!");
+				    }
+				});*/
 			},
 
 			onFileNameClicked : function(e){
