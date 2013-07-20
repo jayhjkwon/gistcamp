@@ -17,6 +17,7 @@
     "jquery-nicescroll": "*",
     "modernizr": "~2.6.2",
     "jquery.scrollTo": "~1.4.5",
-    "bootmetro": "*"
+    "bootmetro": "*",
+    "infinite-scroll": "latest"
   }
 }
