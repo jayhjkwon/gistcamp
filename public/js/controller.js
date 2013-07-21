@@ -15,18 +15,24 @@ define(function(require){
 				shellView.main.show(gistListView);
 
 				var gistItemListView = new GistItemListView;
-				gistItemListView.getGistList();
+				gistItemListView.getAllGistList();
 				
 				gistListView.gistItemList.show(gistItemListView);
 
 				Application.vent.trigger(constants.MENU_SELECTED,'home');
 			},
 			following : function(){
-				shellView.main.show(new GistListView({currentSelectedMenu: 'following'}));
-				Application.vent.trigger(constants.MENU_SELECTED,'following');				
+				
 			},
 			myGists : function(){
-				shellView.main.show(new GistListView({currentSelectedMenu: 'mygists'}));
+				var gistListView = new GistListView({currentSelectedMenu: 'mygists'});
+				shellView.main.show(gistListView);
+
+				var gistItemListView = new GistItemListView;
+				gistItemListView.getGistListByUser();
+				
+				gistListView.gistItemList.show(gistItemListView);
+
 				Application.vent.trigger(constants.MENU_SELECTED,'mygists');
 			},
 			starred : function(){
