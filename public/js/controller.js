@@ -22,7 +22,15 @@ define(function(require){
 				Application.vent.trigger(constants.MENU_SELECTED,'home');
 			},
 			following : function(){
+				var gistListView = new GistListView({currentSelectedMenu: 'following'});
+				shellView.main.show(gistListView);
+
+				var gistItemListView = new GistItemListView;
+				gistItemListView.getGistListByUser();
 				
+				gistListView.gistItemList.show(gistItemListView);
+
+				Application.vent.trigger(constants.MENU_SELECTED,'following');
 			},
 			myGists : function(){
 				var gistListView = new GistListView({currentSelectedMenu: 'mygists'});

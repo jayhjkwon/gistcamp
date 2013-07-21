@@ -4,11 +4,11 @@ var github = new GitHubApi({
 	version: '3.0.0'
 });
 
-github.authenticate({
-	type: 'basic',
-	username: 'RayKwon',
-	password: 'havana24'
-});
+// github.authenticate({
+// 	type: 'basic',
+// 	username: 'username',
+// 	password: 'password'
+// });
 
 exports.getGistList = function(req, res){
 	github.gists.getAll({
@@ -26,16 +26,15 @@ exports.getGistList = function(req, res){
 
 exports.getGistListByUser = function(req, res){
 	github.gists.getFromUser({
-		user: req.param('user') || 'mikedeboertest',
+		// user: req.param('user') || 'RayKwon'/*,
+		user: "RayKwon",
 		page: req.param('page') || 1,
 		per_page: 30
 	},
 	function(err, data){
-		console.log('getGistListByUser invoked in server');
-		console.dir(data.pop());
-		var gist = data.pop();
+		console.dir(data);
 		res.send({
-			data: gist, 
+			data: data, 
 			hasNextPage: github.hasNextPage(data)
 		});
 	});

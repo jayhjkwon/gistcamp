@@ -9,6 +9,7 @@ define(function(require){
 		GistItemView	= require('./gistItemView'),
 		NoItemsView		= require('./NoItemsView'),
 		GistItemList	= require('models/gistItemList'),
+		constants       = require('constants'),
 		
 		GistItemListView = Marionette.CollectionView.extend({
 			className: 'gist-item-container',
@@ -21,17 +22,17 @@ define(function(require){
 			getGistList: function(gistDataMode){
 				var self = this;
 				var gistItemList = new GistItemList({'gistDataMode': gistDataMode });
-				gistItemList.fetch({data: {page:100}}).done(function(res){
+				gistItemList.fetch({data: {page:1}}).done(function(res){
 					self.collection.set(res.data);
 					self.setFirstItemSelected();
 					console.log('has next page : ' + res.hasNextPage);
 				});
 			},
 			getAllGistList: function(){
-				this.getGistList('GIST_ALL_LIST');
+				this.getGistList(constants.GIST_ALL_LIST);
 			},
 			getGistListByUser: function(){
-				this.getGistList('GIST_LIST_BY_USER');
+				this.getGistList(constants.GIST_LIST_BY_USER);
 			},  			
 			setFirstItemSelected: function(){
 		    	$('.gist-item').first().addClass('selected');
