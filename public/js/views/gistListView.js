@@ -35,8 +35,8 @@ define(function(require){
 			},
 
 			events : {
-				'click .pivot-headers a' : 'onFileNameClicked',
-				'scroll .gist-list' : 'onScroll'
+				'click .pivot-headers a' : 'onFileNameClicked'/*,
+				'scroll .gist-list' : 'onScroll'*/
 			},
 
 			onScroll : function(){
@@ -57,14 +57,7 @@ define(function(require){
 
 				prettyPrint();
 
-				this.delegateEvents();
-
-				/*var w = $('.gist-list');
-				w.scroll(function() {
-					if(w.scrollTop() + w.height() >= $('.gist-item-container').height()) {
-				       alert("bottom!");
-				    }
-				});*/
+				$('.gist-list').off('scroll').on('scroll', this.onScroll);
 			},
 
 			onFileNameClicked : function(e){
