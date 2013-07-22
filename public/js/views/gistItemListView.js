@@ -16,7 +16,6 @@ define(function(require){
 			itemView: GistItemView,
 			emptyView: NoItemsView,
 			collection: new GistItemList,
-			currentPage: 1,
 			currentGistDataMode: '',
 			initialize: function(){
 				_.bindAll(this, 'getGistList', 'onRender', 'onScroll');
@@ -24,30 +23,40 @@ define(function(require){
 			},
 			getGistList: function(){
 				var self = this;
-				var gistItemList = new GistItemList({'gistDataMode': self.gistDataMode });
-				gistItemList.fetch({data: {page: self.currentPage}})
-							.done(function(res){
-								if (self.currentPage === 1){
-									self.collection.set(res.data);
-									self.setFirstItemSelected();	
-								}else{
-									self.collection.add(res.data);
-								}
-								
-								console.log('has next page : ' + res.hasNextPage);})
-							.always(function(){
-								$('.gist-list').getNiceScroll().resize();
-								self.loading(false);
-							});
+				var gistItemList = new GistItemList({'gistDataMode': self.currentGistDataMode });
+				gistItemList.fetch({data: {linkHeader: self.linkHeader}})
+					.done(function(res){
+						if (!self.linkHeader){
+							self.collection.set(res.data);
+							self.setFirstItemSelected();	
+						}else{
+							self.collection.add(res.data);
+						}
+						
+						if (res.hasNextPage){
+							self.linkHeader = res.linkHeader;
+						}else{
+							self.lastPage = true;
+							self.showEndofDataSign();									
+						}
+					})
+					.always(function(){
+						$('.gist-list').getNiceScroll().resize();
+						self.loading(false);
+					});
 			},
-			getAllGistList: function(){
-				this.currentGistDataMode = constants.GIST_ALL_LIST;
-				this.getGistList(constants.GIST_ALL_LIST);
+			getPublicGistList: function(){
+				this.currentGistDataMode = constants.GIST_PUBLIC;
+				this.getGistList(constants.GIST_PUBLIC);
 			},
 			getGistListByUser: function(){
 				this.currentGistDataMode = constants.GIST_LIST_BY_USER;
 				this.getGistList(constants.GIST_LIST_BY_USER);
-			},  			
+			},  
+			getStarredGistList: function(){
+				this.currentGistDataMode = constants.GIST_STARRED;
+				this.getGistList(constants.GIST_STARRED);
+			},		
 			setFirstItemSelected: function(){
 		    	$('.gist-item').first().addClass('selected');
 		    },
@@ -73,8 +82,8 @@ define(function(require){
 			    }
 			},
 			loadMore: function(){
+				if(self.lastPage) return;
 				this.loading(true);
-				this.currentPage = this.currentPage + 1;
 				this.getGistList();
 			},
 			loading: function(showSpinner){
@@ -86,6 +95,9 @@ define(function(require){
 					this.spinner.stop();					
 					$('.loading').remove();	
 				}
+			},
+			showEndofDataSign: function(){
+				$('#gist-item-list').append('<div style="height:50px;font-size:15px;font-weight:bold;text-align:center;">End of Data..</div>');
 			}
 
 		})

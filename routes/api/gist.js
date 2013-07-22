@@ -8,38 +8,78 @@ var github = new GitHubApi({
 	version: '3.0.0'
 });
 
-// github.authenticate({
-// 	type: 'basic',
-// 	username: 'username',
-// 	password: 'password'
-// });
+/*github.authenticate({
+	type: 'basic',
+	username: 'username',
+	password: 'password'
+});*/
 
+var getNextPage = function(linkHeader, res){
+	github.getNextPage(linkHeader,
+		function(err, data){		
+			console.dir(data);
+			res.send({
+				data: data, 
+				hasNextPage: github.hasNextPage(data),
+				linkHeader: data.meta.link
+			});
+		}
+	);		
+};
 
-exports.getGistList = function(req, res){
-	github.gists.getAll({
-		page: req.param('page') || 1,
-		per_page: config.options.perPage
-	},
-	function(err, data){
-		console.dir(data);
-		res.send({
-			data: data, 
-			hasNextPage: github.hasNextPage(data)
-		});
+var sendData = function(data, res){
+	console.dir(data);				
+	res.send({
+		data: data, 
+		hasNextPage: github.hasNextPage(data),
+		linkHeader: data.meta.link
 	});
 };
 
+exports.getPublicGists = function(req, res){
+	var self = this;
+	console.log('getPublicGists');
+	var linkHeader = req.param('linkHeader');
+	if (!linkHeader){
+		github.gists.public({},
+			function(err, data){		
+				sendData(data, res);
+			}
+		);
+	}else{
+		getNextPage(linkHeader, res);
+	}
+};
+
 exports.getGistListByUser = function(req, res){
-	github.gists.getFromUser({
-		user: req.param('user') || 'RayKwon',
-		page: req.param('page') || 1,
-		per_page: config.options.perPage
-	},
-	function(err, data){
-		console.dir(data);
-		res.send({
-			data: data, 
-			hasNextPage: github.hasNextPage(data)
-		});
-	});
+	var self = this;	
+	console.log('getGistListByUser');
+	var linkHeader = req.param('linkHeader');
+	if (!linkHeader){
+		github.gists.getFromUser({
+			user: req.param('user') || 'RayKwon', 
+			per_page: config.options.perPage || 30
+		}, 
+			function(err, data){		
+				sendData(data, res);
+			}
+		);
+	}else{
+		getNextPage(linkHeader, res);
+	}
+};
+
+exports.getStarredGists = function(req, res){
+	var self = this;	
+	console.log('getStarredGists');
+	var linkHeader = req.param('linkHeader');
+	if (!linkHeader){
+		github.gists.starred({}, 
+			function(err, data){		
+				sendData(data, res);
+			}
+		);
+	}else{
+		getNextPage(linkHeader, res);
+	}
 };

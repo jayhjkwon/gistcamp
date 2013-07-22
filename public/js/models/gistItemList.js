@@ -13,12 +13,14 @@ define(function(require){
 				var url = '';
 
 				switch (this.gistDataMode){
-					case constants.GIST_ALL_LIST :
-						return '/api/gist/list';	
+					case constants.GIST_PUBLIC :
+						return '/api/gist/public';	
 					case constants.GIST_LIST_BY_USER :
 						return '/api/gist/user'
+					case constants.GIST_STARRED :
+						return '/api/gist/starred'
 					default :
-						return '/api/gist/list';	
+						return '/api/gist/public';	
 				}
 			}
 		})

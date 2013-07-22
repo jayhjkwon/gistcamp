@@ -15,7 +15,7 @@ define(function(require){
 				shellView.main.show(gistListView);
 
 				var gistItemListView = new GistItemListView;
-				gistItemListView.getAllGistList();
+				gistItemListView.getPublicGistList();
 				
 				gistListView.gistItemList.show(gistItemListView);
 
@@ -44,7 +44,14 @@ define(function(require){
 				Application.vent.trigger(constants.MENU_SELECTED,'mygists');
 			},
 			starred : function(){
-				shellView.main.show(new GistListView({currentSelectedMenu: 'starred'}));
+				var gistListView = new GistListView({currentSelectedMenu: 'starred'});
+				shellView.main.show(gistListView);
+
+				var gistItemListView = new GistItemListView;
+				gistItemListView.getStarredGistList();
+				
+				gistListView.gistItemList.show(gistItemListView);
+
 				Application.vent.trigger(constants.MENU_SELECTED,'starred');
 			},
 			forked : function(){
