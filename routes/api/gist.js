@@ -17,7 +17,7 @@ var github = new GitHubApi({
 var getNextPage = function(linkHeader, res){
 	github.getNextPage(linkHeader,
 		function(err, data){		
-			console.dir(data);
+			// console.dir(data);
 			res.send({
 				data: data, 
 				hasNextPage: github.hasNextPage(data),
@@ -28,7 +28,7 @@ var getNextPage = function(linkHeader, res){
 };
 
 var sendData = function(data, res){
-	console.dir(data);				
+	// console.dir(data);				
 	res.send({
 		data: data, 
 		hasNextPage: github.hasNextPage(data),
@@ -43,7 +43,7 @@ exports.getPublicGists = function(req, res){
 	if (!linkHeader){
 		github.gists.public({},
 			function(err, data){		
-				sendData(data, res);
+				if (data) sendData(data, res);
 			}
 		);
 	}else{
@@ -61,7 +61,7 @@ exports.getGistListByUser = function(req, res){
 			per_page: config.options.perPage || 30
 		}, 
 			function(err, data){		
-				sendData(data, res);
+				if (data) sendData(data, res);
 			}
 		);
 	}else{
@@ -76,10 +76,17 @@ exports.getStarredGists = function(req, res){
 	if (!linkHeader){
 		github.gists.starred({}, 
 			function(err, data){		
-				sendData(data, res);
+				if (data) sendData(data, res);
 			}
 		);
 	}else{
 		getNextPage(linkHeader, res);
 	}
 };
+
+// getFollowers : people who follows me
+// getFollowingFromUser, getFollowing : people who I follow
+// github.user.getFollowers({user:'RayKwon'}, function(err, data){
+// 	console.log('getFollowUser');
+// 	console.dir(data);
+// });
