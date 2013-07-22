@@ -35,29 +35,16 @@ define(function(require){
 			},
 
 			events : {
-				'click .pivot-headers a' : 'onFileNameClicked'/*,
-				'scroll .gist-list' : 'onScroll'*/
-			},
-
-			onScroll : function(){
-				var w = $('.gist-list');
-				if(w.scrollTop() + w.height() == $('.gist-item-container').height()) {
-			       alert("bottom!");
-			    }
+				'click .pivot-headers a' : 'onFileNameClicked'
 			},
 
 			onDomRefresh: function(){
-				// Application.vent.on(constants.MENU_SELECTED, this.onMenuChanged);
-
-				$('.gist-list').niceScroll({cursorcolor: '#eee'});
 				$('.center').niceScroll({cursorcolor: '#eee'});
 				$('.comments-wrapper').niceScroll({cursorcolor: '#eee'});
 
 				$('.carousel').carousel({interval: false});
 
 				prettyPrint();
-
-				$('.gist-list').off('scroll').on('scroll', this.onScroll);
 			},
 
 			onFileNameClicked : function(e){
@@ -71,7 +58,6 @@ define(function(require){
 			},
 
 			onClose: function(){
-				// Application.vent.off(constants.MENU_SELECTED, this.onMenuChanged);	
 			}
 		})
 	;

@@ -1,4 +1,5 @@
 exports.options = {
 	env : 'development',
-	// env : 'production'
+	// env : 'production',
+	perPage : 10
 };
