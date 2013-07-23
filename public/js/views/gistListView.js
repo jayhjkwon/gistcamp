@@ -31,7 +31,9 @@ define(function(require){
 			template : gistListTemplate,
 
 			regions : {
-				gistItemList : '#gist-item-list'
+				gistItemList    : '#gist-item-list',
+				filesWrapper    : '#files-wrapper',
+				commentsWrapper : '#comments-wrapper'
 			},
 
 			events : {
@@ -39,12 +41,6 @@ define(function(require){
 			},
 
 			onDomRefresh: function(){
-				$('.center').niceScroll({cursorcolor: '#eee'});
-				$('.comments-wrapper').niceScroll({cursorcolor: '#eee'});
-
-				$('.carousel').carousel({interval: false});
-
-				prettyPrint();
 			},
 
 			onFileNameClicked : function(e){

@@ -26,7 +26,7 @@ require(['jquery', 'application', 'router', 'views/shellView', 'views/topView', 
 
 
 		// $('.gist-list').niceScroll({cursorcolor: '#eee'});
-		// $('.center').niceScroll({cursorcolor: '#eee'});
+		// $('.files-wrapper').niceScroll({cursorcolor: '#eee'});
 		// $('.comments-wrapper').niceScroll({cursorcolor: '#eee'});
 
 		$('.btn-comments').tooltip();
@@ -34,29 +34,29 @@ require(['jquery', 'application', 'router', 'views/shellView', 'views/topView', 
 		$('.btn-comments').click(function (e) {
 		  	e.preventDefault();
 		  	if($('.comments-wrapper').css('right') == '-300px'){
-		  		$('.center').css('right', '300px');
+		  		$('.files-wrapper').css('right', '300px');
 		  		$('.comments-wrapper').css('right','0px');	  
 		  		setTimeout(function(){
 			  		$('#comment-input').focus();
 			  	},300);		
 		  	}else{
-		  		$('.center').css('right', '0px');
+		  		$('.files-wrapper').css('right', '0px');
 		  		$('.comments-wrapper').css('right','-300px');
 		  	}
 
 		  	/*if($('.comments-wrapper').css('margin-left') == '0px'){
-		  		// $('.center').css('right', '300px');
+		  		// $('.files-wrapper').css('right', '300px');
 		  		$('.comments-wrapper').css('margin-left','-300px');	  
 		  		setTimeout(function(){
 			  		$('#comment-input').focus();
 			  	},300);		
 		  	}else{
-		  		// $('.center').css('right', '0px');
+		  		// $('.files-wrapper').css('right', '0px');
 		  		$('.comments-wrapper').css('margin-left','0px');
 		  	}*/
 
 		  	setTimeout(function(){
-		  		$('.center').getNiceScroll().resize();	
+		  		$('.files-wrapper').getNiceScroll().resize();	
 		  	},300);
 		  	
 		});	
@@ -67,7 +67,7 @@ require(['jquery', 'application', 'router', 'views/shellView', 'views/topView', 
 
 	    /*$('.pivot-headers a').click(function(e){
 	    	e.preventDefault();
-	    	// $('.center').niceScroll();
+	    	// $('.files-wrapper').niceScroll();
 
 	    	$('.pivot-headers a').removeClass('active');
 	    	$(this).addClass('active');
@@ -76,7 +76,7 @@ require(['jquery', 'application', 'router', 'views/shellView', 'views/topView', 
 	    // listen to slide event completion
 	    /*$('#pivot').on('slid', function(){
 	    	// Check for scrollbars resize (when content or position have changed)
-	    	$('.center').getNiceScroll().resize();
+	    	$('.files-wrapper').getNiceScroll().resize();
 	    });*/
 
 	    /*$('.gist-item').click(function(){

@@ -22,6 +22,8 @@ define(function(require){
 				this.spinner = new Spinner();
 				util.loadSpinner(true);
 			},
+			events : {
+			},
 			getGistList: function(){
 				var self = this;
 				var gistItemList = new GistItemList({'gistDataMode': self.currentGistDataMode });
@@ -29,7 +31,7 @@ define(function(require){
 					.done(function(res){
 						if (!self.linkHeader){
 							self.collection.set(res.data);
-							self.setFirstItemSelected();	
+							self.setFirstItemSelected();
 						}else{
 							self.collection.add(res.data);
 						}
@@ -39,7 +41,7 @@ define(function(require){
 						}else{
 							self.lastPage = true;
 							self.showEndofDataSign();									
-						}
+						}						
 					})
 					.always(function(){
 						$('.gist-list').getNiceScroll().resize();
@@ -60,16 +62,8 @@ define(function(require){
 				this.getGistList(constants.GIST_STARRED);
 			},		
 			setFirstItemSelected: function(){
-		    	$('.gist-item').first().addClass('selected');
-		    },
-		    events : {
-				'click .gist-item' : 'onGistItemSelected'
-			},
-			onGistItemSelected : function(e){
-				$('.gist-item').removeClass('selected');
-				$(e.currentTarget).addClass('selected');
-				$('.comments-badge').hide().show(500);
-			},
+		    	$('.gist-item').first().trigger('click');
+		    },		    
 			onRender : function(){
 				$('.gist-list').niceScroll({cursorcolor: '#eee'});
 
