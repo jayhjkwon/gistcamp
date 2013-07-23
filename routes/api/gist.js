@@ -3,16 +3,14 @@ var
 	config   = require('../../infra/config')
 ;
 
-
 var github = new GitHubApi({
 	version: '3.0.0'
 });
 
-/*github.authenticate({
-	type: 'basic',
-	username: 'username',
-	password: 'password'
-});*/
+github.authenticate({
+	type: 'oauth',
+	token: '7a42d72331c2d19a1dc6a47b01c227d267d71e36'
+});
 
 var getNextPage = function(linkHeader, res){
 	github.getNextPage(linkHeader,

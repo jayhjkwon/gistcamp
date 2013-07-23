@@ -13,7 +13,6 @@ define(function(require){
 				_.bindAll(this, 'activateMenu');
 
 				Application.vent.on(constants.MENU_SELECTED, function(menu){
-					console.log('topView ' + menu);
 					self.activateMenu(menu);
 				});
 			},

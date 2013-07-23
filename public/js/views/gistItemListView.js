@@ -10,16 +10,17 @@ define(function(require){
 		NoItemsView		= require('./NoItemsView'),
 		GistItemList	= require('models/gistItemList'),
 		constants       = require('constants'),
+		util            = require('util'),
 		
 		GistItemListView = Marionette.CollectionView.extend({
 			className: 'gist-item-container',
 			itemView: GistItemView,
-			emptyView: NoItemsView,
 			collection: new GistItemList,
 			currentGistDataMode: '',
 			initialize: function(){
 				_.bindAll(this, 'getGistList', 'onRender', 'onScroll');
 				this.spinner = new Spinner();
+				util.loadSpinner(true);
 			},
 			getGistList: function(){
 				var self = this;
@@ -43,6 +44,7 @@ define(function(require){
 					.always(function(){
 						$('.gist-list').getNiceScroll().resize();
 						self.loading(false);
+						util.loadSpinner(false);
 					});
 			},
 			getPublicGistList: function(){
@@ -69,7 +71,6 @@ define(function(require){
 				$('.comments-badge').hide().show(500);
 			},
 			onRender : function(){
-				console.log('rendered');
 				$('.gist-list').niceScroll({cursorcolor: '#eee'});
 
 				// register scroll event handler, this shuld be registered after view rendered
