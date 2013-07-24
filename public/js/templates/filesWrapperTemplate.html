@@ -4,101 +4,16 @@
     {{/fileNames}}
   </div>
   <div class="carousel-inner">
+  <!-- {{#each items}}
+    {{#if isActive}}
     <div class="item active">
+    {{else}}
+    <div class="item">
+      {{/if}}
       <pre class="prettyprint linenums">
-$ ->
-toastr.options = 
-positionClass   : 'toast-bottom-right'
-timeOut     : 10000
-fadeIn      : 1000
-
-showToastr = -> toastr.info 'Scott Hanselman commented on your gist', 'GistCamp'
-i = 0
-counter = setInterval ( -> 
-showToastr() 
-++i
-clearInterval(counter) if i is 3
-), 3000
-
-prettyPrint()
-                      </pre>
-                    </div>
-                  <div class="item">
-                    <pre class="prettyprint linenums">
-$(function(){
-var app = new Backbone.Marionette.Application();
-app.addRegions({main : '#main'});
-
-var AppRouter = Backbone.Router.extend({
-initialize : function(){
-  $('a').click(function(e){
-      e.preventDefault();
-      var href = $(this).attr('href');
-      Backbone.history.navigate(href, true);
-  });
-},
-
-routes : {
-'' : 'home',
-'about' : 'about'
-},
-
-home : function(){
-var homeView = new HomeView();
-    app.main.show(homeView);
-},
-
-about : function(){
-var personModel = new PersonModel({
-        firstName : 'test',
-        addresses : new AddressesModel([
-            new AddressModel({city : 'seoul'}),
-            new AddressModel({city : 'pusan'}),
-            new AddressModel({city : 'incheon'})
-        ])
-});
-var aboutView = new AboutView({model : personModel});
-    app.main.show(aboutView);
-}
-
-});
-
-new AppRouter();
-Backbone.history.start({pushState : true});
-});
-          </pre>
-              </div>
-              <div class="item">
-                 <pre class="prettyprint linenums">
-public class FilterConfig
-{
-    public static void RegisterConfig(HttpConfiguration config)
-    {
-        // register global model validation filter
-        config.Services.RemoveAll(typeof(System.Web.Http.Validation.ModelValidatorProvider), v => v is System.Web.Http.Validation.Providers.InvalidModelValidatorProvider);
-        config.Filters.Add(new ValidationActionFilter());
-    }
-}
-            </pre>
-              </div>
-              <div class="item">
-                 <pre class="prettyprint linenums">
-$ ->
-toastr.options = 
-positionClass   : 'toast-bottom-right'
-timeOut     : 10000
-fadeIn      : 1000
-
-showToastr = -> toastr.info 'Scott Hanselman commented on your gist', 'GistCamp'
-i = 0
-counter = setInterval ( -> 
-showToastr() 
-++i
-clearInterval(counter) if i is 3
-), 3000
-
-prettyPrint()
-    </pre>
-  </div>
+      {{file_content}}
+      </pre>
+    </div>    
+  {{/each}} -->
   </div>
 </div>

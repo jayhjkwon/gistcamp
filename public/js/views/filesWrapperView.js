@@ -11,14 +11,17 @@ define(function(require){
 		prettify 		= require('prettify'),		
 		File            = require('models/file'),
 		Files           = require('models/files'),
+		service         = require('service'),
 
 		FilesWrapperView = Marionette.ItemView.extend({
 			className: 'files',			
 			template : filesWrapperTemplate,
+			
 			initialize: function(options){
 				_.bindAll(this, 'onDomRefresh', 'onFilesRefresh');
-				Application.commands.setHandler('files', this.onFilesRefresh);
+				Application.commands.setHandler(constants.GIST_ITEM_SELECTED, this.onFilesRefresh);
 			},
+			
 			onDomRefresh: function(){
 				var self = this;
 
@@ -27,13 +30,47 @@ define(function(require){
 
 				prettyPrint();
 			},
+
 			onFilesRefresh: function(files){
+				var self = this;
+
+				function htmlEncode(value){
+				  //create a in-memory div, set it's inner text(which jQuery automatically encodes)
+				  //then grab the encoded contents back out.  The div never exists on the page.
+				  return $('<div/>').text(value).html();
+				}
+
+				function htmlDecode(value){
+				  return $('<div/>').html(value).text();
+				}
+
 				var filesArray = _.toArray(files);
-				this.collection = new Files(filesArray);
-				this.render();
+
+				if (filesArray)
+					filesArray[0].isActive = true;
+
+				/*service.getRawFiles(filesArray, function(result){
+					self.collection = new Files(result);
+					self.render();
+				});*/
+
+				self.collection = new Files(filesArray);
+				self.render();
+				service.getRawFile(filesArray[0], function(result){
+					var html = '';
+					html = html + '<div class="item active">';
+					html = html + '<pre class="prettyprint linenums">';
+					html = html + htmlEncode(result.file_content);
+					html = html + '</pre>';
+					html = html + '</div>';
+
+					$('.carousel-inner').html(html);
+				});
+				prettyPrint();
 			},
+			
 			onClose: function(){
-				Application.commands.removeHandler('files');
+				Application.commands.removeHandler(constants.GIST_ITEM_SELECTED);
 			}
 		})
 	;

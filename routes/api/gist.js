@@ -1,6 +1,8 @@
 var 
 	GitHubApi = require('github'),
-	config   = require('../../infra/config')
+	config    = require('../../infra/config'),
+	request   = require('request'),
+	_         = require('underscore')
 ;
 
 var github = new GitHubApi({
@@ -80,6 +82,45 @@ exports.getStarredGists = function(req, res){
 	}else{
 		getNextPage(linkHeader, res);
 	}
+};
+
+exports.getRawFiles = function(req, res){
+	var filesInfo = req.param('files');
+	var isLast = function(file){
+		var i = _.indexOf(filesInfo, file);
+		
+		if (i === filesInfo.length - 1){
+			console.dir(filesInfo);
+			res.send(filesInfo);
+		}		
+	};
+
+	/*_.each(filesInfo, function(file){
+		request.get(file.raw_url, function(error, response, body){	
+			file.file_content = body;
+			isLast(file);
+		});
+	});*/
+
+	for(var i=0, len = filesInfo.length; i<len; i++){
+		(function(i){
+			request.get(filesInfo[i].raw_url, function(error, response, body){	
+			var f = filesInfo[i];
+			f.file_content = body;
+			if (i === len-1)
+				res.send(filesInfo);
+			})
+		})(i);
+	}
+};
+
+exports.getRawFile = function(req, res){
+	var fileInfo = req.param('file');
+
+	request.get(fileInfo.raw_url, function(error, response, body){	
+		fileInfo.file_content = body;
+		res.send(fileInfo);
+	});
 };
 
 // getFollowers : people who follows me

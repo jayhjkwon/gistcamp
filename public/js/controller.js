@@ -42,36 +42,64 @@ define(function(require){
 			},
 			
 			following : function(){
+				// LayoutView with regions
 				var gistListView = new GistListView({currentSelectedMenu: 'following'});
 				shellView.main.show(gistListView);
 
+				// Gist Item on the left region
 				var gistItemListView = new GistItemListView;
 				gistItemListView.getGistListByUser();				
 				gistListView.gistItemList.show(gistItemListView);
+
+				// Gist Files on the center region
+				var filesWrapperView = new FilesWrapperView;
+				gistListView.filesWrapper.show(filesWrapperView);
+
+				// Comments on the right region
+				var commentsWrapperView = new CommentsWrapperView;
+				gistListView.commentsWrapper.show(commentsWrapperView);
 
 				Application.execute(constants.MENU_SELECTED,'following');
 			},
 			
 			myGists : function(){
+				// LayoutView with regions
 				var gistListView = new GistListView({currentSelectedMenu: 'mygists'});
 				shellView.main.show(gistListView);
 
+				// Gist Item on the left region
 				var gistItemListView = new GistItemListView;
-				gistItemListView.getGistListByUser();
-				
+				gistItemListView.getGistListByUser();				
 				gistListView.gistItemList.show(gistItemListView);
+
+				// Gist Files on the center region
+				var filesWrapperView = new FilesWrapperView;
+				gistListView.filesWrapper.show(filesWrapperView);
+
+				// Comments on the right region
+				var commentsWrapperView = new CommentsWrapperView;
+				gistListView.commentsWrapper.show(commentsWrapperView);
 
 				Application.execute(constants.MENU_SELECTED,'mygists');
 			},
 			
 			starred : function(){
+				// LayoutView with regions
 				var gistListView = new GistListView({currentSelectedMenu: 'starred'});
 				shellView.main.show(gistListView);
 
+				// Gist Item on the left region
 				var gistItemListView = new GistItemListView;
-				gistItemListView.getStarredGistList();
-				
+				gistItemListView.getStarredGistList();				
 				gistListView.gistItemList.show(gistItemListView);
+
+				// Gist Files on the center region
+				var filesWrapperView = new FilesWrapperView;
+				gistListView.filesWrapper.show(filesWrapperView);
+
+				// Comments on the right region
+				var commentsWrapperView = new CommentsWrapperView;
+				gistListView.commentsWrapper.show(commentsWrapperView);
 
 				Application.execute(constants.MENU_SELECTED,'starred');
 			},
