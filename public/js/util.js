@@ -8,6 +8,7 @@ define(function(require){
 		loadSpinner = function(enableSpinner){
 			if(enableSpinner){
 				var target = $('body')[0];
+				$('.loadSpinner').remove();
 				$('body').append('<div class="loadSpinner"></div>');
 				spinner.spin(target);
 			}else{

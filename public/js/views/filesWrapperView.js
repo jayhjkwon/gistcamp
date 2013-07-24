@@ -53,9 +53,7 @@ define(function(require){
 					self.collection = new Files(result);
 					self.render();
 				});*/
-
-				self.collection = new Files(filesArray);
-				self.render();
+				
 				service.getRawFile(filesArray[0], function(result){
 					var html = '';
 					html = html + '<div class="item active">';
@@ -64,9 +62,12 @@ define(function(require){
 					html = html + '</pre>';
 					html = html + '</div>';
 
-					$('.carousel-inner').html(html);
+					$('.carousel-inner').append(html);
 				});
-				prettyPrint();
+
+				self.collection = new Files(filesArray);
+				self.render();
+				// prettyPrint();
 			},
 			
 			onClose: function(){
