@@ -116,7 +116,7 @@ exports.getRawFiles = function(req, res){
 
 exports.getRawFile = function(req, res){
 	var fileInfo = req.param('file');
-
+	
 	request.get(fileInfo.raw_url, function(error, response, body){	
 		fileInfo.file_content = body;
 		res.send(fileInfo);

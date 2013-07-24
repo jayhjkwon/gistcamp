@@ -67,7 +67,6 @@ define(function(require){
 
 				self.collection = new Files(filesArray);
 				self.render();
-				// prettyPrint();
 			},
 			
 			onClose: function(){
