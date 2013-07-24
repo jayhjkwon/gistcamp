@@ -18,35 +18,38 @@ define(function(require){
 			},
 
 			onClose: function(){
-				Application.commands.removeAllHandlers();
 			},
 
 			home : function(){
+				// LayoutView with regions
 				var gistListView = new GistListView({currentSelectedMenu: 'home'});
 				shellView.main.show(gistListView);
 
+				// Gist Item on the left region
 				var gistItemListView = new GistItemListView;
 				gistItemListView.getPublicGistList();				
 				gistListView.gistItemList.show(gistItemListView);
 
+				// Gist Files on the center region
 				var filesWrapperView = new FilesWrapperView;
 				gistListView.filesWrapper.show(filesWrapperView);
 
+				// Comments on the right region
 				var commentsWrapperView = new CommentsWrapperView;
 				gistListView.commentsWrapper.show(commentsWrapperView);
 
-				Application.vent.trigger(constants.MENU_SELECTED,'home');
+				Application.execute(constants.MENU_SELECTED,'home');
 			},
 			
 			following : function(){
 				var gistListView = new GistListView({currentSelectedMenu: 'following'});
-				shellView.main.show(this.gistListView);
+				shellView.main.show(gistListView);
 
 				var gistItemListView = new GistItemListView;
 				gistItemListView.getGistListByUser();				
-				this.gistListView.gistItemList.show(gistItemListView);
+				gistListView.gistItemList.show(gistItemListView);
 
-				Application.vent.trigger(constants.MENU_SELECTED,'following');
+				Application.execute(constants.MENU_SELECTED,'following');
 			},
 			
 			myGists : function(){
@@ -58,7 +61,7 @@ define(function(require){
 				
 				gistListView.gistItemList.show(gistItemListView);
 
-				Application.vent.trigger(constants.MENU_SELECTED,'mygists');
+				Application.execute(constants.MENU_SELECTED,'mygists');
 			},
 			
 			starred : function(){
@@ -70,22 +73,22 @@ define(function(require){
 				
 				gistListView.gistItemList.show(gistItemListView);
 
-				Application.vent.trigger(constants.MENU_SELECTED,'starred');
+				Application.execute(constants.MENU_SELECTED,'starred');
 			},
 			
 			forked : function(){
 				shellView.main.show(new GistListView({currentSelectedMenu: 'forked'}));
-				Application.vent.trigger(constants.MENU_SELECTED,'forked');
+				Application.execute(constants.MENU_SELECTED,'forked');
 			},
 			
 			tagged : function(tag){
 				// console.log(tag);
 				shellView.main.show(new GistListView({currentSelectedMenu: 'tagged', tag: tag}));
-				Application.vent.trigger(constants.MENU_SELECTED,'tagged');				
+				Application.execute(constants.MENU_SELECTED,'tagged');				
 			},
 			
 			newGist : function(){
-				Application.vent.trigger(constants.MENU_SELECTED,'newgist');
+				Application.execute(constants.MENU_SELECTED,'newgist');
 			}
 		})
 	;

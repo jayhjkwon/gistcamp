@@ -12,7 +12,7 @@ define(function(require){
 				var self = this;
 				_.bindAll(this, 'activateMenu');
 
-				Application.vent.on(constants.MENU_SELECTED, function(menu){
+				Application.commands.setHandler(constants.MENU_SELECTED, function(menu){
 					self.activateMenu(menu);
 				});
 			},
