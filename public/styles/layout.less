@@ -1,0 +1,100 @@
+@top-height: 40px;
+@gist-list-width: 300px;
+// @files-wrapper-width: 50%;
+@comments-wrapper-width: 300px;
+@footer-height: 70px;
+
+/* layout */
+body {
+	overflow: hidden;	
+	position:absolute !important;
+	top:0;left:0;bottom:0;right:0;	
+	// font-family: 'Oxygen', sans-serif !important;
+	// font-family: 'Source Code Pro', sans-serif !important;
+}
+
+header {
+	position: absolute;
+	top:0;
+	height:@top-height;
+	left:0;
+	right:0;
+	min-width:970px;
+}
+
+#main {
+	position: absolute;
+	top:@top-height + 3px;
+	bottom:0;
+	left:10px;
+	right:0;	
+	// max-width:1024px;
+	// margin:0 auto 0 auto;
+	background-color: white;	
+
+	.main-content {
+		position: absolute;
+		top:0px;
+		bottom:@footer-height;
+		left:0;
+		right:0;		
+
+		.gist-list {
+			position: absolute;
+			top:0px;
+			bottom:0px;
+			left:0;
+			width:@gist-list-width;
+			overflow-y:auto;
+			// border-right:solid 1px #eee;
+			padding-top:10px;
+			border-right:0px solid #eee;
+		}
+
+		.files-wrapper {
+			position: absolute;
+			top:0px;
+			bottom:0px;
+			left:@gist-list-width+1px;
+			right:0;//@comments-wrapper-width;
+			background-color: white;
+			overflow-y:auto;
+			transition: right 0.3s ease-out;
+			-webkit-transition: right 0.3s ease-out;
+		}
+
+		.comments-wrapper {
+			position: fixed;	// if the position is absolute, it is scrollable in mobile browser.
+			top:@top-height;
+			bottom:@footer-height;
+			right:-@comments-wrapper-width;
+			// padding-top:-40px;
+			width:@comments-wrapper-width;
+			overflow-y:auto;
+			overflow-x:hidden;
+			transition: right 0.3s ease-out;	
+			-webkit-transition: right 0.3s ease-out;			
+
+			/*position: absolute;
+			top:0px;
+			bottom:0px;
+			left:100%;
+			margin-left:0;
+			width:@comments-wrapper-width;
+			overflow-y:auto;
+			overflow-x:hidden;
+			transition: right 0.3s ease-out;	
+			-webkit-transition: right 0.3s ease-out;			*/
+		}
+	}
+}
+
+footer {
+	position: absolute;
+	bottom:0;
+	height:@footer-height;
+	background-color: blue;
+	left:0;
+	right:0;
+	z-index: 9004;	// higher than charms
+}
