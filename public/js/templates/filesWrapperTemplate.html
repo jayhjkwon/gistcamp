@@ -9,8 +9,12 @@
     <div class="item active">
     {{else}}
     <div class="item">
-      {{/if}}
-      <pre class="prettyprint linenums">{{file_content}}</pre>
+    {{/if}}
+    {{#if isMarkdown}}
+    <pre class="prettyprint linenums">{{{file_content}}}</pre>
+    {{else}}
+    <pre class="prettyprint linenums">{{file_content}}</pre>
+    {{/if}}      
     </div>    
   {{/each}}
   </div>
