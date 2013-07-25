@@ -8,14 +8,30 @@ define(function(require){
 		constants 		= require('constants'),		
 		nicescroll 		= require('nicescroll'),
 		bootstrap 		= require('bootstrap'),
-		prettify 		= require('prettify'),		
+		prettify 		= require('prettify'),	
+		postalWrapper   = require('postalWrapper'),	
 
 		CommentsWrapperView = Marionette.Layout.extend({
 			className: 'comments',			
 			template : commentsWrapperTemplate,
+
+			initialize: function(options){
+				_.bindAll(this, 'onDomRefresh', 'onItemSelected');
+				this.subscription = postalWrapper.subscribe(constants.GIST_ITEM_SELECTED, this.onItemSelected);
+			},
+
 			onDomRefresh: function(){
 				$('.comments-wrapper').niceScroll({cursorcolor: '#eee'});
 			},
+
+			onItemSelected: function(gistItem){
+				console.log('onItemSelected in CommentsWrapperView');
+				console.dir(gistItem);
+			},
+
+			onClose: function(){
+				this.subscription.unsubscribe();
+			}
 		})
 	;
 

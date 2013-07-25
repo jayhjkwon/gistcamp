@@ -13,14 +13,15 @@ define(function(require){
 		Files           = require('models/files'),
 		service         = require('service'),
 		util            = require('util'),
+		postalWrapper   = require('postalWrapper'),
 
 		FilesWrapperView = Marionette.ItemView.extend({
 			className: 'files',			
 			template : filesWrapperTemplate,
 			
 			initialize: function(options){
-				_.bindAll(this, 'onDomRefresh', 'onFilesRefresh');
-				Application.commands.setHandler(constants.GIST_ITEM_SELECTED, this.onFilesRefresh);
+				_.bindAll(this, 'onDomRefresh', 'onItemSelected');
+				this.subscription = postalWrapper.subscribe(constants.GIST_ITEM_SELECTED, this.onItemSelected);
 			},
 			
 			onDomRefresh: function(){
@@ -32,7 +33,8 @@ define(function(require){
 				prettyPrint();
 			},
 
-			onFilesRefresh: function(files){
+			onItemSelected: function(gistItem){
+				console.log('onItemSelected in FilesWrapperView');
 				util.loadSpinner(true);
 				var self = this;
 
@@ -46,14 +48,14 @@ define(function(require){
 				  return $('<div/>').html(value).text();
 				}
 
-				var filesArray = _.toArray(files);
+				var filesArray = _.toArray(gistItem.files);
 
 				if (filesArray){
 					filesArray[0].isActive = true;
 				}
 
 				_.each(filesArray, function(file){
-					if (file.language.toLowerCase() === 'markdown'){
+					if (file.language && file.language.toLowerCase() === 'markdown'){
 						file.isMarkdown = true;
 					}
 				});
@@ -66,7 +68,7 @@ define(function(require){
 			},
 			
 			onClose: function(){
-				Application.commands.removeHandler(constants.GIST_ITEM_SELECTED);
+				this.subscription.unsubscribe();
 			}
 		})
 	;
