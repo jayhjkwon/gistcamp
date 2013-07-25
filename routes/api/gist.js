@@ -2,7 +2,8 @@ var
 	GitHubApi = require('github'),
 	config    = require('../../infra/config'),
 	request   = require('request'),
-	_         = require('underscore')
+	_         = require('underscore'),
+	moment    = require('moment')
 ;
 
 var github = new GitHubApi({

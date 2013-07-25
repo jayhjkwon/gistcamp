@@ -10,7 +10,8 @@
     "ejs": "*",
     "underscore": "*",
     "github": "~0.1.10",
-    "request": "~2.25.0"
+    "request": "~2.25.0",
+    "moment": "~2.1.0"
   },
   "devDependencies": {
     "grunt": "~0.4.1",

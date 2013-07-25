@@ -15,7 +15,8 @@ require.config({
 	    nicescroll     : '../vendor/jquery-nicescroll/jquery.nicescroll',
 	    autoGrow       : '../vendor/autogrow-textarea/jquery.autogrowtextarea',
 	    scrollTo       : '../vendor/jquery.scrollTo/jquery.scrollTo',
-        spin           : '../vendor/spin.js/spin'
+        spin           : '../vendor/spin.js/spin',
+        moment         : '../vendor/moment/moment'
 	},
 	shim: {
 		underscore: {
