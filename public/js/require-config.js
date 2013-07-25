@@ -16,7 +16,8 @@ require.config({
 	    autoGrow       : '../vendor/autogrow-textarea/jquery.autogrowtextarea',
 	    scrollTo       : '../vendor/jquery.scrollTo/jquery.scrollTo',
         spin           : '../vendor/spin.js/spin',
-        moment         : '../vendor/moment/moment'
+        moment         : '../vendor/moment/moment',
+        postal         : '../vendor/postal.js/lib/postal'
 	},
 	shim: {
 		underscore: {

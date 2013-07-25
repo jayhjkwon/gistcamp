@@ -7,6 +7,7 @@ define(function(require){
 		gistItemTemplate= require('hbs!templates/gistItemTemplate'),
 		Application 	= require('application'),
 		constants       = require('constants'),
+		postalWrapper   = require('postalWrapper'),
 		
 		GistItemView 	= Marionette.ItemView.extend({
 			template: gistItemTemplate,
@@ -25,7 +26,8 @@ define(function(require){
 				$(e.currentTarget).addClass('selected');
 				$('.comments-badge').hide().show(300);
 
-				Application.execute(constants.GIST_ITEM_SELECTED, this.model.toJSON().files);
+				// Application.execute(constants.GIST_ITEM_SELECTED, this.model.toJSON());
+				postalWrapper.publish(constants.GIST_ITEM_SELECTED, this.model.toJSON());
 			},
 		});
 
