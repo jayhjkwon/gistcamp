@@ -91,37 +91,28 @@ exports.getRawFiles = function(req, res){
 
 	var setFileContent = function(file, callback){
 		request.get(file.raw_url, function(error, response, body){	
-			file.file_content = body;
-			callback(null, file);
+			if (file.language.toLowerCase() === 'markdown'){
+				github.markdown.render({text:body}, function(err, data){
+					file.file_content = data.data;		
+					callback(null, file);
+				});
+			}else{
+				file.file_content = body;
+				callback(null, file);
+			}
+			
 		});
 	};
 
 	async.each(filesInfo, setFileContent, function(error, result){
 		var cacheSeconds = 60 * 60 * 1 // 1 hour
 		res.set({
-		  'Cache-Control': 'public, max-age=' + cacheSeconds
+		  'Cache-Control': 'public, max-age=' + cacheSeconds,
+		  // "ETag" : "054c193559e0eb2adc19e15af2c50361"
 		});
 		res.send(filesInfo);
 	});
 };
-
-/*exports.getRawFile = function(req, res){
-	var fileInfo = req.param('file');
-	
-	var a = moment();
-	
-	request.get(fileInfo.raw_url, function(error, response, body){	
-		var b = moment();
-		console.log('time: ' + a.diff(b));
-
-		fileInfo.file_content = body;
-		
-		res.send(fileInfo);
-		
-		var c = moment();
-		console.log('time: ' + b.diff(c));
-	});
-};*/
 
 exports.getRawFile = function(req, res){
 	var rawUrl = req.param('file');
@@ -141,37 +132,6 @@ exports.getRawFile = function(req, res){
 		console.log('time: ' + b.diff(c));
 	});
 };
-
-/*exports.getRawFile = function(req, res){
-	var filePath = req.param('file');
-	var filePathArray = filePath.split('/');
-	var host = filePathArray[2];
-	var path = filePath.substring(23);
-
-	var a = moment();
-	
-	var options = {
-	  host: host,
-	  path: path
-	};
-
-	var callback = function(response) {
-	  var str = '';
-
-	  response.on('data', function (chunk) {
-	    str += chunk;
-	  });
-
-	  response.on('end', function () {
-	    res.set({
-		  'Cache-Control': 'public, max-age=31536000'
-		});
-	    res.send(str);
-	  });
-	}
-
-	https.request(options, callback).end();
-};*/
 
 
 // getFollowers : people who follows me

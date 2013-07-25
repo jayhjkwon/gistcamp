@@ -52,26 +52,17 @@ define(function(require){
 					filesArray[0].isActive = true;
 				}
 
+				_.each(filesArray, function(file){
+					if (file.language.toLowerCase() === 'markdown'){
+						file.isMarkdown = true;
+					}
+				});
+
 				service.getRawFiles(filesArray, function(result){
 					self.collection = new Files(result);
 					self.render();
 					util.loadSpinner(false);
 				});
-				
-				/*service.getRawFile(filesArray[0], function(result){
-					console.log('test');
-					var html = '';
-					html = html + '<div class="item active">';
-					html = html + '<pre class="prettyprint linenums">';
-					html = html + htmlEncode(result);
-					html = html + '</pre>';
-					html = html + '</div>';
-					console.log(html);
-					$('.carousel-inner').append(html);
-				});*/
-
-				// self.collection = new Files(filesArray);
-				// self.render();
 			},
 			
 			onClose: function(){
