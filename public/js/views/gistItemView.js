@@ -19,7 +19,7 @@ define(function(require){
 			events : {
 				'click .gist-item' : 'onGistItemSelected'
 			},
-			
+
 			onGistItemSelected : function(e){
 				$('.gist-item').removeClass('selected');
 				$(e.currentTarget).addClass('selected');

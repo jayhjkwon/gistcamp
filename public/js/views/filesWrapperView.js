@@ -12,6 +12,7 @@ define(function(require){
 		File            = require('models/file'),
 		Files           = require('models/files'),
 		service         = require('service'),
+		util            = require('util'),
 
 		FilesWrapperView = Marionette.ItemView.extend({
 			className: 'files',			
@@ -32,6 +33,7 @@ define(function(require){
 			},
 
 			onFilesRefresh: function(files){
+				util.loadSpinner(true);
 				var self = this;
 
 				function htmlEncode(value){
@@ -46,27 +48,30 @@ define(function(require){
 
 				var filesArray = _.toArray(files);
 
-				if (filesArray)
+				if (filesArray){
 					filesArray[0].isActive = true;
+				}
 
-				/*service.getRawFiles(filesArray, function(result){
+				service.getRawFiles(filesArray, function(result){
 					self.collection = new Files(result);
 					self.render();
-				});*/
+					util.loadSpinner(false);
+				});
 				
-				service.getRawFile(filesArray[0], function(result){
+				/*service.getRawFile(filesArray[0], function(result){
+					console.log('test');
 					var html = '';
 					html = html + '<div class="item active">';
 					html = html + '<pre class="prettyprint linenums">';
-					html = html + htmlEncode(result.file_content);
+					html = html + htmlEncode(result);
 					html = html + '</pre>';
 					html = html + '</div>';
-
+					console.log(html);
 					$('.carousel-inner').append(html);
-				});
+				});*/
 
-				self.collection = new Files(filesArray);
-				self.render();
+				// self.collection = new Files(filesArray);
+				// self.render();
 			},
 			
 			onClose: function(){

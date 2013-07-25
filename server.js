@@ -41,7 +41,7 @@ app.get('/api/gist/public', gist.getPublicGists);
 app.get('/api/gist/user', gist.getGistListByUser);
 app.get('/api/gist/starred', gist.getStarredGists);
 app.post('/api/gist/rawfiles', gist.getRawFiles);
-app.post('/api/gist/rawfile', gist.getRawFile);
+app.get('/api/gist/rawfile', gist.getRawFile);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

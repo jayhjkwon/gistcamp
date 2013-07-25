@@ -3,7 +3,8 @@ var
 	config    = require('../../infra/config'),
 	request   = require('request'),
 	_         = require('underscore'),
-	moment    = require('moment')
+	moment    = require('moment'),
+    async     = require('async')
 ;
 
 var github = new GitHubApi({
@@ -87,42 +88,87 @@ exports.getStarredGists = function(req, res){
 
 exports.getRawFiles = function(req, res){
 	var filesInfo = req.param('files');
-	var isLast = function(file){
-		var i = _.indexOf(filesInfo, file);
-		
-		if (i === filesInfo.length - 1){
-			console.dir(filesInfo);
-			res.send(filesInfo);
-		}		
-	};
 
-	/*_.each(filesInfo, function(file){
+	var setFileContent = function(file, callback){
 		request.get(file.raw_url, function(error, response, body){	
 			file.file_content = body;
-			isLast(file);
+			callback(null, file);
 		});
-	});*/
+	};
 
-	for(var i=0, len = filesInfo.length; i<len; i++){
-		(function(i){
-			request.get(filesInfo[i].raw_url, function(error, response, body){	
-			var f = filesInfo[i];
-			f.file_content = body;
-			if (i === len-1)
-				res.send(filesInfo);
-			})
-		})(i);
-	}
-};
-
-exports.getRawFile = function(req, res){
-	var fileInfo = req.param('file');
-	
-	request.get(fileInfo.raw_url, function(error, response, body){	
-		fileInfo.file_content = body;
-		res.send(fileInfo);
+	async.each(filesInfo, setFileContent, function(error, result){
+		res.send(filesInfo);
 	});
 };
+
+/*exports.getRawFile = function(req, res){
+	var fileInfo = req.param('file');
+	
+	var a = moment();
+	
+	request.get(fileInfo.raw_url, function(error, response, body){	
+		var b = moment();
+		console.log('time: ' + a.diff(b));
+
+		fileInfo.file_content = body;
+		
+		res.send(fileInfo);
+		
+		var c = moment();
+		console.log('time: ' + b.diff(c));
+	});
+};*/
+
+exports.getRawFile = function(req, res){
+	var rawUrl = req.param('file');
+	
+	var a = moment();
+	
+	request.get(rawUrl, function(error, response, body){	
+		var b = moment();
+		console.log('time: ' + a.diff(b));
+
+		res.set({
+		  'Cache-Control': 'public, max-age=31536000'
+		});
+		res.send(body);
+		
+		var c = moment();
+		console.log('time: ' + b.diff(c));
+	});
+};
+
+/*exports.getRawFile = function(req, res){
+	var filePath = req.param('file');
+	var filePathArray = filePath.split('/');
+	var host = filePathArray[2];
+	var path = filePath.substring(23);
+
+	var a = moment();
+	
+	var options = {
+	  host: host,
+	  path: path
+	};
+
+	var callback = function(response) {
+	  var str = '';
+
+	  response.on('data', function (chunk) {
+	    str += chunk;
+	  });
+
+	  response.on('end', function () {
+	    res.set({
+		  'Cache-Control': 'public, max-age=31536000'
+		});
+	    res.send(str);
+	  });
+	}
+
+	https.request(options, callback).end();
+};*/
+
 
 // getFollowers : people who follows me
 // getFollowingFromUser, getFollowing : people who I follow

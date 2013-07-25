@@ -1,6 +1,6 @@
-require(['jquery', 'application', 'router', 'views/shellView', 'views/topView', 'views/footerView', 
+require(['jquery', 'underscore', 'application', 'router', 'views/shellView', 'views/topView', 'views/footerView', 
 	'bootstrap', 'prettify', 'nicescroll', 'autoGrow', 'scrollTo'], 
-	function($, Application, Router, shellView, topView, footerView){
+	function($, _, Application, Router, shellView, topView, footerView){
 
 	$(function(){
 		var el = shellView.render().el;
@@ -137,6 +137,7 @@ require(['jquery', 'application', 'router', 'views/shellView', 'views/topView', 
 		    		$(prevGist).addClass('selected');
 		    		if (!isScrolledIntoView('.gist-list', '.gist-list .gist-item.selected'))
 		    			$('.gist-list').scrollTo($(prevGist));
+		    		$(prevGist).trigger('click');
 
 		    		break;
 				case 40 : 	// arrow-down key
@@ -148,6 +149,7 @@ require(['jquery', 'application', 'router', 'views/shellView', 'views/topView', 
 		    		$(nextGist).addClass('selected');
 		    		if (!isScrolledIntoView('.gist-list', '.gist-list .gist-item.selected'))
 		   				$('.gist-list').scrollTo($(nextGist));
+	   				$(nextGist).trigger('click');
 
 		   			break;
 				case 37 : 	// arrow-left key
