@@ -4,7 +4,7 @@ define(function(require){
 
 		getRawFiles = function(filesInfo, callback){
 			$.ajax({
-				type: "POST",
+				type: "GET",
 			  	url: "/api/gist/rawfiles",
 			  	data: {files: filesInfo},
 			  	dataType: 'json'
