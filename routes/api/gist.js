@@ -97,6 +97,10 @@ exports.getRawFiles = function(req, res){
 	};
 
 	async.each(filesInfo, setFileContent, function(error, result){
+		var cacheSeconds = 60 * 60 * 1 // 1 hour
+		res.set({
+		  'Cache-Control': 'public, max-age=' + cacheSeconds
+		});
 		res.send(filesInfo);
 	});
 };

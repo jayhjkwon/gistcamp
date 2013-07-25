@@ -40,7 +40,7 @@ app.delete('/api/users/:id', user.removeUser);
 app.get('/api/gist/public', gist.getPublicGists);
 app.get('/api/gist/user', gist.getGistListByUser);
 app.get('/api/gist/starred', gist.getStarredGists);
-app.post('/api/gist/rawfiles', gist.getRawFiles);
+app.get('/api/gist/rawfiles', gist.getRawFiles);
 app.get('/api/gist/rawfile', gist.getRawFile);
 
 http.createServer(app).listen(app.get('port'), function(){
