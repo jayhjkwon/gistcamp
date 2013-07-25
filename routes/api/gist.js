@@ -99,19 +99,20 @@ exports.getRawFiles = function(req, res){
 			}else{
 				file.file_content = body;
 				callback(null, file);
-			}
-			
+			}			
 		});
 	};
 
-	async.each(filesInfo, setFileContent, function(error, result){
+	var sendFiles = function(error, result){
 		var cacheSeconds = 60 * 60 * 1 // 1 hour
 		res.set({
 		  'Cache-Control': 'public, max-age=' + cacheSeconds,
 		  // "ETag" : "054c193559e0eb2adc19e15af2c50361"
 		});
 		res.send(filesInfo);
-	});
+	};
+
+	async.each(filesInfo, setFileContent, sendFiles);
 };
 
 exports.getRawFile = function(req, res){

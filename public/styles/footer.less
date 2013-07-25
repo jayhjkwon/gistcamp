@@ -1,0 +1,100 @@
+/* footer */
+footer {	
+	background-color: lighten(#1b1b1b, 3%);
+	.command-buttons {
+		margin-top:10px;
+		text-align: center;
+	}
+
+	.btn-command-wrapper {
+		cursor:pointer;
+		width:60px !important;
+		display:inline-block;
+		position:relative;
+		&:hover .icon-circle {
+			color:lighten(#000, 70%);
+		}
+		.btn-command{
+			font-size:20px;			
+		}
+		.lbl-command{
+			color:#fff;
+			font-size:11px;
+			margin-top:-2px;
+		}		
+	}
+
+	button.btn-search{
+		border: 2px solid gray !important;
+	}
+
+	/*.win-command.search {
+		margin-top:20px;
+	}
+	.win-commandicon{
+		width:30px;
+		height:30px;
+		line-height:30px;
+		font-size:18px;
+	}
+
+	button.win-command{
+		position:relative;
+	}*/
+	.comments-badge {
+		position:absolute;
+		left:37px;
+		top:-5px;
+		border-radius:0;
+		-webkit-border-radius:0;
+	}
+
+	.popover {
+		// z-index: 300;
+		.popover-title{
+			color:black;
+		}
+		.popover-content{
+			padding: 0;
+
+		}
+
+		.add-tag{						
+			ul {
+				list-style: none;
+				margin:0;
+			}
+
+			li {
+				height: 20px;
+				border-bottom: 1px solid #eee;
+				padding:10px 20px 5px 20px;
+				
+				&:last-child{
+					height: 30px;
+					padding: 5px 20px;
+					input[type=text] {
+						height: 20px;
+					}
+				}
+
+				&:hover {
+					font-weight: bold;	
+				}
+
+				a {
+					color: black;
+					font-size:12px !important;
+				}
+			}
+		}
+	}
+}
+
+.hide-comments-badge{
+	opacity:0.0;	
+}
+
+.show-comments-badge{
+	opacity:1;
+}

@@ -10,10 +10,12 @@ define(function(require){
 		bootstrap 		= require('bootstrap'),
 		prettify 		= require('prettify'),	
 		postalWrapper   = require('postalWrapper'),	
+		CommentItemView = require('./commentItemView'),
 
-		CommentsWrapperView = Marionette.Layout.extend({
+		CommentsWrapperView = Marionette.CompositeView.extend({
 			className: 'comments',			
 			template : commentsWrapperTemplate,
+			itemView : CommentItemView,
 
 			initialize: function(options){
 				_.bindAll(this, 'onDomRefresh', 'onItemSelected');
