@@ -1,6 +1,6 @@
 @top-height: 40px;
 @gist-list-width: 300px;
-// @center-width: 50%;
+// @files-wrapper-width: 50%;
 @comments-wrapper-width: 300px;
 @footer-height: 70px;
 
@@ -51,7 +51,7 @@ header {
 			border-right:0px solid #eee;
 		}
 
-		.center {
+		.files-wrapper {
 			position: absolute;
 			top:0px;
 			bottom:0px;
@@ -254,7 +254,7 @@ header {
 }
 
 
-/* center */
+/* files-wrapper */
 
 .pivot-headers {
 	margin:10px 0 15px 0;
@@ -368,6 +368,7 @@ footer {
 		cursor:pointer;
 		width:60px !important;
 		display:inline-block;
+		position:relative;
 		&:hover .icon-circle {
 			color:lighten(#000, 70%);
 		}
@@ -378,14 +379,14 @@ footer {
 			color:#fff;
 			font-size:11px;
 			margin-top:-2px;
-		}
+		}		
 	}
 
 	button.btn-search{
 		border: 2px solid gray !important;
 	}
 
-	.win-command.search {
+	/*.win-command.search {
 		margin-top:20px;
 	}
 	.win-commandicon{
@@ -397,11 +398,13 @@ footer {
 
 	button.win-command{
 		position:relative;
-	}
+	}*/
 	.comments-badge {
 		position:absolute;
-		left:45px;
+		left:37px;
 		top:-5px;
+		border-radius:0;
+		-webkit-border-radius:0;
 	}
 
 	.popover {
