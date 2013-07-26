@@ -33,15 +33,13 @@ app.get('/', pages.index); // redirect to welcome page if no session
 app.get('/welcome', pages.welcome);
 
 // restful services
-app.get('/api/users', user.getUserList);
 app.get('/api/users/:id', user.getUser);
-app.post('/api/users', user.save);
-app.delete('/api/users/:id', user.removeUser);
 app.get('/api/gist/public', gist.getPublicGists);
 app.get('/api/gist/user', gist.getGistListByUser);
 app.get('/api/gist/starred', gist.getStarredGists);
 app.get('/api/gist/rawfiles', gist.getRawFiles);
 app.get('/api/gist/rawfile', gist.getRawFile);
+app.get('/api/gist/:gistId/comments', gist.getComments);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

@@ -70,6 +70,9 @@ define(function(require){
 				// register scroll event handler, this shuld be registered after view rendered
 				$('.gist-list').off('scroll').on('scroll', this.onScroll);
 			},
+			onDomRefresh: function(){
+				util.loadSpinner(false);
+			},
 			onScroll : function(){
 				var w = $('.gist-list');
 				if(w.scrollTop() + w.height() == $('.gist-item-container').height()) {
