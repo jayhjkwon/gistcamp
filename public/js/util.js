@@ -15,11 +15,21 @@ define(function(require){
 				spinner.stop();					
 				$('.loadSpinner').remove();
 			}
+		},
+
+		htmlEncode = function (value){
+		  return $('<div/>').text(value).html();
+		},
+
+		htmlDecode = function (value){
+		  return $('<div/>').html(value).text();
 		}
 	;
 
 
 	return {
-		loadSpinner : loadSpinner
+		loadSpinner : loadSpinner,
+		htmlEncode  : htmlEncode,
+		htmlDecode  : htmlDecode
 	};
 });

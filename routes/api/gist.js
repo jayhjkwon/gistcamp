@@ -6,6 +6,7 @@ var
 	moment    = require('moment'),
     async     = require('async')
 ;
+var accessToken = '2fdd28703ec694d5d39084ca424a6466510f2c7d';
 
 var github = new GitHubApi({
 	version: '3.0.0'
@@ -13,7 +14,7 @@ var github = new GitHubApi({
 
 github.authenticate({
 	type: 'oauth',
-	token: '7a42d72331c2d19a1dc6a47b01c227d267d71e36'
+	token: accessToken
 });
 
 var getNextPage = function(linkHeader, res){
@@ -131,6 +132,36 @@ exports.getRawFile = function(req, res){
 		
 		var c = moment();
 		console.log('time: ' + b.diff(c));
+	});
+};
+
+exports.getComments = function(req, res){
+	var gistId = req.params.gistId;
+	var comments = [];
+
+	var setUserName = function(comment, callback){
+		comments.push(comment);
+		var url = config.options.githubHost + '/users/' + comment.user.login + '?access_token=' + accessToken; 
+		request.get(url, function(err, data){
+			var user = JSON.parse(data.body);
+			comment.user.user_name = user.name;
+			callback(null, comments);
+		});
+	};
+
+	request.get(config.options.githubHost + '/gists/' + gistId + '/comments?access_token=' + accessToken, function(error, response, body){
+		if (body){
+			comments = JSON.parse(body);
+			async.each(JSON.parse(body), setUserName, function(error, result){
+				var cacheSeconds = 60 * 60 * 1 // 1 hour				
+				res.set({
+				  'Cache-Control': 'public, max-age=' + cacheSeconds
+				});
+				res.send(comments);
+			});
+		}else{
+			res.send(comments);
+		}		
 	});
 };
 

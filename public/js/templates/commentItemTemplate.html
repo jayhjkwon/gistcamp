@@ -1,8 +1,8 @@
 <div class="commenter-photo">
-	<img src="https://secure.gravatar.com/avatar/af19ab2bc64a6df17b1db58005424473?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png&s=40"/>
+	<img src="{{user.avatar_url}}" style="width:40px;height:40px;"/>
 </div>  
 <div class="comment-content">
-	<div class="commenter"><span class="commenter-name">Scott Hanselman</span> / shanselman</div>
-	<div class="date-write">3 hours ago</div>
-	<div class="comment-text">Hello Ray, what a great job! awesome, keep up the fire!!</div>
+	<div class="commenter"><span class="commenter-name">{{user.login}}</span> / {{user.user_name}}</div>
+	<div class="date-write">{{updated_at}}</div>
+	<p class="comment-text">{{{body}}}</p>
 </div>

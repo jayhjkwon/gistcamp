@@ -7,9 +7,10 @@ define(function(require){
 			model: CommentItem,
 			initialize: function(props){
 				console.log('CommentItemList Collection initialized');
+				this.gistId = props ? props.gistId || '' : '';
 			},
 			url : function(){
-				return '/api/gist/comments';	
+				return '/api/gist/' + this.gistId + '/comments';
 			}
 		})
 	;
