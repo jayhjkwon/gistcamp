@@ -16,6 +16,7 @@ define(function(require){
 			className: 'comments',			
 			template : commentsWrapperTemplate,
 			itemView : CommentItemView,
+			ItemViewContainer: 'div.comment-list',
 
 			initialize: function(options){
 				_.bindAll(this, 'onDomRefresh', 'onItemSelected');

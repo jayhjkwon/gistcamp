@@ -7,6 +7,9 @@ define(function(require){
 			model: File,
 			initialize: function(props){
 				console.log('Files Collection initialized');
+			},
+			url : function(){
+				return "/api/gist/rawfiles";
 			}
 		})
 	;

@@ -60,11 +60,18 @@ define(function(require){
 					}
 				});
 
-				service.getRawFiles(filesArray, function(result){
+				self.collection = new Files();
+				self.collection.fetch({data: {files: filesArray}})
+					.done(function(){
+						self.render();
+						util.loadSpinner(false);	
+					});
+
+				/*service.getRawFiles(filesArray, function(result){
 					self.collection = new Files(result);
 					self.render();
 					util.loadSpinner(false);
-				});
+				});*/
 			},
 			
 			onClose: function(){

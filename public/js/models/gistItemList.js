@@ -6,7 +6,7 @@ define(function(require){
 		GistItemList	= Backbone.Collection.extend({
 			model: GistItem,
 			initialize: function(props){
-				console.log('GistItemList model initialized');
+				console.log('GistItemList Collection initialized');
 				this.gistDataMode = props ? props.gistDataMode || '' : '';
 			},
 			url : function(){
