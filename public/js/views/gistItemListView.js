@@ -71,7 +71,7 @@ define(function(require){
 				$('.gist-list').off('scroll').on('scroll', this.onScroll);
 			},
 			onDomRefresh: function(){
-				util.loadSpinner(false);
+				// util.loadSpinner(false);
 			},
 			onScroll : function(){
 				var w = $('.gist-list');

@@ -107,7 +107,7 @@ exports.getRawFiles = function(req, res){
 	var sendFiles = function(error, result){
 		var cacheSeconds = 60 * 60 * 1 // 1 hour
 		res.set({
-		  'Cache-Control': 'public, max-age=' + cacheSeconds,
+		  // 'Cache-Control': 'public, max-age=' + cacheSeconds,
 		  // "ETag" : "054c193559e0eb2adc19e15af2c50361"
 		});
 		res.send(filesInfo);
@@ -155,7 +155,7 @@ exports.getComments = function(req, res){
 			async.each(JSON.parse(body), setUserName, function(error, result){
 				var cacheSeconds = 60 * 60 * 1 // 1 hour				
 				res.set({
-				  'Cache-Control': 'public, max-age=' + cacheSeconds
+				  // 'Cache-Control': 'public, max-age=' + cacheSeconds
 				});
 				res.send(comments);
 			});
@@ -163,6 +163,19 @@ exports.getComments = function(req, res){
 			res.send(comments);
 		}		
 	});
+};
+
+exports.createComment = function(req, res){
+	var gistId = req.params.gistId;
+	var commentText = req.param('commentText');
+	
+	request.post(config.options.githubHost + '/gists/' + gistId + '/comments?access_token=' + accessToken, 
+		{form: {bldy: commentText}},
+		function(error, response, body){
+			console.log(body);
+			res.send(body);
+		}		
+	);	
 };
 
 
