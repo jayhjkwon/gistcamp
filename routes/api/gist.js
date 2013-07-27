@@ -168,12 +168,29 @@ exports.getComments = function(req, res){
 exports.createComment = function(req, res){
 	var gistId = req.params.gistId;
 	var commentText = req.param('commentText');
+
+	var setUserName = function(comment, callback){
+		var url = config.options.githubHost + '/users/' + comment.user.login + '?access_token=' + accessToken; 
+		request.get(url, function(err, data){
+			var user = JSON.parse(data.body);
+			comment.user.user_name = user.name;
+			callback(null, comments);
+		});
+	};
 	
-	request.post(config.options.githubHost + '/gists/' + gistId + '/comments?access_token=' + accessToken, 
-		{form: {bldy: commentText}},
+	request.post({
+		uri: config.options.githubHost + '/gists/' + gistId + '/comments?access_token=' + accessToken, 
+		body: JSON.stringify({body: commentText})
+	},
 		function(error, response, body){
-			console.log(body);
-			res.send(body);
+			//get user name
+			var comment = JSON.parse(body);
+			var url = config.options.githubHost + '/users/' + comment.user.login + '?access_token=' + accessToken; 
+			request.get(url, function(err, data){
+				var user = JSON.parse(data.body);
+				comment.user.user_name = user.name;
+				res.send(comment);
+			});		
 		}		
 	);	
 };
