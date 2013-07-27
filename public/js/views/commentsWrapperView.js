@@ -21,21 +21,47 @@ define(function(require){
 			template : commentsWrapperTemplate,
 			itemView : CommentItemView,
 			itemViewContainer: '.comment-list',
+			selectedGistItem : {},
 
 			initialize: function(options){
-				_.bindAll(this, 'onDomRefresh', 'onItemSelected');
+				_.bindAll(this, 'onDomRefresh', 'onItemSelected', 'onCommentInputKeypress');
 				this.spinner = new Spinner({length:7});
 				this.subscription = postalWrapper.subscribe(constants.GIST_ITEM_SELECTED, this.onItemSelected);
+			},
+
+			events: {
+				'keydown #comment-input' : 'onCommentInputKeypress'
 			},
 
 			onDomRefresh: function(){
 				$('.comments-wrapper').niceScroll({cursorcolor: '#eee'});
 			},
 
+			onCommentInputKeypress : function(e){
+				var self = this;
+				var keyCode = e.keyCode || e.which;
+		    	if (keyCode === 13){
+		    		self.loading(true);
+		    		var text = $('#comment-input').val();
+		    		var comment = new CommentItem({gistId: this.selectedGistItem.id, commentText: text});
+		    		comment.save()
+		    		.done(function(data){
+		    			console.dir(data);
+		    			self.collection.add(data);
+		    			self.render();
+		    		})
+		    		.always(function(){
+		    			self.loading(false);
+		    		});
+		    	}
+			},
+
 			onItemSelected: function(gistItem){
 				var self = this;
 				console.log('onItemSelected in CommentsWrapperView');
 				console.dir(gistItem);				
+
+				self.selectedGistItem = gistItem;
 
 				if (gistItem.comments == 0){
 					if (self.collection){
