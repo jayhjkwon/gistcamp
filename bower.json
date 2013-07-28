@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "dependencies": {
     "jquery": "1.9.0",
-    "bootstrap": "*",
+    "bootstrap": "2.3.2",
     "underscore": "*",
     "backbone": "*",
     "marionette": "*",
@@ -13,10 +13,9 @@
     "require-handlebars-plugin": "*",
     "requirejs-domready": "*",
     "handlebars.js": "*",
-    "autogrow-textarea": "*",
-    "jquery-nicescroll": "*",
     "modernizr": "~2.6.2",
     "jquery.scrollTo": "~1.4.5",
-    "bootmetro": "*"
+    "bootmetro": "*",
+    "ace": "~v1.1.1"
   }
 }

@@ -15,7 +15,8 @@ require.config({
 	    nicescroll     : '../vendor/jquery-nicescroll/jquery.nicescroll',
 	    autoGrow       : '../vendor/autogrow-textarea/jquery.autogrowtextarea',
 	    scrollTo       : '../vendor/jquery.scrollTo/jquery.scrollTo',
-        postal         : '../vendor/postal.js/lib/postal'
+        postal         : '../vendor/postal.js/lib/postal',
+        aceeditor      : '../vendor/ace/lib/ace/ace'
 	},
 	shim: {
 		underscore: {

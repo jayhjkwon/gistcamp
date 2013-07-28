@@ -4,7 +4,8 @@ define(function(require){
 		Application = require('application'),
 		GistListView = require('views/gistListView'),
 		shellView = require('views/shellView'),
-		constants = require('constants')
+		constants = require('constants'),
+		CreateGistView = require('views/createGistView')
 	;
 
 	var
@@ -35,6 +36,7 @@ define(function(require){
 				Application.vent.trigger(constants.MENU_SELECTED,'tagged');				
 			},
 			newGist : function(){
+				shellView.main.show(new CreateGistView({currentSelectedMenu:'newgist'}));
 				Application.vent.trigger(constants.MENU_SELECTED,'newgist');
 			}
 		})
