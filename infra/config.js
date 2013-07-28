@@ -1,4 +1,6 @@
 exports.options = {
 	env : 'development',
-	// env : 'production'
+	// env : 'production',
+	perPage : 10,
+	githubHost: 'https://api.github.com'
 };

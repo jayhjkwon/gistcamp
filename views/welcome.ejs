@@ -10,7 +10,28 @@
       <link rel='stylesheet' href='styles/welcome.min.css?v=<%= appVersion %>' />
     <% } %>
   </head>
-  <body> 	
+  <body>
+
+    <div class="contents">
+      <div class="div-power">1</div>
+      <div class="div-light">2</div>
+      <div class="div-bag">3</div>
+      <div class="div-person">4</div>
+    </div>
+
+    <div class="menu">
+      <img src="images/power.gif" class="img-power"/>
+      <img src="images/light.gif" class="img-light"/>
+      <img src="images/bag.gif" class="img-bag"/>
+      <img src="images/person.gif" class="img-person"/>
+      <div class="menu-bottom">
+    </div>
+    <div class="headers"> 
+        <img src="images/logo.gif" class="img-logo"/> 
+
+    </div>
+
+
   <% if (devMode === 'development') { %>
       <script src="vendor/jquery/jquery.min.js"></script>
       <script src="js/welcome.js?modified_time=<%= (new Date()).getTime() %>"></script>

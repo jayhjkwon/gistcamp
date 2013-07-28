@@ -1,43 +1,136 @@
 define(function(require){
 	var 
+<<<<<<< HEAD
 		Marionette = require('marionette'),
 		Application = require('application'),
 		GistListView = require('views/gistListView'),
 		shellView = require('views/shellView'),
 		constants = require('constants'),
 		CreateGistView = require('views/createGistView')
+=======
+		_   				= require('underscore'),
+		Marionette 			= require('marionette'),
+		Application 		= require('application'),
+		GistListView 		= require('views/gistListView'),
+		GistItemListView 	= require('views/gistItemListView'),
+		shellView 			= require('views/shellView'),		
+		constants 			= require('constants'),
+		FilesWrapperView    = require('views/filesWrapperView'),
+		CommentsWrapperView = require('views/CommentsWrapperView')
+>>>>>>> 4264bac10442fe96803d5adbb9168be9a3da66f1
 	;
 
 	var
 		Controller = Marionette.Controller.extend({
+			initialize: function(){
+				var self = this;
+			},
+
+			onClose: function(){
+			},
+
 			home : function(){
-				shellView.main.show(new GistListView({currentSelectedMenu: 'home'}));
-				Application.vent.trigger(constants.MENU_SELECTED,'home');
+				// LayoutView with regions
+				var gistListView = new GistListView({currentSelectedMenu: 'home'});
+				shellView.main.show(gistListView);
+
+				// Gist Item on the left region
+				var gistItemListView = new GistItemListView;
+				gistItemListView.getPublicGistList();				
+				gistListView.gistItemList.show(gistItemListView);
+
+				// Gist Files on the center region
+				var filesWrapperView = new FilesWrapperView;
+				gistListView.filesWrapper.show(filesWrapperView);
+
+				// Comments on the right region
+				var commentsWrapperView = new CommentsWrapperView;
+				gistListView.commentsWrapper.show(commentsWrapperView);
+
+				Application.execute(constants.MENU_SELECTED,'home');
 			},
+			
 			following : function(){
-				shellView.main.show(new GistListView({currentSelectedMenu: 'following'}));
-				Application.vent.trigger(constants.MENU_SELECTED,'following');				
+				// LayoutView with regions
+				var gistListView = new GistListView({currentSelectedMenu: 'following'});
+				shellView.main.show(gistListView);
+
+				// Gist Item on the left region
+				var gistItemListView = new GistItemListView;
+				gistItemListView.getGistListByUser();				
+				gistListView.gistItemList.show(gistItemListView);
+
+				// Gist Files on the center region
+				var filesWrapperView = new FilesWrapperView;
+				gistListView.filesWrapper.show(filesWrapperView);
+
+				// Comments on the right region
+				var commentsWrapperView = new CommentsWrapperView;
+				gistListView.commentsWrapper.show(commentsWrapperView);
+
+				Application.execute(constants.MENU_SELECTED,'following');
 			},
+			
 			myGists : function(){
-				shellView.main.show(new GistListView({currentSelectedMenu: 'mygists'}));
-				Application.vent.trigger(constants.MENU_SELECTED,'mygists');
+				// LayoutView with regions
+				var gistListView = new GistListView({currentSelectedMenu: 'mygists'});
+				shellView.main.show(gistListView);
+
+				// Gist Item on the left region
+				var gistItemListView = new GistItemListView;
+				gistItemListView.getGistListByUser();				
+				gistListView.gistItemList.show(gistItemListView);
+
+				// Gist Files on the center region
+				var filesWrapperView = new FilesWrapperView;
+				gistListView.filesWrapper.show(filesWrapperView);
+
+				// Comments on the right region
+				var commentsWrapperView = new CommentsWrapperView;
+				gistListView.commentsWrapper.show(commentsWrapperView);
+
+				Application.execute(constants.MENU_SELECTED,'mygists');
 			},
+			
 			starred : function(){
-				shellView.main.show(new GistListView({currentSelectedMenu: 'starred'}));
-				Application.vent.trigger(constants.MENU_SELECTED,'starred');
+				// LayoutView with regions
+				var gistListView = new GistListView({currentSelectedMenu: 'starred'});
+				shellView.main.show(gistListView);
+
+				// Gist Item on the left region
+				var gistItemListView = new GistItemListView;
+				gistItemListView.getStarredGistList();				
+				gistListView.gistItemList.show(gistItemListView);
+
+				// Gist Files on the center region
+				var filesWrapperView = new FilesWrapperView;
+				gistListView.filesWrapper.show(filesWrapperView);
+
+				// Comments on the right region
+				var commentsWrapperView = new CommentsWrapperView;
+				gistListView.commentsWrapper.show(commentsWrapperView);
+
+				Application.execute(constants.MENU_SELECTED,'starred');
 			},
+			
 			forked : function(){
 				shellView.main.show(new GistListView({currentSelectedMenu: 'forked'}));
-				Application.vent.trigger(constants.MENU_SELECTED,'forked');
+				Application.execute(constants.MENU_SELECTED,'forked');
 			},
+			
 			tagged : function(tag){
 				// console.log(tag);
 				shellView.main.show(new GistListView({currentSelectedMenu: 'tagged', tag: tag}));
-				Application.vent.trigger(constants.MENU_SELECTED,'tagged');				
+				Application.execute(constants.MENU_SELECTED,'tagged');				
 			},
+			
 			newGist : function(){
+<<<<<<< HEAD
 				shellView.main.show(new CreateGistView({currentSelectedMenu:'newgist'}));
 				Application.vent.trigger(constants.MENU_SELECTED,'newgist');
+=======
+				Application.execute(constants.MENU_SELECTED,'newgist');
+>>>>>>> 4264bac10442fe96803d5adbb9168be9a3da66f1
 			}
 		})
 	;

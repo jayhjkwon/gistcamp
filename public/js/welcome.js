@@ -1,0 +1,4 @@
+
+$("#btnLogin").click(function() {
+alert("...");
+});

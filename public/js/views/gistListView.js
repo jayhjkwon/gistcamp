@@ -1,12 +1,14 @@
 define(function(require){
 	var
-		$ = require('jquery'),
-		_ = require('underscore'),
-		Marionette = require('marionette'),
-		gistListTemplate = require('hbs!templates/gistListTemplate'),
-		Application = require('application'),
-		constants = require('constants'),		
-		nicescroll = require('nicescroll'),
+		$ 				= require('jquery'),
+		_ 				= require('underscore'),
+		Marionette 		= require('marionette'),
+		gistListTemplate= require('hbs!templates/gistListTemplate'),
+		Application 	= require('application'),
+		constants 		= require('constants'),		
+		nicescroll 		= require('nicescroll'),
+		bootstrap 		= require('bootstrap'),
+		prettify 		= require('prettify'),		
 
 		GistListView = Marionette.Layout.extend({
 			currentSelectedMenu : '',
@@ -15,7 +17,7 @@ define(function(require){
 				var self = this;
 				console.log('GistListView initialized');
 
-				_.bindAll(this, 'onClose');
+				_.bindAll(this, 'onClose', 'onDomRefresh');
 
 				if (this.options.currentSelectedMenu)
 					self.currentSelectedMenu = this.options.currentSelectedMenu;
@@ -28,22 +30,23 @@ define(function(require){
 			
 			template : gistListTemplate,
 
-			events : {
-				'click .gist-item' : 'onGistItemSelected'
+			regions : {
+				gistItemList    : '#gist-item-list',
+				filesWrapper    : '#files-wrapper',
+				commentsWrapper : '#comments-wrapper'
 			},
 
-			onGistItemSelected : function(e){
-				$('.gist-item').removeClass('selected');
-				$(e.currentTarget).addClass('selected');
-				$('.comments-badge').hide().show(500);
+			events : {
+				'click .pivot-headers a' : 'onFileNameClicked'
 			},
 
 			onDomRefresh: function(){
-				// Application.vent.on(constants.MENU_SELECTED, this.onMenuChanged);
+			},
 
-				$('.gist-list').niceScroll({cursorcolor: '#eee'});
-				$('.center').niceScroll({cursorcolor: '#eee'});
-				$('.comments-wrapper').niceScroll({cursorcolor: '#eee'});
+			onFileNameClicked : function(e){
+				e.preventDefault();
+		    	$('.pivot-headers a').removeClass('active');
+		    	$(e.currentTarget).addClass('active');
 			},
 
 			onMenuChanged: function(){
@@ -51,7 +54,6 @@ define(function(require){
 			},
 
 			onClose: function(){
-				// Application.vent.off(constants.MENU_SELECTED, this.onMenuChanged);	
 			}
 		})
 	;

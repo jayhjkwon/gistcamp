@@ -3,7 +3,7 @@ define(function(require){
 		Backbone = require('backbone'),
 		
 		User = Backbone.Model.extend({
-			urlRoot : '/rest/users/',
+			urlRoot : '/api/users/',
 			url 	: function(){ 
 				if (this.id){
 					return this.urlRoot + this.id; 

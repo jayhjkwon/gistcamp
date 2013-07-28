@@ -15,8 +15,14 @@ require.config({
 	    nicescroll     : '../vendor/jquery-nicescroll/jquery.nicescroll',
 	    autoGrow       : '../vendor/autogrow-textarea/jquery.autogrowtextarea',
 	    scrollTo       : '../vendor/jquery.scrollTo/jquery.scrollTo',
+<<<<<<< HEAD
         postal         : '../vendor/postal.js/lib/postal',
         aceeditor      : '../vendor/ace/lib/ace/ace'
+=======
+        spin           : '../vendor/spin.js/spin',
+        moment         : '../vendor/moment/moment',
+        postal         : '../vendor/postal.js/lib/postal'
+>>>>>>> 4264bac10442fe96803d5adbb9168be9a3da66f1
 	},
 	shim: {
 		underscore: {
@@ -48,7 +54,11 @@ require.config({
 	},
 	hbs : {
 		templateExtension : 'html',
-	    disableI18n : true
+	    disableI18n : true,
+        helperPathCallback: function(name){
+            // set path for handlebar helpers
+            return 'templates/helpers/' + name;
+        }
 	}/*,
     urlArgs: 'modified_time=' +  (new Date()).getTime()*/
 });

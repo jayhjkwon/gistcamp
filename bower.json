@@ -2,11 +2,19 @@
   "name": "gistcamp",
   "version": "0.0.1",
   "dependencies": {
+<<<<<<< HEAD
     "jquery": "1.9.0",
     "bootstrap": "2.3.2",
     "underscore": "*",
     "backbone": "*",
     "marionette": "*",
+=======
+    "jquery": "1.9.1",
+    "bootstrap": "2.3.2",
+    "underscore": "1.5.1",
+    "backbone": "1.0.0",
+    "marionette": "1.0.4",
+>>>>>>> 4264bac10442fe96803d5adbb9168be9a3da66f1
     "font-awesome": "*",
     "toastr": "*",
     "requirejs": "*",
@@ -15,7 +23,13 @@
     "handlebars.js": "*",
     "modernizr": "~2.6.2",
     "jquery.scrollTo": "~1.4.5",
+<<<<<<< HEAD
     "bootmetro": "*",
     "ace": "~v1.1.1"
+=======
+    "spin.js": "~1.3.0",
+    "moment": "~2.1.0",
+    "postal.js": "~0.8.4"
+>>>>>>> 4264bac10442fe96803d5adbb9168be9a3da66f1
   }
 }

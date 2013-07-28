@@ -1,0 +1,21 @@
+<div id="pivot" class="carousel slide">
+  <div class="pivot-headers">
+    {{#fileNames items}}
+    {{/fileNames}}
+  </div>
+  <div class="carousel-inner">
+  {{#each items}}
+    {{#if isActive}}
+    <div class="item active">
+    {{else}}
+    <div class="item">
+    {{/if}}
+    {{#if isMarkdown}}
+    <pre class="prettyprint">{{{file_content}}}</pre>
+    {{else}}
+    <pre class="prettyprint linenums">{{file_content}}</pre>
+    {{/if}}      
+    </div>    
+  {{/each}}
+  </div>
+</div>

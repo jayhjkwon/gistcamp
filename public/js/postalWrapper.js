@@ -1,19 +1,28 @@
 define(function(require){
 	var 
-		postal = require('postal'),
-		channel = postal.channel(),
+		constants = require('constants'),		
+		postal    = require('postal'),
 
-		pub = function(topic, data){
-			channel.publish(topic, data);
+		publish = function(topic, data) {
+		  return postal.publish({
+		    channel: constants.channels.APPLICATION,
+		    topic  : topic,
+		    data   : data
+		  });
 		},
 
-		sub = function(topic, callback){
-			channel.subscribe(topic, callback);
+		subscribe = function(topic, callback) {
+		  return postal.subscribe({
+		    channel : constants.channels.APPLICATION,
+		    topic   : topic,
+		    callback: callback
+		  });
 		}
 	;
 
 	return {
-		pub : pub,
-		sub : sub
+		publish   : publish,
+		subscribe : subscribe
 	};
 });
+

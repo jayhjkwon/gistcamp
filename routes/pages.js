@@ -4,6 +4,10 @@ var
 ;
 
 exports.index = function(req, res){
+  var code = req.param('code') ; 
+  console.log(code);
+
+
   res.render('index', { 
   	title: 'Welcome to GistCamp',
   	devMode: config.options.env,
