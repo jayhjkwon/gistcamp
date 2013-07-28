@@ -143,8 +143,10 @@ exports.getComments = function(req, res){
 		comments.push(comment);
 		var url = config.options.githubHost + '/users/' + comment.user.login + '?access_token=' + accessToken; 
 		request.get(url, function(err, data){
-			var user = JSON.parse(data.body);
-			comment.user.user_name = user.name;
+			if(data.body){
+				var user = JSON.parse(data.body);
+				comment.user.user_name = user.name;
+			}
 			callback(null, comments);
 		});
 	};
@@ -172,8 +174,10 @@ exports.createComment = function(req, res){
 	var setUserName = function(comment, callback){
 		var url = config.options.githubHost + '/users/' + comment.user.login + '?access_token=' + accessToken; 
 		request.get(url, function(err, data){
-			var user = JSON.parse(data.body);
-			comment.user.user_name = user.name;
+			if (data.body){
+				var user = JSON.parse(data.body);
+				comment.user.user_name = user.name;
+			}
 			callback(null, comments);
 		});
 	};
@@ -196,9 +200,98 @@ exports.createComment = function(req, res){
 };
 
 
-// getFollowers : people who follows me
-// getFollowingFromUser, getFollowing : people who I follow
-// github.user.getFollowers({user:'RayKwon'}, function(err, data){
-// 	console.log('getFollowUser');
-// 	console.dir(data);
-// });
+/*
+	1. get friends (following, follower)
+	2. get recent gists of each friend (get only first page)
+	3. sort all gists by date 
+	4. send data
+*/
+
+exports.getFriendsGist = function(req, res){
+	var gists = [];
+	var followings = [];
+	var gistsFollower = [];
+	var gistsFollowing = [];
+
+	// get people's gists who I follow
+	var getGistsFollowing = function(user, callback){
+		github.gists.getFromUser({user: user.login, per_page: 10}, 
+			function(err, data){		
+				if (data) {
+					_.each(data, function(d){
+						gistsFollowing.push(d);
+					});					
+				}
+				callback(null, gistsFollowing);
+			}
+		);	
+	};
+
+	// get people's gists who follow me
+	var getGistsFollower = function(user, callback){
+		github.gists.getFromUser({user: user.login, per_page: 30}, 
+			function(err, data){		
+				if (data) {
+					_.each(data, function(d){
+						gistsFollower.push(d);
+					});					
+				}
+				callback(null, gistsFollower);
+			}
+		);	
+	};
+
+	var sendGists = function(){
+		var gists = _.union(gistsFollower, gistsFollowing);
+		var sortedGists = _.sortBy(gists, function(gist){
+			return gist.updated_at;
+		}).reverse();
+
+		res.send({data: sortedGists});
+	};
+
+	// get gists in parallel, send gists after getting all
+	async.parallel([
+		function(callback){
+			github.user.getFollowers({user: 'RayKwon'}, function(err, data){
+				async.each(data, getGistsFollowing, function(error, result){
+					callback(null, gistsFollowing);
+				});
+			});
+		},
+		
+		function(callback){
+			github.user.getFollowing({}, function(err, data){
+				async.each(data, getGistsFollower, function(error, result){
+					callback(null, gistsFollower);
+				});
+			});
+		}
+	], function(error, results){
+		sendGists();
+	});
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

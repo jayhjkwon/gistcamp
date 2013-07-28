@@ -48,7 +48,7 @@ define(function(require){
 
 				// Gist Item on the left region
 				var gistItemListView = new GistItemListView;
-				gistItemListView.getGistListByUser();				
+				gistItemListView.getFriendsGist();				
 				gistListView.gistItemList.show(gistItemListView);
 
 				// Gist Files on the center region

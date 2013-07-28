@@ -60,6 +60,10 @@ define(function(require){
 			getStarredGistList: function(){
 				this.currentGistDataMode = constants.GIST_STARRED;
 				this.getGistList(constants.GIST_STARRED);
+			},
+			getFriendsGist: function(){
+				this.currentGistDataMode = constants.GIST_FRIENDS_GISTS;
+				this.getGistList(constants.GIST_FRIENDS_GISTS);
 			},		
 			setFirstItemSelected: function(){
 		    	$('.gist-item').first().trigger('click');
