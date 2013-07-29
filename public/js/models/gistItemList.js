@@ -19,6 +19,8 @@ define(function(require){
 						return '/api/gist/user'
 					case constants.GIST_STARRED :
 						return '/api/gist/starred'
+					case constants.GIST_FRIENDS_GISTS :
+						return '/api/gist/friends';
 					default :
 						return '/api/gist/public';	
 				}

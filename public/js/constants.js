@@ -5,6 +5,7 @@ define(function(){
 		GIST_LIST_BY_USER	: 'GIST_LIST_BY_USER',
 		GIST_STARRED        : 'GIST_STARRED',
 		GIST_ITEM_SELECTED  : 'GIST_ITEM_SELECTED',
+		GIST_FRIENDS_GISTS  : 'GIST_FRIENDS_GISTS',
 		channels            : {
 			APPLICATION     : 'APPLICATION'
 		}
