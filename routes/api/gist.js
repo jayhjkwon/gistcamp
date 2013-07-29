@@ -218,6 +218,7 @@ exports.getFriendsGist = function(req, res){
 		github.gists.getFromUser({user: user.login, per_page: 10}, 
 			function(err, data){		
 				if (data) {
+					console.log('getGistsFollowing counts = ' + data.length);
 					_.each(data, function(d){
 						gistsFollowing.push(d);
 					});					
@@ -229,9 +230,10 @@ exports.getFriendsGist = function(req, res){
 
 	// get people's gists who follow me
 	var getGistsFollower = function(user, callback){
-		github.gists.getFromUser({user: user.login, per_page: 30}, 
+		github.gists.getFromUser({user: user.login, per_page: 10}, 
 			function(err, data){		
 				if (data) {
+					console.log('getGistsFollower counts = ' + data.length);
 					_.each(data, function(d){
 						gistsFollower.push(d);
 					});					
@@ -254,17 +256,27 @@ exports.getFriendsGist = function(req, res){
 	async.parallel([
 		function(callback){
 			github.user.getFollowers({user: 'RayKwon'}, function(err, data){
-				async.each(data, getGistsFollowing, function(error, result){
-					callback(null, gistsFollowing);
-				});
+				if (data) {
+					console.log('github.user.getFollowers counts = ' + data.length);
+					async.each(data, getGistsFollower, function(error, result){
+						callback(null, gistsFollower);
+					});
+				}else{
+					callback(null, []);
+				}
 			});
 		},
 		
 		function(callback){
 			github.user.getFollowing({}, function(err, data){
-				async.each(data, getGistsFollower, function(error, result){
-					callback(null, gistsFollower);
-				});
+				if (data){
+					console.log('github.user.getFollowing counts = ' + data.length);
+					async.each(data, getGistsFollowing, function(error, result){
+						callback(null, gistsFollowing);
+					});
+				}else{
+					callback(null, []);
+				}
 			});
 		}
 	], function(error, results){
