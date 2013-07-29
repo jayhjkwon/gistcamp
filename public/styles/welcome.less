@@ -4,6 +4,11 @@
 @person-bg-color:#f85052;
 
 @content-height:100%;
+
+@menu-ico-size:100px;
+
+@contents-font-family: "Alial"; 
+
 html{
 	height: 100%; 
 }
@@ -12,6 +17,57 @@ body{
 	height: 100%;
 }
 
+.power-font{ 
+	position: relative;
+	top:130px;
+	left:-100px;
+ 	color: white ;
+ 	font-size: 30px;
+ 	font-family: @contents-font-family;
+}
+.power-font2{ 
+	position: relative;
+	top:170px;
+	left:-100px;
+ 	color: white ;
+ 	font-size: 50px;
+ 	font-family: @contents-font-family;
+}
+.power-font3{ 
+	position: relative;
+	top:142px;
+	left:190px;
+ 	color: white ;
+ 	font-size: 30px;
+ 	font-family: @contents-font-family;
+
+}
+.power-font4{ 
+	position: relative;
+	top:200px;
+	left:140px;
+ 	color: white ;
+ 	font-size: 15px;
+ 	font-family: @contents-font-family;
+
+}
+.sign-in{
+	position: relative ;
+	height: 55px;
+	width: 270px; 
+	top:230px;
+	right:130px;
+	color:white;
+	font-size:30px;
+	padding-top: 30px;
+	background-color: black ;
+	margin-right: 100px;
+
+}
+.sign-in:hover{
+
+	background-color: #233641;
+};
 .contents{
 	background-color: red;
 	height: 100%;
@@ -22,7 +78,7 @@ body{
 	top : 0px;
 	right :0px;
 	bottom : 0px;
-	width: 100px;  
+	width: @menu-ico-size;  
 }
 
 .headers {
@@ -35,92 +91,95 @@ body{
 
 }
 
-.img-logo{
-	position: absolute;
-	top:0px;
-	height: 100px;
-	width: 100px;
 
-}
-
-.div-power{
-	// position:absolute;
-	// top:0px;
-	// left:0px;
-	// right:0px;
+// contnets ----------------------------------
+#div-power{ 
 	width: 100%; 
 	background-color: @power-bg-color;
 	height: @content-height;
 }
-.div-light{
-	// position:absolute;
-	// top:500px;
-	// left:0px;
-	// right:0px;
+#div-light{ 
 	width: 100%; 
-	 
 	background-color: @light-bg-color;
 	height: @content-height;
 }
-.div-bag{
-	// position:absolute;
-	// top:1000px;
-	// left:0px;
-	// right:0px;
-	 
+#div-bag{ 
 	width: 100%; 
 	background-color: @bag-bg-color;
 	height: @content-height;
 }
 
-.div-person{
-	// position:absolute;
-	// top:1500px;
-	// left:0px;
-	// right:0px; 
+#div-person{ 
 	width: 100%; 
 	background-color: @person-bg-color;
 	height: @content-height;
 }
- 
-.img-power{
+
+//----------------------------------------------
+
+.img-logo{
 	position: absolute;
 	top:0px;
 	height: 100px;
-	width: 100px;  
-	background-color: @power-bg-color; 
+	width: 100px;
+}
+.logo-font{
+	position: absolute;
+	top:40px;
+	left: 110px;
+	height: 200px;
+	font-size: 40px;
+	color: white; 
+}
+
+.img-logo-center{
+	position: relative ;
+	margin-right: 100px;
+	top:120px;
+}
+
+//images for menu -----------------------
+.img-power{
+	position: absolute;
+	top:0px;
+	height: @menu-ico-size;
+	width: @menu-ico-size;  
+	background-color: @power-bg-color;  
 }
 
 .img-light{
 	position: absolute;
 	top:100px;
-	height: 100px;
-	width: 100px;  
+	height: @menu-ico-size;
+	width: @menu-ico-size;  
 	background-color: @light-bg-color; 
 }
 
 .img-bag{
 	position: absolute;
 	top:200px;
-	height: 100px;
-	width: 100px;  
+	height: @menu-ico-size;
+	width: @menu-ico-size;  
 	background-color: @bag-bg-color; 
 }
 
 .img-person{
 	position: absolute;
 	top:300px;
-	height: 100px;
-	width: 100px;  
+	height: @menu-ico-size;
+	width: @menu-ico-size;  
 	background-color: @person-bg-color; 
 }
 
+
 .menu-bottom{
-position: absolute;
+	position: absolute;
 	top:400px;
 	bottom:0px;
-	width: 100px;
-	opacity: 0.1;
-	background-color: blue;
+	width: @menu-ico-size;
+	opacity: 0.2;
+	background-color: white;
 
-}
+} 
+	
+//----------------------------------------
