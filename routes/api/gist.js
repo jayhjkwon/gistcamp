@@ -17,21 +17,7 @@ github.authenticate({
 	token: accessToken
 });
 
-var getNextPage = function(linkHeader, res){
-	github.getNextPage(linkHeader,
-		function(err, data){		
-			// console.dir(data);
-			res.send({
-				data: data, 
-				hasNextPage: github.hasNextPage(data),
-				linkHeader: data.meta.link
-			});
-		}
-	);		
-};
-
 var sendData = function(data, res){
-	// console.dir(data);				
 	res.send({
 		data: data, 
 		hasNextPage: github.hasNextPage(data),
@@ -39,14 +25,62 @@ var sendData = function(data, res){
 	});
 };
 
+
+var getNextPage = function(linkHeader, res){
+	github.getNextPage(linkHeader,
+		function(err, data){		
+			sendData(data, res);
+		}
+	);		
+};
+
+
 exports.getPublicGists = function(req, res){
 	var self = this;
 	console.log('getPublicGists');
 	var linkHeader = req.param('linkHeader');
+
+	var setFileContent = function(file, callback){
+		request.get(file.raw_url, function(error, response, body){	
+			if (file.language && file.language.toLowerCase() === 'markdown'){
+				github.markdown.render({text:body}, function(err, data){
+					file.file_content = data.data;		
+					callback(null, file);
+				});
+			}else{
+				file.file_content = body;
+				callback(null, file);
+			}			
+		});
+	};
+
+	var takeGist = function(gist, callback){
+		async.each(gist.files, setFileContent, function(error, result){
+			callback(null, gist);
+		});
+	};
+
 	if (!linkHeader){
 		github.gists.public({},
 			function(err, data){		
-				if (data) sendData(data, res);
+				if (data) {
+					/*sendData(data, res);*/
+
+					/*var filesFlatten = [];
+					var files = _.pluck(data, 'files');
+					_.each(files, function(file){
+						var nestedFiles = _.values(file);
+						_.each(nestedFiles, function(nestedFile){
+							filesFlatten.push(nestedFile);
+						});
+					})
+					async.each(filesFlatten, setFileContent, function(error, result){
+					});*/
+
+					async.each(data, takeGist, function(error, result){
+						var b = data;
+					});
+				}
 			}
 		);
 	}else{
