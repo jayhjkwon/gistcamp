@@ -12,7 +12,8 @@
     "github": "~0.1.10",
     "request": "~2.25.0",
     "moment": "~2.1.0",
-    "async": "~0.2.9"
+    "async": "~0.2.9",
+    "mongoose": "~3.6.15"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
