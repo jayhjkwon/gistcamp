@@ -45,6 +45,9 @@ define(function(require){
 					filesArray[0].isActive = true;
 				}
 
+				/*self.collection = new Files(filesArray);
+				self.render();*/
+
 				_.each(filesArray, function(file){
 					if (file.language && file.language.toLowerCase() === 'markdown'){
 						file.isMarkdown = true;
@@ -54,9 +57,13 @@ define(function(require){
 				self.collection = new Files();
 				self.collection.fetch({data: {files: filesArray}})
 					.done(function(){
-						self.render();
+						self.render();						
+					})
+					.always(function(){
 						util.loadSpinner(false);	
 					});
+
+				
 
 				/*service.getRawFiles(filesArray, function(result){
 					self.collection = new Files(result);

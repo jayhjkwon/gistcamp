@@ -30,41 +30,46 @@ var getNextPage = function(linkHeader, res){
 	github.getNextPage(linkHeader,
 		function(err, data){		
 			sendData(data, res);
+			/*async.each(data, handleGist, function(error, result){
+				sendData(data, res);
+			});*/
 		}
 	);		
 };
 
+/*var setFileContent = function(file, callback){
+	request.get(file.raw_url, function(error, response, body){	
+		if (file.language && file.language.toLowerCase() === 'markdown'){
+			github.markdown.render({text:body}, function(err, data){
+				file.file_content = data.data;		
+				callback(null, file);
+			});
+		}else{
+			file.file_content = body;
+			callback(null, file);
+		}			
+	});
+};*/
+
+var handleGist = function(gist, callback){
+	var files = _.values(gist.files);
+	async.each(files, setFileContent, function(error, result){
+		callback(null, gist);
+	});
+};
 
 exports.getPublicGists = function(req, res){
 	var self = this;
 	console.log('getPublicGists');
-	var linkHeader = req.param('linkHeader');
+	var linkHeader = req.param('linkHeader');	
 
-	var setFileContent = function(file, callback){
-		request.get(file.raw_url, function(error, response, body){	
-			if (file.language && file.language.toLowerCase() === 'markdown'){
-				github.markdown.render({text:body}, function(err, data){
-					file.file_content = data.data;		
-					callback(null, file);
-				});
-			}else{
-				file.file_content = body;
-				callback(null, file);
-			}			
-		});
-	};
-
-	var takeGist = function(gist, callback){
-		async.each(gist.files, setFileContent, function(error, result){
-			callback(null, gist);
-		});
-	};
+	var a = moment();
 
 	if (!linkHeader){
-		github.gists.public({},
+		github.gists.public({per_page: 10},
 			function(err, data){		
 				if (data) {
-					/*sendData(data, res);*/
+					sendData(data, res);
 
 					/*var filesFlatten = [];
 					var files = _.pluck(data, 'files');
@@ -75,11 +80,13 @@ exports.getPublicGists = function(req, res){
 						});
 					})
 					async.each(filesFlatten, setFileContent, function(error, result){
+						var b = moment();
+						console.log('time: ' + a.diff(b));
 					});*/
 
-					async.each(data, takeGist, function(error, result){
-						var b = data;
-					});
+					/*async.each(data, handleGist, function(error, result){
+						sendData(data, res);
+					});*/
 				}
 			}
 		);

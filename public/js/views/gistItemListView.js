@@ -46,7 +46,7 @@ define(function(require){
 					.always(function(){
 						$('.gist-list').getNiceScroll().resize();
 						self.loading(false);
-						util.loadSpinner(false);
+						util.loadSpinner(false);						
 					});
 			},
 			getPublicGistList: function(){
