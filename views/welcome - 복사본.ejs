@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="vendor/bootstrap/docs/assets/css/bootstrap.css">
+    <link rel='stylesheet' href="vendor/font-awesome/css/font-awesome.min.css">
+    <% if (devMode === 'development') { %>
+      <link rel='stylesheet' href='styles/welcome.min.css?modified_time=<%= (new Date()).getTime() %>' />
+    <% }else{ %> 
+      <link rel='stylesheet' href='styles/welcome.min.css?v=<%= appVersion %>' />
+    <% } %>
+ 
+
+  </head>
+
+  <body> 	
+  
+  <input type="button" value="Login" id="btnLogin"/> 
+
+  <a href="https://github.com/login/oauth/authorize?client_id=794dabc19ea9ed6aba0c" >login</a>
+  <% if (devMode === 'development') { %>
+      <script src="vendor/jquery/jquery.min.js"></script>
+      <script src="js/welcome.js?modified_time=<%= (new Date()).getTime() %>"></script>
+      <script src="http://localhost:35729/livereload.js"></script>
+    <% }else{ %> 
+      <script src="js/welcome.min.js?v=<%= appVersion %>"></script>
+    <% } %>
+
+
+
+    <script type="text/javascript">
+       var CLIENT_ID = "794dabc19ea9ed6aba0c"; 
+       var CLIENT_SECRET ="d37b57ebbb1a9afa20a0b2ba035d2e4d894f5bca"; 
+       var code; 
+
+            $(function(){
+              $("#btnLogin").click(function(){
+                  alert("test");  
+
+                  var requestAuthUri = 'https://github.com/login/oauth/access_token';
+
+                  var ajaxArgs = {
+                      type        :   'POST',
+                      url         :   requestAuthUri,
+                      headers     :   {
+                          'Accept'    :   'application/json'
+                      },
+                      data        :   {
+                          'client_id'         :       CLIENT_ID,
+                          'client_secret'     :       CLIENT_SECRET,
+                          'code'              :       code
+                      },
+                      dataType    :   'json',
+                      error       :   function( jqXHR, textStatus, errorThrown ) {
+
+                          console.log(errorThrown);
+
+                              alert( textStatus + ' : ' + errorThrown );
+                          }
+                      };
+
+                      console.log(ajaxArgs);
+
+                      $.ajax( ajaxArgs ).done( function( response ) {
+
+                          console.log( response );
+
+                      });
+
+              }); 
+            });  
+
+
+
+
+
+
+    </script>
+  </body>
+</html>
+
+
