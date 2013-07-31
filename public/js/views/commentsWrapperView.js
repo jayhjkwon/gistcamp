@@ -86,7 +86,7 @@ define(function(require){
 
 			loading: function(showSpinner){
 				if (showSpinner){
-					var target = $('.comments')[0];
+					var target = $('.comment-input-wrapper')[0];
 					this.spinner.spin(target);
 				}else{					
 					this.spinner.stop();					
