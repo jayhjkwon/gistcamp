@@ -18,7 +18,8 @@ require.config({
         spin           : '../vendor/spin.js/spin',
         moment         : '../vendor/moment/moment',
         postal         : '../vendor/postal.js/lib/postal',
-        async          : '../vendor/async/lib/async'
+        async          : '../vendor/async/lib/async',
+        store          : '../vendor/store.js/store'
 	},
 	shim: {
 		underscore: {

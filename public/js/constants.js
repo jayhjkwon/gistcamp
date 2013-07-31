@@ -6,6 +6,7 @@ define(function(){
 		GIST_STARRED        : 'GIST_STARRED',
 		GIST_ITEM_SELECTED  : 'GIST_ITEM_SELECTED',
 		GIST_FRIENDS_GISTS  : 'GIST_FRIENDS_GISTS',
+		SHOW_COMMENTS       : 'SHOW_COMMENTS',
 		channels            : {
 			APPLICATION     : 'APPLICATION'
 		}
