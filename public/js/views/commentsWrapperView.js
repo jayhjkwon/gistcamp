@@ -22,6 +22,8 @@ define(function(require){
 			itemView : CommentItemView,
 			itemViewContainer: '.comment-list',
 			selectedGistItem : {},
+			xhrs : [],
+			xhr: {},
 
 			initialize: function(options){
 				_.bindAll(this, 'onDomRefresh', 'onItemSelected', 'onCommentInputKeypress');
@@ -61,6 +63,10 @@ define(function(require){
 				console.log('onItemSelected in CommentsWrapperView');
 				console.dir(gistItem);				
 
+				if (self.xhr.state && self.xhr.state() === 'pending') {
+					self.xhr.abort();
+				}
+
 				self.selectedGistItem = gistItem;
 
 				if (gistItem.comments == 0){
@@ -71,8 +77,8 @@ define(function(require){
 				}else{
 					self.loading(true);
 					self.collection = new CommentItemList({gistId: gistItem.id});
-					self.collection.fetch()
-						.done(function(res){
+					self.xhr = self.collection.fetch();
+					self.xhr.done(function(res){
 							self.collection.set(res);
 							self.render();
 						})
@@ -81,7 +87,16 @@ define(function(require){
 							$('#comment-input').focus();
 						});
 				}
+			},
 
+			onClose: function(){
+				var self = this;
+				_.each(self.xhrs, function(xhr){
+					var s = xhr.state();
+					if (s === 'pending') {
+						xhr.abort();	// abort ajax requests those are not completed
+					}
+				});
 			},
 
 			loading: function(showSpinner){
