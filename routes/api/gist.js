@@ -29,10 +29,7 @@ var sendData = function(data, res){
 var getNextPage = function(linkHeader, res){
 	github.getNextPage(linkHeader,
 		function(err, data){		
-			sendData(data, res);
-			/*async.each(data, handleGist, function(error, result){
-				sendData(data, res);
-			});*/
+			sendData(data, res);			
 		}
 	);		
 };
@@ -49,7 +46,7 @@ var getNextPage = function(linkHeader, res){
 			callback(null, file);
 		}			
 	});
-};*/
+};
 
 var handleGist = function(gist, callback){
 	var files = _.values(gist.files);
@@ -57,6 +54,7 @@ var handleGist = function(gist, callback){
 		callback(null, gist);
 	});
 };
+*/
 
 exports.getPublicGists = function(req, res){
 	var self = this;
@@ -70,23 +68,6 @@ exports.getPublicGists = function(req, res){
 			function(err, data){		
 				if (data) {
 					sendData(data, res);
-
-					/*var filesFlatten = [];
-					var files = _.pluck(data, 'files');
-					_.each(files, function(file){
-						var nestedFiles = _.values(file);
-						_.each(nestedFiles, function(nestedFile){
-							filesFlatten.push(nestedFile);
-						});
-					})
-					async.each(filesFlatten, setFileContent, function(error, result){
-						var b = moment();
-						console.log('time: ' + a.diff(b));
-					});*/
-
-					/*async.each(data, handleGist, function(error, result){
-						sendData(data, res);
-					});*/
 				}
 			}
 		);
@@ -133,9 +114,10 @@ exports.getRawFiles = function(req, res){
 
 	var setFileContent = function(file, callback){
 		request.get(file.raw_url, function(error, response, body){	
-			if (file.language.toLowerCase() === 'markdown'){
+			if (file.language && file.language.toLowerCase() === 'markdown'){
 				github.markdown.render({text:body}, function(err, data){
-					file.file_content = data.data;		
+					file.file_content = data.data;	
+					file.isMarkdown = true;	
 					callback(null, file);
 				});
 			}else{
@@ -149,7 +131,6 @@ exports.getRawFiles = function(req, res){
 		var cacheSeconds = 60 * 60 * 1 // 1 hour
 		res.set({
 		  // 'Cache-Control': 'public, max-age=' + cacheSeconds,
-		  // "ETag" : "054c193559e0eb2adc19e15af2c50361"
 		});
 		res.send(filesInfo);
 	};
@@ -159,20 +140,27 @@ exports.getRawFiles = function(req, res){
 
 exports.getRawFile = function(req, res){
 	var rawUrl = req.param('file');
+	var isMarkdown = req.param('isMarkdown');
 	
-	var a = moment();
-	
-	request.get(rawUrl, function(error, response, body){	
-		var b = moment();
-		console.log('time: ' + a.diff(b));
-
+	// var a = moment();
+	var sendFileContent = function(body){
 		res.set({
-		  'Cache-Control': 'public, max-age=31536000'
+		  // 'Cache-Control': 'public, max-age=' + cacheSeconds,
 		});
 		res.send(body);
-		
-		var c = moment();
-		console.log('time: ' + b.diff(c));
+	};
+	
+	request.get(rawUrl, function(error, response, body){	
+		if (isMarkdown){
+			github.markdown.render({text:body}, function(err, data){
+				if (data && data.data) 
+					sendFileContent(data.data);
+			});
+		}else{
+			sendFileContent(body);
+		}
+		// var b = moment();
+		// console.log('time: ' + a.diff(b));
 	});
 };
 
@@ -198,7 +186,7 @@ exports.getComments = function(req, res){
 			async.each(JSON.parse(body), setUserName, function(error, result){
 				var cacheSeconds = 60 * 60 * 1 // 1 hour				
 				res.set({
-				  // 'Cache-Control': 'public, max-age=' + cacheSeconds
+				  'Cache-Control': 'public, max-age=' + cacheSeconds
 				});
 				res.send(comments);
 			});

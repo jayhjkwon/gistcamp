@@ -11,19 +11,27 @@ define(function(require){
 		GistItemList	= require('models/gistItemList'),
 		constants       = require('constants'),
 		util            = require('util'),
+		async           = require('async'),
+		service         = require('service'),
+		File            = require('models/file'),
 		
 		GistItemListView = Marionette.CollectionView.extend({
 			className: 'gist-item-container',
 			itemView: GistItemView,
 			collection: new GistItemList,
 			currentGistDataMode: '',
-			initialize: function(){
-				_.bindAll(this, 'getGistList', 'onRender', 'onScroll');
+			xhrs : [],
+
+			initialize: function(){				
+				_.bindAll(this, 'getGistList', 'onRender', 'onScroll', 'handleGist', 'setFileContent', 'onClose');
+				this.xhrs.length = 0;
 				this.spinner = new Spinner();
 				util.loadSpinner(true);
 			},
+
 			events : {
 			},
+			
 			getGistList: function(){
 				var self = this;
 				var gistItemList = new GistItemList({'gistDataMode': self.currentGistDataMode });
@@ -40,8 +48,12 @@ define(function(require){
 							self.linkHeader = res.linkHeader;
 						}else{
 							self.lastPage = true;
-							self.showEndofDataSign();									
+							self.showEndofDataSign();	
 						}						
+
+						async.eachLimit(res.data, 5, self.handleGist, function(error, result){
+							// do nothing, because set file content in setFileContent method
+						});
 					})
 					.always(function(){
 						$('.gist-list').getNiceScroll().resize();
@@ -49,6 +61,30 @@ define(function(require){
 						util.loadSpinner(false);						
 					});
 			},
+			
+			handleGist : function(gist, callback){
+				var self = this;
+				var files = _.values(gist.files);
+				async.each(files, self.setFileContent, function(error, result){
+					callback(null, gist);
+				});
+			},			
+
+			setFileContent : function(file, callback){
+				var xhr = service.getFileContent(file, callback);
+				this.xhrs.push(xhr);
+			},
+
+			onClose: function(){
+				var self = this;
+				_.each(self.xhrs, function(xhr){
+					var s = xhr.state();
+					if (s === 'pending') {
+						xhr.abort();	// abort ajax requests those are not completed
+					}
+				})
+			},
+
 			getPublicGistList: function(){
 				this.currentGistDataMode = constants.GIST_PUBLIC;
 				this.getGistList(constants.GIST_PUBLIC);

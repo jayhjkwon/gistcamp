@@ -14,6 +14,7 @@ define(function(require){
 		service         = require('service'),
 		util            = require('util'),
 		postalWrapper   = require('postalWrapper'),
+		Spinner         = require('spin'),
 
 		FilesWrapperView = Marionette.ItemView.extend({
 			className: 'files',			
@@ -21,6 +22,7 @@ define(function(require){
 			
 			initialize: function(options){
 				_.bindAll(this, 'onDomRefresh', 'onItemSelected');
+				this.spinner = new Spinner({length:7});
 				this.subscription = postalWrapper.subscribe(constants.GIST_ITEM_SELECTED, this.onItemSelected);
 			},
 			
@@ -34,42 +36,38 @@ define(function(require){
 			},
 
 			onItemSelected: function(gistItem){
-				console.log('onItemSelected in FilesWrapperView');
-				util.loadSpinner(true);
-
 				var self = this;
-
 				var filesArray = _.toArray(gistItem.files);
 
 				if (filesArray){
 					filesArray[0].isActive = true;
 				}
 
-				/*self.collection = new Files(filesArray);
-				self.render();*/
+				if (filesArray && !filesArray[0].file_content){
+					self.loading(true);
 
-				_.each(filesArray, function(file){
-					if (file.language && file.language.toLowerCase() === 'markdown'){
-						file.isMarkdown = true;
-					}
-				});
-
-				self.collection = new Files();
-				self.collection.fetch({data: {files: filesArray}})
+					self.collection = new Files(filesArray);
+					self.collection.fetch({data: {files: filesArray}})
 					.done(function(){
 						self.render();						
 					})
 					.always(function(){
-						util.loadSpinner(false);	
+						self.loading(false);	
 					});
 
-				
-
-				/*service.getRawFiles(filesArray, function(result){
-					self.collection = new Files(result);
+				}else{
+					self.collection = new Files(filesArray);
 					self.render();
-					util.loadSpinner(false);
-				});*/
+				}
+			},
+
+			loading: function(showSpinner){
+				if (showSpinner){
+					var target = $('#pivot')[0];
+					this.spinner.spin(target);
+				}else{					
+					this.spinner.stop();					
+				}
 			},
 			
 			onClose: function(){

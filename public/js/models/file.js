@@ -2,7 +2,10 @@ define(function(require){
 	var
 		Backbone = require('backbone'),		
 		
-		File  	 = Backbone.Model.extend({			
+		File  	 = Backbone.Model.extend({
+			url : function(){
+				return "/api/gist/rawfile";
+			}			
 		})
 	;
 
