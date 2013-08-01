@@ -78,6 +78,7 @@ define(function(require){
 						})
 						.always(function(){
 							self.loading(false);
+							$('#comment-input').focus();
 						});
 				}
 

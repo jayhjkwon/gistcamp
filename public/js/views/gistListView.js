@@ -41,6 +41,8 @@ define(function(require){
 			},
 
 			onDomRefresh: function(){
+				// if ( !$('#comment-input').val())
+				// 	$('.btn-comments').trigger('click');
 			},
 
 			onFileNameClicked : function(e){

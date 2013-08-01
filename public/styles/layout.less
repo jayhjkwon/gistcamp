@@ -56,7 +56,7 @@ header {
 			top:0px;
 			bottom:0px;
 			left:@gist-list-width+1px;
-			right:0;//@comments-wrapper-width;
+			right:@comments-wrapper-width;
 			background-color: white;
 			overflow-y:auto;
 			transition: right 0.3s ease-out;
@@ -67,7 +67,7 @@ header {
 			position: fixed;	// if the position is absolute, it is scrollable in mobile browser.
 			top:@top-height;
 			bottom:@footer-height;
-			right:-@comments-wrapper-width;
+			right:0;//-@comments-wrapper-width;
 			// padding-top:-40px;
 			width:@comments-wrapper-width;
 			overflow-y:auto;

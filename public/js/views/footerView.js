@@ -4,6 +4,7 @@ define(function(require){
 		footerTemplate  = require('hbs!templates/footerTemplate'),
 		postalWrapper   = require('postalWrapper'),
 		constants 		= require('constants'),		
+		store           = require('store'),
 
 		FooterView = Marionette.Layout.extend({
 			className: 'command-buttons',
@@ -11,6 +12,34 @@ define(function(require){
 			
 			initialize: function(){
 				this.subscription = postalWrapper.subscribe(constants.GIST_ITEM_SELECTED, this.onItemSelected);
+			},
+
+			events: {
+				'click .btn-comments' : 'onBtnCommentClick'
+			},
+
+			onBtnCommentClick: function(e){
+				var showComments = true;
+
+				e.preventDefault();
+			  	if($('.comments-wrapper').css('right') == '-300px'){
+			  		$('.files-wrapper').css('right', '300px');
+			  		$('.comments-wrapper').css('right','0px');	  
+			  		setTimeout(function(){
+				  		$('#comment-input').focus();
+				  	},300);		
+				  	showComments = true;
+			  	}else{
+			  		$('.files-wrapper').css('right', '0px');
+			  		$('.comments-wrapper').css('right','-300px');
+			  		showComments = false;
+			  	}
+
+			  	setTimeout(function(){
+			  		$('.files-wrapper').getNiceScroll().resize();	
+			  	},300);
+
+			  	store.set(constants.SHOW_COMMENTS, showComments);
 			},
 
 			onItemSelected : function(gistItem){
@@ -21,7 +50,7 @@ define(function(require){
 				}
 			},
 
-			close: function(){
+			onClose: function(){
 				this.subscription.unsubscribe();
 			}
 		})

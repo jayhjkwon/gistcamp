@@ -7,6 +7,8 @@ var
     async     = require('async')
 ;
 var accessToken = '2fdd28703ec694d5d39084ca424a6466510f2c7d';
+var cacheSeconds = 60 * 60 * 1 // 1 hour	
+var cacheEnabled = true;			
 
 var github = new GitHubApi({
 	version: '3.0.0'
@@ -17,21 +19,7 @@ github.authenticate({
 	token: accessToken
 });
 
-var getNextPage = function(linkHeader, res){
-	github.getNextPage(linkHeader,
-		function(err, data){		
-			// console.dir(data);
-			res.send({
-				data: data, 
-				hasNextPage: github.hasNextPage(data),
-				linkHeader: data.meta.link
-			});
-		}
-	);		
-};
-
 var sendData = function(data, res){
-	// console.dir(data);				
 	res.send({
 		data: data, 
 		hasNextPage: github.hasNextPage(data),
@@ -39,14 +27,50 @@ var sendData = function(data, res){
 	});
 };
 
+
+var getNextPage = function(linkHeader, res){
+	github.getNextPage(linkHeader,
+		function(err, data){		
+			sendData(data, res);			
+		}
+	);		
+};
+
+/*var setFileContent = function(file, callback){
+	request.get(file.raw_url, function(error, response, body){	
+		if (file.language && file.language.toLowerCase() === 'markdown'){
+			github.markdown.render({text:body}, function(err, data){
+				file.file_content = data.data;		
+				callback(null, file);
+			});
+		}else{
+			file.file_content = body;
+			callback(null, file);
+		}			
+	});
+};
+
+var handleGist = function(gist, callback){
+	var files = _.values(gist.files);
+	async.each(files, setFileContent, function(error, result){
+		callback(null, gist);
+	});
+};
+*/
+
 exports.getPublicGists = function(req, res){
 	var self = this;
 	console.log('getPublicGists');
-	var linkHeader = req.param('linkHeader');
+	var linkHeader = req.param('linkHeader');	
+
+	var a = moment();
+
 	if (!linkHeader){
-		github.gists.public({},
+		github.gists.public({per_page: 10},
 			function(err, data){		
-				if (data) sendData(data, res);
+				if (data) {
+					sendData(data, res);
+				}
 			}
 		);
 	}else{
@@ -91,10 +115,13 @@ exports.getRawFiles = function(req, res){
 	var filesInfo = req.param('files');
 
 	var setFileContent = function(file, callback){
-		request.get(file.raw_url, function(error, response, body){	
-			if (file.language.toLowerCase() === 'markdown'){
-				github.markdown.render({text:body}, function(err, data){
-					file.file_content = data.data;		
+		request.get(file.raw_url + '?access_token=' + accessToken, function(error, response, body){	
+			if (file.language && file.language.toLowerCase() === 'markdown'){
+				github.markdown.render({text:body, mode:'markdown'}, function(err, data){
+					if (data && data.data) {
+						file.file_content = data.data;	
+						file.isMarkdown = true;	
+					}
 					callback(null, file);
 				});
 			}else{
@@ -105,11 +132,11 @@ exports.getRawFiles = function(req, res){
 	};
 
 	var sendFiles = function(error, result){
-		var cacheSeconds = 60 * 60 * 1 // 1 hour
-		res.set({
-		  // 'Cache-Control': 'public, max-age=' + cacheSeconds,
-		  // "ETag" : "054c193559e0eb2adc19e15af2c50361"
-		});
+		if (cacheEnabled){
+			res.set({
+			  'Cache-Control': 'public, max-age=' + cacheSeconds,
+			});
+		}
 		res.send(filesInfo);
 	};
 
@@ -118,20 +145,29 @@ exports.getRawFiles = function(req, res){
 
 exports.getRawFile = function(req, res){
 	var rawUrl = req.param('file');
+	var isMarkdown = req.param('isMarkdown');
 	
-	var a = moment();
-	
-	request.get(rawUrl, function(error, response, body){	
-		var b = moment();
-		console.log('time: ' + a.diff(b));
-
-		res.set({
-		  'Cache-Control': 'public, max-age=31536000'
-		});
+	// var a = moment();
+	var sendFileContent = function(body){
+		if (cacheEnabled){
+			res.set({
+			  'Cache-Control': 'public, max-age=' + cacheSeconds,
+			});
+		}
 		res.send(body);
-		
-		var c = moment();
-		console.log('time: ' + b.diff(c));
+	};
+	
+	request.get(rawUrl + '?access_token=' + accessToken, function(error, response, body){	
+		if (isMarkdown){
+			github.markdown.render({text:body, mode:'markdown'}, function(err, data){
+				if (data && data.data) 
+					sendFileContent(data.data);
+			});
+		}else{
+			sendFileContent(body);
+		}
+		// var b = moment();
+		// console.log('time: ' + a.diff(b));
 	});
 };
 
@@ -139,26 +175,32 @@ exports.getComments = function(req, res){
 	var gistId = req.params.gistId;
 	var comments = [];
 
+	// TODO : apply cache using etag or last-modified for avoiding rate-limit
 	var setUserName = function(comment, callback){
 		comments.push(comment);
 		var url = config.options.githubHost + '/users/' + comment.user.login + '?access_token=' + accessToken; 
-		request.get(url, function(err, data){
-			if(data.body){
-				var user = JSON.parse(data.body);
+		request.get({url:url}, function(err, response, data){
+			if(data){
+				var user = JSON.parse(data);
 				comment.user.user_name = user.name;
 			}
 			callback(null, comments);
 		});
 	};
 
-	request.get(config.options.githubHost + '/gists/' + gistId + '/comments?access_token=' + accessToken, function(error, response, body){
+	request.get({
+		url: config.options.githubHost + '/gists/' + gistId + '/comments?access_token=' + accessToken, 
+		headers: {'If-None-Match':'d4573c964abb115b21c90d76869c2fc3'}
+	},
+		function(error, response, body){
 		if (body){
 			comments = JSON.parse(body);
 			async.each(JSON.parse(body), setUserName, function(error, result){
-				var cacheSeconds = 60 * 60 * 1 // 1 hour				
-				res.set({
-				  // 'Cache-Control': 'public, max-age=' + cacheSeconds
-				});
+				if (cacheEnabled){
+					res.set({
+					  'Cache-Control': 'public, max-age=' + cacheSeconds
+					});
+				}
 				res.send(comments);
 			});
 		}else{
@@ -218,6 +260,7 @@ exports.getFriendsGist = function(req, res){
 		github.gists.getFromUser({user: user.login, per_page: 10}, 
 			function(err, data){		
 				if (data) {
+					console.log('getGistsFollowing counts = ' + data.length);
 					_.each(data, function(d){
 						gistsFollowing.push(d);
 					});					
@@ -229,9 +272,10 @@ exports.getFriendsGist = function(req, res){
 
 	// get people's gists who follow me
 	var getGistsFollower = function(user, callback){
-		github.gists.getFromUser({user: user.login, per_page: 30}, 
+		github.gists.getFromUser({user: user.login, per_page: 10}, 
 			function(err, data){		
 				if (data) {
+					console.log('getGistsFollower counts = ' + data.length);
 					_.each(data, function(d){
 						gistsFollower.push(d);
 					});					
@@ -254,17 +298,27 @@ exports.getFriendsGist = function(req, res){
 	async.parallel([
 		function(callback){
 			github.user.getFollowers({user: 'RayKwon'}, function(err, data){
-				async.each(data, getGistsFollowing, function(error, result){
-					callback(null, gistsFollowing);
-				});
+				if (data) {
+					console.log('github.user.getFollowers counts = ' + data.length);
+					async.each(data, getGistsFollower, function(error, result){
+						callback(null, gistsFollower);
+					});
+				}else{
+					callback(null, []);
+				}
 			});
 		},
 		
 		function(callback){
 			github.user.getFollowing({}, function(err, data){
-				async.each(data, getGistsFollower, function(error, result){
-					callback(null, gistsFollower);
-				});
+				if (data){
+					console.log('github.user.getFollowing counts = ' + data.length);
+					async.each(data, getGistsFollowing, function(error, result){
+						callback(null, gistsFollowing);
+					});
+				}else{
+					callback(null, []);
+				}
 			});
 		}
 	], function(error, results){

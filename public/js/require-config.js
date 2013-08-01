@@ -17,7 +17,9 @@ require.config({
 	    scrollTo       : '../vendor/jquery.scrollTo/jquery.scrollTo',
         spin           : '../vendor/spin.js/spin',
         moment         : '../vendor/moment/moment',
-        postal         : '../vendor/postal.js/lib/postal'
+        postal         : '../vendor/postal.js/lib/postal',
+        async          : '../vendor/async/lib/async',
+        store          : '../vendor/store.js/store'
 	},
 	shim: {
 		underscore: {

@@ -9,15 +9,90 @@
     <% }else{ %> 
       <link rel='stylesheet' href='styles/welcome.min.css?v=<%= appVersion %>' />
     <% } %>
- 
-
   </head>
+  <body>
 
-  <body> 	
-  
-  <input type="button" value="Login" id="btnLogin"/> 
+    <div class="contents">
+      <div id="div-power"> 
+         
+          <div>
+            <center>
+              <img class="img-logo-center" src="images/logo.gif" />
+            <center> 
+            <p class="power-font">
+              Camping Place For Developer with code library.
+            </p>
+            <p class="power-font2">
+              "Enjoy Yourself"
+            </p>
+            <p class="power-font3">
+              It is up to you.
+            </p> 
+            <a href="https://github.com/login/oauth/authorize?client_id=794dabc19ea9ed6aba0c">
+            <p class="sign-in">
+              Sign in Github
+            </p> 
+            </a>
+            <p class="power-font4">
+              or learn more about how to enjoy GISTCAMP.
+            </p>
+          </div>
+      </div>
+      <div id="div-light">
 
-  <a href="https://github.com/login/oauth/authorize?client_id=794dabc19ea9ed6aba0c" >login</a>
+      </div>
+      <div id="div-bag">3</div>
+      <div id="div-person">
+      <div>
+
+        <p class="person-font">
+          Let's Talk
+        </p>
+        <p class="person-font1">
+          Contact us
+        </p> 
+        <div class="person-text-background"> 
+          <div class="controls">
+
+            <textarea class="span5 person-message"  placeholder="Message here" rows="5"></textarea>
+          </div>
+          <div class="controls">            
+            <textarea class="span5 person-email"  placeholder="e-mail" rows="1"></textarea> 
+
+          </div>
+          <div class="controls controls-row">            
+            <textarea class="span4 person-name"  placeholder="Your name" rows="1"></textarea> 
+               <p class="span1 person-font2">
+                Send Message
+               </p> 
+          </div>
+        </div>
+
+    </div>
+
+    <div class="menu">
+      <a href="#div-power">
+        <img src="images/power.gif" class="img-power"/>
+      </a>
+
+      <a href="#div-light">
+        <img src="images/light.gif" class="img-light"/>
+      </a>
+      <a href="#div-bag">
+        <img src="images/bag.gif" class="img-bag"/>
+      </a>  
+      <a href="#div-person">
+        <img src="images/person.gif" class="img-person"/>d
+      </a>
+      <div class="menu-bottom">
+    </div>
+    //
+    <div class="headers"> 
+        <img src="images/logo.gif" class="img-logo"/> 
+        <p class="logo-font">GISTCAMP.</p>
+    </div>
+
+
   <% if (devMode === 'development') { %>
       <script src="vendor/jquery/jquery.min.js"></script>
       <script src="js/welcome.js?modified_time=<%= (new Date()).getTime() %>"></script>
@@ -25,57 +100,6 @@
     <% }else{ %> 
       <script src="js/welcome.min.js?v=<%= appVersion %>"></script>
     <% } %>
-
-
-
-    <script type="text/javascript">
-       var CLIENT_ID = "794dabc19ea9ed6aba0c"; 
-       var CLIENT_SECRET ="d37b57ebbb1a9afa20a0b2ba035d2e4d894f5bca"; 
-       var code; 
-
-            $(function(){
-              $("#btnLogin").click(function(){
-                  alert("test");  
-
-                  var requestAuthUri = 'https://github.com/login/oauth/access_token';
-
-                  var ajaxArgs = {
-                      type        :   'POST',
-                      url         :   requestAuthUri,
-                      headers     :   {
-                          'Accept'    :   'application/json'
-                      },
-                      data        :   {
-                          'client_id'         :       CLIENT_ID,
-                          'client_secret'     :       CLIENT_SECRET,
-                          'code'              :       code
-                      },
-                      dataType    :   'json',
-                      error       :   function( jqXHR, textStatus, errorThrown ) {
-
-                          console.log(errorThrown);
-
-                              alert( textStatus + ' : ' + errorThrown );
-                          }
-                      };
-
-                      console.log(ajaxArgs);
-
-                      $.ajax( ajaxArgs ).done( function( response ) {
-
-                          console.log( response );
-
-                      });
-
-              }); 
-            });  
-
-
-
-
-
-
-    </script>
   </body>
 </html>
 

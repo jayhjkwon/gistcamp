@@ -31,7 +31,7 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView', 'vi
 
 		$('.btn-comments').tooltip();
 
-		$('.btn-comments').click(function (e) {
+		/*$('.btn-comments').click(function (e) {
 		  	e.preventDefault();
 		  	if($('.comments-wrapper').css('right') == '-300px'){
 		  		$('.files-wrapper').css('right', '300px');
@@ -42,7 +42,7 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView', 'vi
 		  	}else{
 		  		$('.files-wrapper').css('right', '0px');
 		  		$('.comments-wrapper').css('right','-300px');
-		  	}
+		  	}*/
 
 		  	/*if($('.comments-wrapper').css('margin-left') == '0px'){
 		  		// $('.files-wrapper').css('right', '300px');
@@ -55,11 +55,11 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView', 'vi
 		  		$('.comments-wrapper').css('margin-left','0px');
 		  	}*/
 
-		  	setTimeout(function(){
+		  	/*setTimeout(function(){
 		  		$('.files-wrapper').getNiceScroll().resize();	
 		  	},300);
 		  	
-		});	
+		});	*/
 
 	    /*$('.carousel').carousel({
 	    	interval: false
