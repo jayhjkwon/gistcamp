@@ -177,15 +177,16 @@ exports.getComments = function(req, res){
 
 	// TODO : apply cache using etag or last-modified for avoiding rate-limit
 	var setUserName = function(comment, callback){
-		comments.push(comment);
-		var url = config.options.githubHost + '/users/' + comment.user.login + '?access_token=' + accessToken; 
+		// comments.push(comment);
+		/*var url = config.options.githubHost + '/users/' + comment.user.login + '?access_token=' + accessToken; 
 		request.get({url:url}, function(err, response, data){
 			if(data){
 				var user = JSON.parse(data);
 				comment.user.user_name = user.name;
 			}
 			callback(null, comments);
-		});
+		});*/
+		callback(null, comment);
 	};
 
 	request.get({
@@ -194,7 +195,7 @@ exports.getComments = function(req, res){
 		function(error, response, body){
 		if (body){
 			comments = JSON.parse(body);
-			async.each(JSON.parse(body), setUserName, function(error, result){
+			async.each(comments, setUserName, function(error, result){
 				if (cacheEnabled){
 					res.set({
 					  'Cache-Control': 'public, max-age=' + cacheSeconds
