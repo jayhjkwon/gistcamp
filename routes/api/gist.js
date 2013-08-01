@@ -189,8 +189,7 @@ exports.getComments = function(req, res){
 	};
 
 	request.get({
-		url: config.options.githubHost + '/gists/' + gistId + '/comments?access_token=' + accessToken, 
-		headers: {'If-None-Match':'d4573c964abb115b21c90d76869c2fc3'}
+		url: config.options.githubHost + '/gists/' + gistId + '/comments?access_token=' + accessToken
 	},
 		function(error, response, body){
 		if (body){
@@ -257,7 +256,7 @@ exports.getFriendsGist = function(req, res){
 
 	// get people's gists who I follow
 	var getGistsFollowing = function(user, callback){
-		github.gists.getFromUser({user: user.login, per_page: 10}, 
+		github.gists.getFromUser({user: user.login, per_page: 5}, 
 			function(err, data){		
 				if (data) {
 					console.log('getGistsFollowing counts = ' + data.length);
@@ -272,7 +271,7 @@ exports.getFriendsGist = function(req, res){
 
 	// get people's gists who follow me
 	var getGistsFollower = function(user, callback){
-		github.gists.getFromUser({user: user.login, per_page: 10}, 
+		github.gists.getFromUser({user: user.login, per_page: 5}, 
 			function(err, data){		
 				if (data) {
 					console.log('getGistsFollower counts = ' + data.length);
