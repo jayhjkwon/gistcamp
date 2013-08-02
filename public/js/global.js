@@ -1,7 +1,10 @@
 define({
 	user : {
-		id    : 891212,
+		/*id    : 891212,
 		login : 'RayKwon',
-		name  : 'Jay H.H Kwon'
+		name  : 'Jay H.H Kwon'*/
+		id    : '',
+		login : '',
+		name  : ''
 	}
 })

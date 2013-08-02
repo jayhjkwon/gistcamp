@@ -1,6 +1,7 @@
-require(['jquery', 'underscore', 'application', 'router', 'views/shellView', 'views/topView', 'views/footerView', 
+require(['jquery', 'underscore', 'application', 'router', 'views/shellView', 
+	'views/topView', 'views/footerView', 'constants', 'models/user', 'global',
 	'bootstrap', 'prettify', 'nicescroll', 'autoGrow', 'scrollTo'], 
-	function($, _, Application, Router, shellView, topView, footerView){
+	function($, _, Application, Router, shellView, topView, footerView, constants, User, global){
 
 	$(function(){
 		var el = shellView.render().el;
@@ -12,8 +13,14 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView', 'vi
 		});
 
 		Application.addInitializer(function(options){
-			// TODO : get logged-in user infor, set it in globla.js, then show userInfo in topView
-			topView.setUserInfo();
+			var user = new User({mode: constants.USER_AUTH});
+			user.fetch().done(function(result){
+				global.user.id = result.id;
+				global.user.login = result.login;
+				global.user.name = result.name;
+
+				topView.setUserInfo();
+			});			
 		});
 
 		Application.on('initialize:after', function(options){

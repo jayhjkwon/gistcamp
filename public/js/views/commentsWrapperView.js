@@ -48,8 +48,12 @@ define(function(require){
 		    		var comment = new CommentItem({gistId: this.selectedGistItem.id, commentText: text});
 		    		comment.save()
 		    		.done(function(data){
-		    			console.dir(data);
-		    			self.collection.add(data);
+		    			if (self.collection){
+		    				self.collection.add(data);
+		    			}else{
+		    				self.collection = new CommentItemList({gistId: self.selectedGistItem.id});
+		    				self.collection.add(data);
+		    			}
 		    			self.render();
 		    		})
 		    		.always(function(){

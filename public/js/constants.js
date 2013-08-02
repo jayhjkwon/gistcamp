@@ -8,6 +8,7 @@ define(function(){
 		GIST_FRIENDS_GISTS  : 'GIST_FRIENDS_GISTS',
 		SHOW_COMMENTS       : 'SHOW_COMMENTS',
 		GIST_ITEM_RELOAD    : 'GIST_ITEM_RELOAD',
+		USER_AUTH           : 'USER_AUTH',
 		channels            : {
 			APPLICATION     : 'APPLICATION'
 		}

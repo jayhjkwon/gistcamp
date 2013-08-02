@@ -1,14 +1,19 @@
 define(function(require){
 	var
-		Backbone = require('backbone'),
+		Backbone  = require('backbone'),
+		constants = require('constants'), 
 		
 		User = Backbone.Model.extend({
-			urlRoot : '/api/users/',
-			url 	: function(){ 
-				if (this.id){
-					return this.urlRoot + this.id; 
-				}else{
-					return this.urlRoot;
+			initialize: function(props){
+				this.mode = props ? props.mode || '' : '';
+			},
+
+			url	: function(){ 
+				switch (this.mode){
+					case constants.USER_AUTH :
+						return '/api/user/auth';	
+					default :
+						return '';	
 				}
 			}
 		})

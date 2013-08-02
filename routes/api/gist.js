@@ -58,6 +58,7 @@ var handleGist = function(gist, callback){
 };
 */
 
+
 exports.getPublicGists = function(req, res){
 	var self = this;
 	console.log('getPublicGists');
@@ -218,7 +219,7 @@ exports.getComments = function(req, res){
 			});*/
 			if (cacheEnabled){
 				res.set({
-				  'Cache-Control': 'public, max-age=' + cacheSeconds
+				  // 'Cache-Control': 'public, max-age=' + cacheSeconds
 				});
 			}
 			res.send(comments);
