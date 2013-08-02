@@ -177,25 +177,25 @@ exports.getComments = function(req, res){
 
 	// TODO : apply cache using etag or last-modified for avoiding rate-limit
 	var setUserName = function(comment, callback){
-		comments.push(comment);
-		var url = config.options.githubHost + '/users/' + comment.user.login + '?access_token=' + accessToken; 
+		// comments.push(comment);
+		/*var url = config.options.githubHost + '/users/' + comment.user.login + '?access_token=' + accessToken; 
 		request.get({url:url}, function(err, response, data){
 			if(data){
 				var user = JSON.parse(data);
 				comment.user.user_name = user.name;
 			}
 			callback(null, comments);
-		});
+		});*/
+		callback(null, comment);
 	};
 
 	request.get({
-		url: config.options.githubHost + '/gists/' + gistId + '/comments?access_token=' + accessToken, 
-		headers: {'If-None-Match':'d4573c964abb115b21c90d76869c2fc3'}
+		url: config.options.githubHost + '/gists/' + gistId + '/comments?access_token=' + accessToken
 	},
 		function(error, response, body){
 		if (body){
 			comments = JSON.parse(body);
-			async.each(JSON.parse(body), setUserName, function(error, result){
+			async.each(comments, setUserName, function(error, result){
 				if (cacheEnabled){
 					res.set({
 					  'Cache-Control': 'public, max-age=' + cacheSeconds
@@ -257,7 +257,7 @@ exports.getFriendsGist = function(req, res){
 
 	// get people's gists who I follow
 	var getGistsFollowing = function(user, callback){
-		github.gists.getFromUser({user: user.login, per_page: 10}, 
+		github.gists.getFromUser({user: user.login, per_page: 5}, 
 			function(err, data){		
 				if (data) {
 					console.log('getGistsFollowing counts = ' + data.length);
@@ -272,7 +272,7 @@ exports.getFriendsGist = function(req, res){
 
 	// get people's gists who follow me
 	var getGistsFollower = function(user, callback){
-		github.gists.getFromUser({user: user.login, per_page: 10}, 
+		github.gists.getFromUser({user: user.login, per_page: 5}, 
 			function(err, data){		
 				if (data) {
 					console.log('getGistsFollower counts = ' + data.length);

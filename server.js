@@ -1,10 +1,12 @@
-var express = require('express')
-  , pages = require('./routes/pages')
-  , user = require('./routes/api/user')
-  , http = require('http')
-  , path = require('path')
-  , config = require('./infra/config')
-  , gist = require('./routes/api/gist')
+var 
+	express  = require('express'), 
+	pages    = require('./routes/pages'),
+	user     = require('./routes/api/user'), 
+	http     = require('http'), 
+	path     = require('path'), 
+	config   = require('./infra/config'), 
+	gist     = require('./routes/api/gist'),
+	constants= require('./infra/constants').constants
   ;
 
 var app = express();
@@ -19,9 +21,10 @@ app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.cookieParser('your secret here'));
-app.use(express.session());
+app.use(express.session({cookie: { maxAge : 1000 * 60 * 24 * 30 }}));
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
+
 
 // development only
 if ('development' == app.get('env')) {

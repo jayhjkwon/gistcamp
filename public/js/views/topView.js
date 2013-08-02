@@ -8,6 +8,9 @@ define(function(require){
 		constants = require('constants'),
 
 		TopView = Marionette.ItemView.extend({
+			className: 'navbar-inner',
+			template: topTemplate,
+
 			initialize: function(){
 				var self = this;
 				_.bindAll(this, 'activateMenu');
@@ -17,9 +20,13 @@ define(function(require){
 				});
 			},
 
-			className: 'navbar-inner',
+			events: {
+				'click #btn-refresh' : 'onRefreshClick'
+			},
 
-			template: topTemplate,
+			onRefreshClick: function(e){
+				window.location.reload(true);
+			},			
 
 			activateMenu: function(menu){
 				this.removeActiveClass();						
