@@ -2,7 +2,7 @@ var
 	GitHubApi = require('github'),
 	config    = require('../../infra/config'),
 	request   = require('request'),
-	_         = require('underscore'),
+	_         = require('lodash'),
 	moment    = require('moment'),
     async     = require('async')
 ;
@@ -115,26 +115,34 @@ exports.getRawFiles = function(req, res){
 	var filesInfo = req.param('files');
 
 	var setFileContent = function(file, callback){
-		request.get(file.raw_url + '?access_token=' + accessToken, function(error, response, body){	
-			if (file.language && file.language.toLowerCase() === 'markdown'){
-				github.markdown.render({text:body, mode:'markdown'}, function(err, data){
-					if (data && data.data) {
-						file.file_content = data.data;	
-						file.isMarkdown = true;	
-					}
-					callback(null, file);
-				});
+		request.get({
+			url: file.raw_url + '?access_token=' + accessToken,
+			timeout: 5000
+		}, function(error, response, body){	
+			/*if (file.language && file.language.toLowerCase() === 'markdown'){
+				// github.markdown.render({text:body, mode:'markdown'}, function(err, data){
+				// 	if (data && data.data) {
+				// 		file.file_content = data.data;	
+				// 		file.isMarkdown = true;	
+				// 	}
+				// 	callback(null, file);
+				// });
+				file.file_content = markdown.toHTML(body);
+				file.isMarkdown = true;
+				callback(null, file);
 			}else{
 				file.file_content = body;
 				callback(null, file);
-			}			
+			}*/			
+			file.file_content = body;
+			callback(null, file);
 		});
 	};
 
 	var sendFiles = function(error, result){
 		if (cacheEnabled){
 			res.set({
-			  'Cache-Control': 'public, max-age=' + cacheSeconds,
+			  // 'Cache-Control': 'public, max-age=' + cacheSeconds,
 			});
 		}
 		res.send(filesInfo);
@@ -157,15 +165,22 @@ exports.getRawFile = function(req, res){
 		res.send(body);
 	};
 	
-	request.get(rawUrl + '?access_token=' + accessToken, function(error, response, body){	
-		if (isMarkdown){
-			github.markdown.render({text:body, mode:'markdown'}, function(err, data){
-				if (data && data.data) 
-					sendFileContent(data.data);
-			});
+	request.get({
+		url: rawUrl + '?access_token=' + accessToken,
+		timeout: 5000
+	}, function(error, response, body){	
+		/*if (isMarkdown){
+			// github.markdown.render({text:body, mode:'markdown'}, function(err, data){
+			// 	if (data && data.data) 
+			// 		sendFileContent(data.data);
+			// });
+			sendFileContent(markdown.toHTML(body));
 		}else{
 			sendFileContent(body);
-		}
+		}*/
+
+		sendFileContent(body);
+
 		// var b = moment();
 		// console.log('time: ' + a.diff(b));
 	});
@@ -177,16 +192,14 @@ exports.getComments = function(req, res){
 
 	// TODO : apply cache using etag or last-modified for avoiding rate-limit
 	var setUserName = function(comment, callback){
-		// comments.push(comment);
-		/*var url = config.options.githubHost + '/users/' + comment.user.login + '?access_token=' + accessToken; 
+		var url = config.options.githubHost + '/users/' + comment.user.login + '?access_token=' + accessToken; 
 		request.get({url:url}, function(err, response, data){
 			if(data){
 				var user = JSON.parse(data);
 				comment.user.user_name = user.name;
 			}
-			callback(null, comments);
-		});*/
-		callback(null, comment);
+			callback(null, comment);
+		});
 	};
 
 	request.get({
@@ -195,14 +208,20 @@ exports.getComments = function(req, res){
 		function(error, response, body){
 		if (body){
 			comments = JSON.parse(body);
-			async.each(comments, setUserName, function(error, result){
+			/*async.each(comments, setUserName, function(error, result){
 				if (cacheEnabled){
 					res.set({
 					  'Cache-Control': 'public, max-age=' + cacheSeconds
 					});
 				}
 				res.send(comments);
-			});
+			});*/
+			if (cacheEnabled){
+				res.set({
+				  'Cache-Control': 'public, max-age=' + cacheSeconds
+				});
+			}
+			res.send(comments);
 		}else{
 			res.send(comments);
 		}		

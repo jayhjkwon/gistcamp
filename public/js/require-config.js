@@ -19,7 +19,8 @@ require.config({
         moment         : '../vendor/moment/moment',
         postal         : '../vendor/postal.js/lib/postal',
         async          : '../vendor/async/lib/async',
-        store          : '../vendor/store.js/store'
+        store          : '../vendor/store.js/store',
+        markdown       : '../vendor/markdown/lib/markdown'
 	},
 	shim: {
 		underscore: {
@@ -47,6 +48,9 @@ require.config({
         },
         scrollTo: {
         	deps: ['jquery']
+        },
+        markdown: {
+            exports: 'markdown'
         }
 	},
 	hbs : {

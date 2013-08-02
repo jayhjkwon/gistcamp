@@ -15,7 +15,8 @@ define(function(require){
 			},
 
 			events: {
-				'click .btn-comments' : 'onBtnCommentClick'
+				'click .btn-comments' : 'onBtnCommentClick',
+				'click .btn-reload'   : 'onReloadClick'
 			},
 
 			onBtnCommentClick: function(e){
@@ -40,6 +41,10 @@ define(function(require){
 			  	},300);
 
 			  	store.set(constants.SHOW_COMMENTS, showComments);
+			},
+
+			onReloadClick: function(e){
+				postalWrapper.publish(constants.GIST_ITEM_RELOAD);
 			},
 
 			onItemSelected : function(gistItem){

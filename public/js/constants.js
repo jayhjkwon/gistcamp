@@ -7,6 +7,7 @@ define(function(){
 		GIST_ITEM_SELECTED  : 'GIST_ITEM_SELECTED',
 		GIST_FRIENDS_GISTS  : 'GIST_FRIENDS_GISTS',
 		SHOW_COMMENTS       : 'SHOW_COMMENTS',
+		GIST_ITEM_RELOAD    : 'GIST_ITEM_RELOAD',
 		channels            : {
 			APPLICATION     : 'APPLICATION'
 		}
