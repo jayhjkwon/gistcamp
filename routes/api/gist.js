@@ -58,6 +58,7 @@ var handleGist = function(gist, callback){
 };
 */
 
+
 exports.getPublicGists = function(req, res){
 	var self = this;
 	console.log('getPublicGists');

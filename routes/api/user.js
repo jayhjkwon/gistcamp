@@ -11,3 +11,7 @@ exports.getUser = function(req, res){
 	});
 };
 
+exports.getAuthUser = function(req, res){
+
+},
+
