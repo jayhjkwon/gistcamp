@@ -1,5 +1,6 @@
 ### minified files ###
 public/js/app.min.js
+public/js/welcome.min.js
 
 
 ### auto generated css from less ###
