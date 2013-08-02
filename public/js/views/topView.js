@@ -1,11 +1,12 @@
 define(function(require){
 	var
-		$ = require('jquery'),
-		_ = require('underscore'),
-		Marionette = require('marionette'),
+		$           = require('jquery'),
+		_           = require('underscore'),
+		Marionette  = require('marionette'),
 		topTemplate = require('hbs!templates/topTemplate'),
 		Application = require('application'),
-		constants = require('constants'),
+		constants   = require('constants'),
+		global      = require('global'),
 
 		TopView = Marionette.ItemView.extend({
 			className: 'navbar-inner',
@@ -17,11 +18,20 @@ define(function(require){
 
 				Application.commands.setHandler(constants.MENU_SELECTED, function(menu){
 					self.activateMenu(menu);
-				});
+				});				
 			},
 
 			events: {
 				'click #btn-refresh' : 'onRefreshClick'
+			},
+
+			onDomRefresh: function(){
+				// this.setUserInfo();
+			},
+
+			setUserInfo: function(){
+				// alert($('#loggedin-user-name').text());
+				$('#loggedin-user-name').text(global.user.name);
 			},
 
 			onRefreshClick: function(e){

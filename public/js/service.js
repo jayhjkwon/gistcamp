@@ -1,6 +1,7 @@
 define(function(require){
 	var
-		$ = require('jquery'),
+		$        = require('jquery'),
+		markdown = require('markdown'),
 
 		getFileContent = function(file, callback){
 			var isMarkdown = false;
@@ -13,7 +14,11 @@ define(function(require){
 					url: '/api/gist/rawfile',
 					data: {file: file.raw_url, isMarkdown: file.isMarkdown}
 				}).done(function(result){
-					file.file_content = result;
+					if (file.isMarkdown)
+						file.file_content = markdown.toHTML(result);
+					else
+						file.file_content = result;
+					
 					if (callback)
 						callback(null, file);
 				});

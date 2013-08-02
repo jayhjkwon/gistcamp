@@ -11,6 +11,11 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView', 'vi
 			$('body').html(el);
 		});
 
+		Application.addInitializer(function(options){
+			// TODO : get logged-in user infor, set it in globla.js, then show userInfo in topView
+			topView.setUserInfo();
+		});
+
 		Application.on('initialize:after', function(options){
 			var router = new Router;
 			Backbone.history.start({pushState: false});
