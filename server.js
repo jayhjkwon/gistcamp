@@ -36,8 +36,7 @@ app.get('/', pages.index); // redirect to welcome page if no session
 app.get('/welcome', pages.welcome);
 
 // restful services
-app.get('/api/users/:id', user.getUser);
-app.get('/api/user', user.getAuthUser);
+app.get('/api/user/auth', user.getAuthUser);
 app.get('/api/gist/public', gist.getPublicGists);
 app.get('/api/gist/user', gist.getGistListByUser);
 app.get('/api/gist/starred', gist.getStarredGists);

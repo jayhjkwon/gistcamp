@@ -14,9 +14,20 @@ define(function(require){
 			className: 'comment',
 
 			initialize: function(){				
+				_.bindAll(this, 'onCommentDoubleClick');
 			},
 			
-			events : {				
+			events : {	
+				'dblclick .comment-text' : 'onCommentDoubleClick',
+				'blur .comment-edit'     : 'onCommentBlur'
+			},
+
+			onCommentDoubleClick : function(e){
+				$(e.target).hide().next('.comment-edit').show().focus();
+			},
+
+			onCommentBlur : function(e){
+				$(e.target).hide().prev('.comment-text').show();
 			}
 		})
 	;
