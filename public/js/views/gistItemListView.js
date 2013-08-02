@@ -82,7 +82,7 @@ define(function(require){
 					if (s === 'pending') {
 						xhr.abort();	// abort ajax requests those are not completed
 					}
-				})
+				});
 			},
 
 			getPublicGistList: function(){
