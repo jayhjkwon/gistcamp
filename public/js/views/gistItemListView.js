@@ -51,7 +51,7 @@ define(function(require){
 							self.showEndofDataSign();	
 						}						
 
-						async.eachLimit(res.data, 3, self.handleGist, function(error, result){
+						async.eachLimit(res.data, 5, self.handleGist, function(error, result){
 							// do nothing, because set file content in setFileContent method
 						});
 					})

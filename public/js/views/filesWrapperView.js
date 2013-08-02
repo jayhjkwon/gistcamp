@@ -47,7 +47,7 @@ define(function(require){
 
 				if (self.refreshRequested || (filesArray && !filesArray[0].file_content)){	// in case that file contents are not set yet
 					if (self.refreshRequested)
-						$('.icon-refresh').removeClass('icon-spin').addClass('icon-spin');
+						$('.btn-reload .icon-refresh').removeClass('icon-spin').addClass('icon-spin');
 					else
 						self.loading(true);
 
@@ -66,7 +66,7 @@ define(function(require){
 						self.loading(false);	
 						if (self.refreshRequested){
 							self.refreshRequested = false;
-							$('.icon-refresh').removeClass('icon-spin');
+							$('.btn-reload .icon-refresh').removeClass('icon-spin');
 						}
 					});
 
