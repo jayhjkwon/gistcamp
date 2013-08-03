@@ -4,7 +4,7 @@ define(function(require){
 		footerTemplate  = require('hbs!templates/footerTemplate'),
 		postalWrapper   = require('postalWrapper'),
 		constants 		= require('constants'),		
-		//socket          = require('socketWrapper'),
+		// socket          = require('socketWrapper'),
 
 		FooterView = Marionette.Layout.extend({
 			className: 'command-buttons',
@@ -22,15 +22,13 @@ define(function(require){
 
 				// connect는 나중에 Access token을 받는 부분으로 이동해야 한다.
 				// on connection to server, ask for user's name with an anonymous callback
-				
-/*
-				socket.on('connect', function(){
-					// call the server-side function 'adduser' and send one parameter (value of prompt)
-					socket.emit('adduser', prompt("What's your name?"));
-				});
+				// socket.on('connect', function(){
+				// 	// call the server-side function 'adduser' and send one parameter (value of prompt)
+				// 	socket.emit('adduser', prompt("What's your name?"));
+				// });
 
-				socket.emit('addroom', prompt("What's room name?"));
-*/
+				// socket.emit('addroom', prompt("What's room name?"));
+
 			},
 
 			onItemSelected : function(gistItem){

@@ -1,6 +1,6 @@
-require(['jquery', 'underscore', 'application', 'router', 'views/shellView', 'views/topView', 'views/footerView', 
+require(['jquery', 'underscore', 'application', 'router', 'views/shellView', 'views/topView', 'views/footerView', 'io',
 	'bootstrap', 'prettify', 'nicescroll', 'autoGrow', 'scrollTo'], 
-	function($, _, Application, Router, shellView, topView, footerView){
+	function($, _, Application, Router, shellView, topView, footerView, io){
 
 	$(function(){
 		var el = shellView.render().el;
@@ -11,10 +11,16 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView', 'vi
 			$('body').html(el);
 		});
 
+		Application.addInitializer(function(options){
+			var socket = io.connect();
+		});
+
 		Application.on('initialize:after', function(options){
 			var router = new Router;
 			Backbone.history.start({pushState: false});
 		});
+
+
 
 		Application.start();
 

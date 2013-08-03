@@ -9,9 +9,9 @@ define(function(require){
 		constants 			= require('constants'),
 		FilesWrapperView    = require('views/filesWrapperView'),
 		CommentsWrapperView = require('views/CommentsWrapperView')
-		// ChatView            = require('views/chatView')
-		//ChatListWrapperView = require('views/chatListWrapperView'),
-		//ConversationWrapperView = require('views/conversationWrapperView')
+		// ChatView            = require('views/chatView'),
+		// ChatListWrapperView = require('views/chatListWrapperView'),
+		// ConversationWrapperView = require('views/conversationWrapperView')
 	;
 
 	var
@@ -124,25 +124,23 @@ define(function(require){
 
 			chat : function(){
 				
+				// var chatView = new ChatView({currentSelectedMenu: 'chat'})
+				// shellView.main.show(chatView);
 
-				/*
-				var chatView = new ChatView({currentSelectedMenu: 'chat'})
-				shellView.main.show(chatView);
+				// // Chat List on the left region
+    //             var chatListWrapperView = new ChatListWrapperView;
+				// chatView.chatList.show(chatListWrapperView);
 
-				// Chat List on the left region
-                var chatListWrapperView = new ChatListWrapperView;
-				chatView.chatList.show(chatListWrapperView);
+				// // Gist Files on the center region
+				// var filesWrapperView = new FilesWrapperView;
+				// chatView.filesWrapper.show(filesWrapperView);
 
-				// Gist Files on the center region
-				var filesWrapperView = new FilesWrapperView;
-				chatView.filesWrapper.show(filesWrapperView);
+				// // Chat on the right region
+				// var conversationWrapperView = new ConversationWrapperView;
+				// chatView.chatWrapper.show(conversationWrapperView);
 
-				// Chat on the right region
-				var conversationWrapperView = new ConversationWrapperView;
-				chatView.chatWrapper.show(conversationWrapperView);
-
-				Application.execute(constants.MENU_SELECTED,'chat');
-				*/
+				// Application.execute(constants.MENU_SELECTED,'chat');
+				
 			}
 		})
 	;

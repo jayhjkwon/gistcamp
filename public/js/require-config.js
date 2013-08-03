@@ -17,7 +17,8 @@ require.config({
 	    scrollTo       : '../vendor/jquery.scrollTo/jquery.scrollTo',
         spin           : '../vendor/spin.js/spin',
         moment         : '../vendor/moment/moment',
-        postal         : '../vendor/postal.js/lib/postal'
+        postal         : '../vendor/postal.js/lib/postal',
+        io             : '../vendor/socket.io-client/lib/io'
 	},
 	shim: {
 		underscore: {
@@ -45,6 +46,9 @@ require.config({
         },
         scrollTo: {
         	deps: ['jquery']
+        },
+        io: {
+            exports: 'io'
         }
 	},
 	hbs : {
