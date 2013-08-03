@@ -83,7 +83,7 @@ define(function(require){
 					self.collection = new CommentItemList({gistId: gistItem.id});
 					self.xhr = self.collection.fetch();
 					self.xhr.done(function(res){
-							self.collection.set(res);
+							// self.collection.set(res);
 							self.render();
 						})
 						.always(function(){
