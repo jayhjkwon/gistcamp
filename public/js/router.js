@@ -11,7 +11,8 @@ define(function(require){
 				'starred'     : 'starred',
 				'forked'      : 'forked',
 				'tagged/:tag' : 'tagged',
-				'newgist'     : 'newGist'
+				'newgist'     : 'newGist',
+				'chat'        : 'chat'
 			},
 
 			controller: new Controller
