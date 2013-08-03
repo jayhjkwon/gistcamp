@@ -8,7 +8,8 @@ define(function(require){
 		shellView 			= require('views/shellView'),		
 		constants 			= require('constants'),
 		FilesWrapperView    = require('views/filesWrapperView'),
-		CommentsWrapperView = require('views/CommentsWrapperView')
+		CommentsWrapperView = require('views/CommentsWrapperView'),
+		CreateGistView = require('views/createGistView')
 	;
 
 	var
@@ -116,7 +117,8 @@ define(function(require){
 			},
 			
 			newGist : function(){
-				Application.execute(constants.MENU_SELECTED,'newgist');
+				shellView.main.show(new CreateGistView({currentSelectedMenu:'newgist'}));
+				Application.vent.trigger(constants.MENU_SELECTED,'newgist');
 			}
 		})
 	;
