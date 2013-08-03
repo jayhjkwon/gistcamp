@@ -1,7 +1,13 @@
+<<<<<<< HEAD
 require(['jquery', 'underscore', 'application', 'router', 'views/shellView', 
 	'views/topView', 'views/footerView', 'constants', 'models/user', 'global',
 	'bootstrap', 'prettify', 'nicescroll', 'autoGrow', 'scrollTo'], 
 	function($, _, Application, Router, shellView, topView, footerView, constants, User, global){
+=======
+require(['jquery', 'underscore', 'application', 'router', 'views/shellView', 'views/topView', 'views/footerView', 'io',
+	'bootstrap', 'prettify', 'nicescroll', 'autoGrow', 'scrollTo'], 
+	function($, _, Application, Router, shellView, topView, footerView, io){
+>>>>>>> hotfixes/patched
 
 	$(function(){
 		var el = shellView.render().el;
@@ -13,6 +19,7 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 		});
 
 		Application.addInitializer(function(options){
+<<<<<<< HEAD
 			var user = new User({mode: constants.USER_AUTH});
 			user.fetch().done(function(result){
 				global.user.id = result.id;
@@ -21,12 +28,17 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 
 				topView.setUserInfo();
 			});			
+=======
+			var socket = io.connect();
+>>>>>>> hotfixes/patched
 		});
 
 		Application.on('initialize:after', function(options){
 			var router = new Router;
 			Backbone.history.start({pushState: false});
 		});
+
+
 
 		Application.start();
 

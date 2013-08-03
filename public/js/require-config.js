@@ -21,6 +21,7 @@ require.config({
         async          : '../vendor/async/lib/async',
         store          : '../vendor/store.js/store',
         markdown       : '../vendor/markdown/lib/markdown'
+        io             : '../vendor/socket.io-client/lib/io'
 	},
 	shim: {
 		underscore: {
@@ -51,6 +52,8 @@ require.config({
         },
         markdown: {
             exports: 'markdown'
+        io: {
+            exports: 'io'
         }
 	},
 	hbs : {
