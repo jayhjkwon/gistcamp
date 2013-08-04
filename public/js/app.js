@@ -1,6 +1,6 @@
 require(['jquery', 'underscore', 'application', 'router', 'views/shellView', 
 	'views/topView', 'views/footerView', 'constants', 'models/user', 'global',
-	'bootstrap', 'prettify', 'nicescroll', 'autoGrow', 'scrollTo'], 
+	'bootstrap', 'prettify', 'nicescroll', 'scrollTo'], 
 	function($, _, Application, Router, shellView, topView, footerView, constants, User, global){
 
 	$(function(){
@@ -115,7 +115,7 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 	                    '</div>'
 	    });
 
-	    $('#comment-input').autoGrow();
+	    // $('#comment-input').autoGrow();
 
 	    // check if elem is visible
 	    var isScrolledIntoView = function(scrollElem, elem) {

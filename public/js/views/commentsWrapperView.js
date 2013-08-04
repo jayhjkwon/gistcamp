@@ -15,6 +15,7 @@ define(function(require){
 		CommentItem     = require('models/commentItem'),
 		util            = require('util'),
 		Spinner         = require('spin'),
+		autoGrow        = require('autoGrow'),
 
 		CommentsWrapperView = Marionette.CompositeView.extend({
 			className: 'comments',			
@@ -36,14 +37,17 @@ define(function(require){
 			},
 
 			onDomRefresh: function(){
-				$('.comments-wrapper').niceScroll({cursorcolor: '#eee'});
+				$('.comments-wrapper').niceScroll({cursorcolor:'#fff'});
+				$('#comment-input').autoGrow();
 			},
 
 			onCommentInputKeypress : function(e){
 				var self = this;
 				var keyCode = e.keyCode || e.which;
-		    	if (keyCode === 13){
+		    	if (keyCode === 13 && !self.saving){
+		    		self.saving = true;
 		    		self.loading(true);
+		    		$(e.target).attr('disabled', 'disabled');
 		    		var text = $('#comment-input').val();
 		    		var comment = new CommentItem({gistId: this.selectedGistItem.id, commentText: text});
 		    		comment.save()
@@ -57,7 +61,9 @@ define(function(require){
 		    			self.render();
 		    		})
 		    		.always(function(){
-		    			self.loading(false);
+		    			self.saving = false;
+		    			$(e.target).removeAttr('disabled');
+		    			self.loading(false);		    			
 		    		});
 		    	}
 			},

@@ -308,7 +308,7 @@ exports.getFriendsGist = function(req, res){
 	var sendGists = function(){
 		var gists = _.union(gistsFollower, gistsFollowing);
 		var sortedGists = _.sortBy(gists, function(gist){
-			return gist.updated_at;
+			return gist.created_at;
 		}).reverse();
 
 		res.send({data: sortedGists});

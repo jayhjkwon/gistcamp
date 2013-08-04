@@ -8,6 +8,7 @@ define(function(require){
 		Application 	= require('application'),
 		constants       = require('constants'),
 		postalWrapper   = require('postalWrapper'),
+		autoGrow        = require('autoGrow'),
 		
 		CommentItemView = Marionette.ItemView.extend({
 			template: commentItemTemplate,
@@ -23,7 +24,7 @@ define(function(require){
 			},
 
 			onCommentDoubleClick : function(e){
-				$(e.target).hide().next('.comment-edit').show().focus();
+				$(e.target).hide().next('.comment-edit').show().focus().autoGrow();
 			},
 
 			onCommentBlur : function(e){
