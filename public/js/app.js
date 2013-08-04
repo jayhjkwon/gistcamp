@@ -147,9 +147,9 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 		    		selectedGist.removeClass('selected');
 		    		var prevGist = gistList[selectedGistIndex - 1];
 		    		$(prevGist).addClass('selected');
-		    		if (!isScrolledIntoView('.gist-list', '.gist-list .gist-item.selected'))
-		    			$('.gist-list').scrollTo($(prevGist));
 		    		$(prevGist).trigger('click');
+		    		// if (!isScrolledIntoView('.gist-list', '.gist-list .gist-item.selected'))
+		    			$('.gist-list').scrollTo($(prevGist), {offset:-20});		    		
 
 		    		break;
 				case 40 : 	// arrow-down key
@@ -159,9 +159,9 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 		    		selectedGist.removeClass('selected');
 		    		var nextGist = gistList[selectedGistIndex + 1];
 		    		$(nextGist).addClass('selected');
-		    		if (!isScrolledIntoView('.gist-list', '.gist-list .gist-item.selected'))
-		   				$('.gist-list').scrollTo($(nextGist));
-	   				$(nextGist).trigger('click');
+		    		$(nextGist).trigger('click');
+		    		// if (!isScrolledIntoView('.gist-list', '.gist-list .gist-item.selected'))
+		   				$('.gist-list').scrollTo($(nextGist), {offset:-20});	   				
 
 		   			break;
 				case 37 : 	// arrow-left key
