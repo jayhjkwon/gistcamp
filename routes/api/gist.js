@@ -25,7 +25,7 @@ var getNextPage = function(linkHeader, req, res){
 
 	github.getNextPage(linkHeader,
 		function(err, data){		
-			sendData(data, req, res);			
+			if (data) sendData(data, req, res);			
 		}
 	);		
 };
