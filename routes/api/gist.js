@@ -38,8 +38,6 @@ exports.getPublicGists = function(req, res){
 	console.log('getPublicGists');
 	var linkHeader = req.param('linkHeader');	
 
-	var a = moment();
-
 	if (!linkHeader){
 		github.gists.public({per_page: 10},
 			function(err, data){		
@@ -139,6 +137,7 @@ exports.getRawFile = function(req, res){
 };
 
 exports.getComments = function(req, res){
+	// var a = moment();
 	var gistId = req.params.gistId;
 	var comments = [];
 	var accessToken = service.getAccessToken(req);
@@ -159,25 +158,29 @@ exports.getComments = function(req, res){
 		url: config.options.githubHost + '/gists/' + gistId + '/comments?access_token=' + accessToken
 	},
 		function(error, response, body){
-		if (body){
-			comments = JSON.parse(body);
-			/*async.each(comments, setUserName, function(error, result){
-				if (cacheEnabled){
-					res.set({
-					  'Cache-Control': 'public, max-age=' + cacheSeconds
-					});
-				}
-				res.send(comments);
-			});*/
-			if (cacheEnabled){
-				res.set({
-				  // 'Cache-Control': 'public, max-age=' + cacheSeconds
-				});
-			}
-			res.send(comments);
-		}else{
-			res.send(comments);
-		}		
+			// var b = moment();
+			// console.log('test:' + a.diff(b));
+			res.send(body);			
+
+		// if (body){
+		// 	// comments = JSON.parse(body);
+		// 	async.each(comments, setUserName, function(error, result){
+		// 		if (cacheEnabled){
+		// 			res.set({
+		// 			  'Cache-Control': 'public, max-age=' + cacheSeconds
+		// 			});
+		// 		}
+		// 		res.send(comments);
+		// 	});
+		// 	// if (cacheEnabled){
+		// 	// 	res.set({
+		// 	// 	  // 'Cache-Control': 'public, max-age=' + cacheSeconds
+		// 	// 	});
+		// 	// }
+		// 	// res.send(comments);
+		// }else{
+		// 	// res.send(comments);
+		// }		
 	});
 };
 
