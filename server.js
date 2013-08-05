@@ -93,6 +93,7 @@ app.get('/api/gist/rawfiles', ensureAuthenticated, gist.getRawFiles);
 app.get('/api/gist/rawfile', ensureAuthenticated, gist.getRawFile);
 app.get('/api/gist/:gistId/comments', ensureAuthenticated, gist.getComments);
 app.post('/api/gist/:gistId/comments', ensureAuthenticated, gist.createComment);
+app.put('/api/gist/:gistId/comments/:id', ensureAuthenticated, gist.editComment);
 app.get('/api/gist/friends', ensureAuthenticated, gist.getFriendsGist);
 
 

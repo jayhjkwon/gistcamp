@@ -30,12 +30,16 @@ define(function(require){
 
 			initialize: function(options){
 				_.bindAll(this, 'onDomRefresh', 'onItemSelected', 'onCommentInputKeypress');
-				this.spinner = new Spinner({length:7});
+				this.spinner = new Spinner({length:5,lines:9,width:4,radius:4});
 				this.subscription = postalWrapper.subscribe(constants.GIST_ITEM_SELECTED, this.onItemSelected);
 			},
 
 			events: {
 				'keydown #comment-input' : 'onCommentInputKeypress'
+			},
+
+			itemViewOptions : function(){
+				return { gistItem: this.selectedGistItem };	// gistItem will be passed to the itemView
 			},
 
 			onDomRefresh: function(){
@@ -105,6 +109,7 @@ define(function(require){
 
 			onClose: function(){
 				var self = this;
+				self.subscription.unsubscribe();
 				_.each(self.xhrs, function(xhr){
 					var s = xhr.state();
 					if (s === 'pending') {
@@ -120,10 +125,6 @@ define(function(require){
 				}else{					
 					this.spinner.stop();					
 				}
-			},
-
-			onClose: function(){
-				this.subscription.unsubscribe();
 			}
 		})
 	;

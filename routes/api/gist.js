@@ -207,6 +207,22 @@ exports.createComment = function(req, res){
 	);	
 };
 
+exports.editComment = function(req, res){
+	var id = req.params.id;
+	var gistId = req.params.gistId;
+	var commentText = req.param('commentText');
+	var accessToken = service.getAccessToken(req);
+
+	request.patch({
+		url: config.options.githubHost + '/gists/' + gistId + '/comments/' + id + '?access_token=' + accessToken, 
+		body: JSON.stringify({body: commentText})
+	},
+		function(error, response, body){
+			res.send(body);
+		}		
+	);	
+};
+
 
 /*
 	1. get friends (following, follower)
