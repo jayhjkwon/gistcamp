@@ -15,6 +15,9 @@ define(function(require){
 		CommentItem     = require('models/commentItem'),
 		util            = require('util'),
 		Spinner         = require('spin'),
+		autoGrow        = require('autoGrow'),
+		global          = require('global'),
+
 
 		CommentsWrapperView = Marionette.CompositeView.extend({
 			className: 'comments',			
@@ -27,7 +30,7 @@ define(function(require){
 
 			initialize: function(options){
 				_.bindAll(this, 'onDomRefresh', 'onItemSelected', 'onCommentInputKeypress');
-				this.spinner = new Spinner({length:7});
+				this.spinner = new Spinner({length:5,lines:9,width:4,radius:4});
 				this.subscription = postalWrapper.subscribe(constants.GIST_ITEM_SELECTED, this.onItemSelected);
 			},
 
@@ -35,15 +38,23 @@ define(function(require){
 				'keydown #comment-input' : 'onCommentInputKeypress'
 			},
 
+			itemViewOptions : function(){
+				return { gistItem: this.selectedGistItem };	// gistItem will be passed to the itemView
+			},
+
 			onDomRefresh: function(){
-				$('.comments-wrapper').niceScroll({cursorcolor: '#eee'});
+				$('.loggedin-user-avatar').attr('src', global.user.avatar);				
+				$('.comments-wrapper').niceScroll({cursorcolor:'#fff'});
+				$('#comment-input').autoGrow();
 			},
 
 			onCommentInputKeypress : function(e){
 				var self = this;
 				var keyCode = e.keyCode || e.which;
-		    	if (keyCode === 13){
+		    	if (keyCode === 13 && !self.saving){
+		    		self.saving = true;
 		    		self.loading(true);
+		    		$(e.target).attr('disabled', 'disabled');
 		    		var text = $('#comment-input').val();
 		    		var comment = new CommentItem({gistId: this.selectedGistItem.id, commentText: text});
 		    		comment.save()
@@ -57,7 +68,10 @@ define(function(require){
 		    			self.render();
 		    		})
 		    		.always(function(){
-		    			self.loading(false);
+		    			self.saving = false;
+		    			$(e.target).removeAttr('disabled');
+		    			self.loading(false);	
+		    			$('#comment-input').focus();
 		    		});
 		    	}
 			},
@@ -83,7 +97,7 @@ define(function(require){
 					self.collection = new CommentItemList({gistId: gistItem.id});
 					self.xhr = self.collection.fetch();
 					self.xhr.done(function(res){
-							self.collection.set(res);
+							// self.collection.set(res);
 							self.render();
 						})
 						.always(function(){
@@ -95,6 +109,7 @@ define(function(require){
 
 			onClose: function(){
 				var self = this;
+				self.subscription.unsubscribe();
 				_.each(self.xhrs, function(xhr){
 					var s = xhr.state();
 					if (s === 'pending') {
@@ -110,10 +125,6 @@ define(function(require){
 				}else{					
 					this.spinner.stop();					
 				}
-			},
-
-			onClose: function(){
-				this.subscription.unsubscribe();
 			}
 		})
 	;

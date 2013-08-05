@@ -26,12 +26,11 @@ define(function(require){
 			},
 
 			onDomRefresh: function(){
-				// this.setUserInfo();
 			},
 
 			setUserInfo: function(){
-				// alert($('#loggedin-user-name').text());
 				$('#loggedin-user-name').text(global.user.name);
+				$('.loggedin-user-avatar').attr('src', global.user.avatar);
 			},
 
 			onRefreshClick: function(e){

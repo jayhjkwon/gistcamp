@@ -1,32 +1,59 @@
 require(['jquery', 'underscore', 'application', 'router', 'views/shellView', 
-	'views/topView', 'views/footerView', 'constants', 'models/user', 'global',
-	'bootstrap', 'prettify', 'nicescroll', 'autoGrow', 'scrollTo'], 
-	function($, _, Application, Router, shellView, topView, footerView, constants, User, global){
+	'views/topView', 'views/footerView', 'constants', 'models/user', 'global', 'async',
+	'bootstrap', 'prettify', 'nicescroll', 'scrollTo'], 
+	function($, _, Application, Router, shellView, topView, footerView, constants, User, global, async){
 
 	$(function(){
 		var el = shellView.render().el;
-		
-		Application.addInitializer(function(options){
-			shellView.top.show(topView);
-			shellView.footer.show(footerView);
-			$('body').html(el);
-		});
 
-		Application.addInitializer(function(options){
+		var getLoginUserInfo = function(callback){
 			var user = new User({mode: constants.USER_AUTH});
 			user.fetch().done(function(result){
 				global.user.id = result.id;
 				global.user.login = result.login;
 				global.user.name = result.name;
+				global.user.avatar = result.avatar_url;
 
-				topView.setUserInfo();
+				callback(null, user);
 			});			
-		});
+		};
 
-		Application.on('initialize:after', function(options){
+		var loadView = function(callback){
+			shellView.top.show(topView);
+			shellView.footer.show(footerView);
+			$('body').html(el);
+			callback(null, shellView);
+		};
+
+		var showUserInfo = function(callback){
+			topView.setUserInfo();
+			callback(null, null);
+		};
+
+		var startRouter = function(callback){
 			var router = new Router;
 			Backbone.history.start({pushState: false});
+			callback(null, router);
+		};
+
+		Application.addInitializer(function(options){
+			async.series(
+				[
+					getLoginUserInfo,
+					loadView,
+					showUserInfo,
+					startRouter,
+					function(err, results){
+						console.log('Application initialization has completed');
+					}
+				]
+			);			
 		});
+
+		// Application.on('initialize:after', function(options){
+		// 	// var router = new Router;
+		// 	// Backbone.history.start({pushState: false});
+		// });
 
 		Application.start();
 
@@ -115,7 +142,7 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 	                    '</div>'
 	    });
 
-	    $('#comment-input').autoGrow();
+	    // $('#comment-input').autoGrow();
 
 	    // check if elem is visible
 	    var isScrolledIntoView = function(scrollElem, elem) {
@@ -147,9 +174,9 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 		    		selectedGist.removeClass('selected');
 		    		var prevGist = gistList[selectedGistIndex - 1];
 		    		$(prevGist).addClass('selected');
-		    		if (!isScrolledIntoView('.gist-list', '.gist-list .gist-item.selected'))
-		    			$('.gist-list').scrollTo($(prevGist));
 		    		$(prevGist).trigger('click');
+		    		// if (!isScrolledIntoView('.gist-list', '.gist-list .gist-item.selected'))
+		    			$('.gist-list').scrollTo($(prevGist), {offset:-20});		    		
 
 		    		break;
 				case 40 : 	// arrow-down key
@@ -159,9 +186,9 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 		    		selectedGist.removeClass('selected');
 		    		var nextGist = gistList[selectedGistIndex + 1];
 		    		$(nextGist).addClass('selected');
-		    		if (!isScrolledIntoView('.gist-list', '.gist-list .gist-item.selected'))
-		   				$('.gist-list').scrollTo($(nextGist));
-	   				$(nextGist).trigger('click');
+		    		$(nextGist).trigger('click');
+		    		// if (!isScrolledIntoView('.gist-list', '.gist-list .gist-item.selected'))
+		   				$('.gist-list').scrollTo($(nextGist), {offset:-20});	   				
 
 		   			break;
 				case 37 : 	// arrow-left key

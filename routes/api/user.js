@@ -4,22 +4,13 @@ var
 	request   = require('request'),
 	_         = require('lodash'),
 	moment    = require('moment'),
-    async     = require('async')
+    async     = require('async'),
+    service   = require('../../infra/service')
 ;
 
-var accessToken = '2fdd28703ec694d5d39084ca424a6466510f2c7d';
-
-var github = new GitHubApi({
-	version: '3.0.0'
-});
-
-github.authenticate({
-	type: 'oauth',
-	token: accessToken
-});
-
-
 exports.getAuthUser = function(req, res){
+	var github = service.getGitHubApi(req);
+	
 	github.user.get({}, function(err, data){
 		res.send(data);
 	});
