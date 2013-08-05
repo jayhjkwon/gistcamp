@@ -16,6 +16,8 @@ define(function(require){
 		util            = require('util'),
 		Spinner         = require('spin'),
 		autoGrow        = require('autoGrow'),
+		global          = require('global'),
+
 
 		CommentsWrapperView = Marionette.CompositeView.extend({
 			className: 'comments',			
@@ -37,6 +39,7 @@ define(function(require){
 			},
 
 			onDomRefresh: function(){
+				$('.loggedin-user-avatar').attr('src', global.user.avatar);				
 				$('.comments-wrapper').niceScroll({cursorcolor:'#fff'});
 				$('#comment-input').autoGrow();
 			},
@@ -63,7 +66,8 @@ define(function(require){
 		    		.always(function(){
 		    			self.saving = false;
 		    			$(e.target).removeAttr('disabled');
-		    			self.loading(false);		    			
+		    			self.loading(false);	
+		    			$('#comment-input').focus();
 		    		});
 		    	}
 			},

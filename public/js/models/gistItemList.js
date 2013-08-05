@@ -3,6 +3,7 @@ define(function(require){
 		Backbone		= require('backbone'),
 		constants       = require('constants'),
 		GistItem 		= require('./gistItem'),
+		global          = require('global'),
 		GistItemList	= Backbone.Collection.extend({
 			model: GistItem,
 			initialize: function(props){
@@ -16,7 +17,7 @@ define(function(require){
 					case constants.GIST_PUBLIC :
 						return '/api/gist/public';	
 					case constants.GIST_LIST_BY_USER :
-						return '/api/gist/user'
+						return '/api/gist/user/' + global.user.login;
 					case constants.GIST_STARRED :
 						return '/api/gist/starred'
 					case constants.GIST_FRIENDS_GISTS :

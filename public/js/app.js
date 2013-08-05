@@ -1,32 +1,59 @@
 require(['jquery', 'underscore', 'application', 'router', 'views/shellView', 
-	'views/topView', 'views/footerView', 'constants', 'models/user', 'global',
+	'views/topView', 'views/footerView', 'constants', 'models/user', 'global', 'async',
 	'bootstrap', 'prettify', 'nicescroll', 'scrollTo'], 
-	function($, _, Application, Router, shellView, topView, footerView, constants, User, global){
+	function($, _, Application, Router, shellView, topView, footerView, constants, User, global, async){
 
 	$(function(){
 		var el = shellView.render().el;
-		
-		Application.addInitializer(function(options){
-			shellView.top.show(topView);
-			shellView.footer.show(footerView);
-			$('body').html(el);
-		});
 
-		Application.addInitializer(function(options){
+		var getLoginUserInfo = function(callback){
 			var user = new User({mode: constants.USER_AUTH});
 			user.fetch().done(function(result){
 				global.user.id = result.id;
 				global.user.login = result.login;
 				global.user.name = result.name;
+				global.user.avatar = result.avatar_url;
 
-				topView.setUserInfo();
+				callback(null, user);
 			});			
-		});
+		};
 
-		Application.on('initialize:after', function(options){
+		var loadView = function(callback){
+			shellView.top.show(topView);
+			shellView.footer.show(footerView);
+			$('body').html(el);
+			callback(null, shellView);
+		};
+
+		var showUserInfo = function(callback){
+			topView.setUserInfo();
+			callback(null, null);
+		};
+
+		var startRouter = function(callback){
 			var router = new Router;
 			Backbone.history.start({pushState: false});
+			callback(null, router);
+		};
+
+		Application.addInitializer(function(options){
+			async.series(
+				[
+					getLoginUserInfo,
+					loadView,
+					showUserInfo,
+					startRouter,
+					function(err, results){
+						console.log('Application initialization has completed');
+					}
+				]
+			);			
 		});
+
+		// Application.on('initialize:after', function(options){
+		// 	// var router = new Router;
+		// 	// Backbone.history.start({pushState: false});
+		// });
 
 		Application.start();
 
