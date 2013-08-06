@@ -66,23 +66,18 @@
 
     </div>
 
-    <div class="menu">
-      <a href="#div-power">
-        <img src="images/power.gif" class="img-power"/>
-      </a>
-
-      <a href="#div-light">
+    <div class="menu"> 
+        <img src="images/power.gif" class="img-power"  />
+ 
+ 
         <img src="images/light.gif" class="img-light"/>
-      </a>
-      <a href="#div-bag">
+    
         <img src="images/bag.gif" class="img-bag"/>
-      </a>  
-      <a href="#div-person">
-        <img src="images/person.gif" class="img-person"/>d
-      </a>
+   
+        <img src="images/person.gif" class="img-person"/>
+      
       <div class="menu-bottom">
     </div>
-    //
     <div class="headers"> 
         <img src="images/logo.gif" class="img-logo"/> 
         <p class="logo-font">GISTCAMP.</p>
@@ -90,7 +85,10 @@
 
 
   <% if (devMode === 'development') { %>
-      <script src="vendor/jquery/jquery.min.js"></script>
+      <script src="vendor/jquery/jquery.min.js"></script> 
+      <script src="vendor/jquery.scrollTo/jquery.scrollTo.min.js"></script>
+      <script src="vendor/jquery-nicescroll/jquery-nicescroll.min.js"></script>
+
       <script src="js/welcome.js?modified_time=<%= (new Date()).getTime() %>"></script>
       <script src="http://localhost:35729/livereload.js"></script>
     <% }else{ %> 
