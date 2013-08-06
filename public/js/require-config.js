@@ -20,7 +20,8 @@ require.config({
         postal         : '../vendor/postal.js/lib/postal',
         async          : '../vendor/async/lib/async',
         store          : '../vendor/store.js/store',
-        markdown       : '../vendor/markdown/lib/markdown'
+        markdown       : '../vendor/markdown/lib/markdown',
+        ace            : '../vendor/ace/lib/ace/ace'
 	},
 	shim: {
 		underscore: {
@@ -51,6 +52,9 @@ require.config({
         },
         markdown: {
             exports: 'markdown'
+        },
+        ace : {
+            exports: 'ace'
         }
 	},
 	hbs : {

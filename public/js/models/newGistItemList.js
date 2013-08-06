@@ -1,13 +1,13 @@
 define(function(require){
 	var
 		Backbone        = require('backbone'),
-		NewGistItem     = require('./newGistList'),
+		NewGistItem     = require('./newGistItem'),
 		NewGistItemList = Backbone.Collection.extend({
-			model : NewGistItem,
+			//model : NewGistItem,
 			initialize: function(props){
 				console.log('newGistItemList init');
 			},
 		});
 
-	return NewGistItemListe;
+	return NewGistItemList;
 })

@@ -117,7 +117,12 @@ define(function(require){
 			},
 			
 			newGist : function(){
-				shellView.main.show(new CreateGistView({currentSelectedMenu:'newgist'}));
+				var createListView = new CreateGistView({currentSelectedMenu:'newgist'});
+				shellView.main.show(createListView);
+
+				//createListView.getItemInit();
+
+
 				Application.vent.trigger(constants.MENU_SELECTED,'newgist');
 			}
 		})
