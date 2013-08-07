@@ -1,0 +1,8 @@
+<div class="add-tag">
+	<ul>
+		{{#each tags}}
+	  	<li><a href="#">{{tag_name}} <span class="badge badge-inverse pull-right">{{tagged_gists_count}}</span></a></li> 
+	  	{{/each}}
+	  <li><input type="text" placeholder="New Tag" /></li> 
+	</ul> 
+</div>

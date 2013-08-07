@@ -26,7 +26,7 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 		};
 
 		var showUserInfo = function(callback){
-			topView.setUserInfo();
+			topView.showUserInfo();
 			callback(null, null);
 		};
 
@@ -127,7 +127,7 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 
 		/*prettyPrint();	*/
 
-		$('.tag').popover({
+		/*$('.tag').popover({
 			html	: true,
 			trigger : 'click',
 			placement: 'top',
@@ -140,7 +140,7 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 	                        '<li><input type="text" placeholder="New Tag" /></li>' +
 	                      '</ul>' +
 	                    '</div>'
-	    });
+	    });*/
 
 	    // $('#comment-input').autoGrow();
 

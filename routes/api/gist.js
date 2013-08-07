@@ -4,7 +4,8 @@ var
 	_         = require('lodash'),
 	moment    = require('moment'),
     async     = require('async'),
-    service   = require('../../infra/service')
+    service   = require('../../infra/service'),
+    util      = require('../../infra/util')
 ;
 var cacheSeconds = 60 * 60 * 1 // 1 hour	
 var cacheEnabled = true;			
@@ -25,7 +26,7 @@ var getNextPage = function(linkHeader, req, res){
 
 	github.getNextPage(linkHeader,
 		function(err, data){		
-			sendData(data, req, res);			
+			if (data) sendData(data, req, res);			
 		}
 	);		
 };
@@ -310,7 +311,18 @@ exports.getFriendsGist = function(req, res){
 	});
 };
 
+exports.getTags = function(req, res){
+	var tags = 
+	[
+		{tag_name: 'JavaScript', tagged_gists_count: 10, tag_id: 1, tag_url: util.convertToSlug('JavaScript')},
+		{tag_name: 'C#', tagged_gists_count: 23, tag_id: 2, tag_url: util.convertToSlug('C#')},
+		{tag_name: 'Ruby on Rails', tagged_gists_count: 5, tag_id: 3, tag_url: util.convertToSlug('Ruby On Rails')},
+		{tag_name: 'Backbone', tagged_gists_count: 45, tag_id: 4, tag_url: util.convertToSlug('Backbone')},
+		{tag_name: 'Java', tagged_gists_count: 5, tag_id: 5, tag_url: util.convertToSlug('Java')}
+	];
 
+	res.send(tags);
+};
 
 
 

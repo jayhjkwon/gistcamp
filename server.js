@@ -95,6 +95,7 @@ app.get('/api/gist/:gistId/comments', ensureAuthenticated, gist.getComments);
 app.post('/api/gist/:gistId/comments', ensureAuthenticated, gist.createComment);
 app.put('/api/gist/:gistId/comments/:id', ensureAuthenticated, gist.editComment);
 app.get('/api/gist/friends', ensureAuthenticated, gist.getFriendsGist);
+app.get('/api/gist/tags', ensureAuthenticated, gist.getTags);
 
 
 http.createServer(app).listen(app.get('port'), function(){

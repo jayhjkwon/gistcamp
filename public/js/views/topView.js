@@ -7,28 +7,37 @@ define(function(require){
 		Application = require('application'),
 		constants   = require('constants'),
 		global      = require('global'),
+		TagItemList = require('models/tagItemList'),
 
 		TopView = Marionette.ItemView.extend({
 			className: 'navbar-inner',
 			template: topTemplate,
 
 			initialize: function(){
+				console.log('TopView initialized');
 				var self = this;
-				_.bindAll(this, 'activateMenu');
+				_.bindAll(this, 'activateMenu', 'showTagInfo');
 
 				Application.commands.setHandler(constants.MENU_SELECTED, function(menu){
 					self.activateMenu(menu);
 				});				
+
+				this.showTagInfo();
 			},
 
 			events: {
 				'click #btn-refresh' : 'onRefreshClick'
 			},
 
-			onDomRefresh: function(){
+			showTagInfo: function(){
+				var self = this;
+				self.collection = new TagItemList();
+				self.collection.fetch().done(function(result){
+					self.render();
+				});
 			},
 
-			setUserInfo: function(){
+			showUserInfo: function(){
 				$('#loggedin-user-name').text(global.user.name);
 				$('.loggedin-user-avatar').attr('src', global.user.avatar);
 			},
