@@ -2,9 +2,9 @@ var mongoose = require('mongoose');
 var db = mongoose.connect('mongodb://localhost/gistcamp');
 
 var userSchema = new mongoose.Schema({
-  _id               : String, // same as login
-  login			        : String,
-  id                : Number,
+  login			        : String, // unique
+  id                : Number, // unique
+  access_token      : String, // unique
   avatar_url  	    : String,
   gravatar_id 	    : String,
   url               : String,
@@ -19,7 +19,7 @@ var userSchema = new mongoose.Schema({
   events_url        : String,
   received_events_url: String,
   type              : String,  
-  name             	: String,
+  name             	: String, 
   company    	      : String,
   blog              : String,
   location          : String,
@@ -31,12 +31,13 @@ var userSchema = new mongoose.Schema({
   following         : Number,  
   created_at        : String,
   updated_at        : String,
-  public_gists      : Number,
-  access_token      : String,
+  public_gists      : Number,  
   tags 			        : 
     [
     	{
-      	tag_name : String, 
+        tag_id   : Number,
+      	tag_name : String,
+        tag_url  : String, 
         gists    : 
           [
             {
@@ -47,4 +48,4 @@ var userSchema = new mongoose.Schema({
     ]
 });
 
-module.exports = db.model('user', userSchema);
+module.exports = db.model('User', userSchema);

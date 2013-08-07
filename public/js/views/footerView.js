@@ -8,15 +8,19 @@ define(function(require){
 		constants 		= require('constants'),		
 		store           = require('store'),
 		bootstrap       = require('bootstrap'),
+		TagItem         = require('models/tagItem'),
 		TagItemList     = require('models/tagItemList'),
 		tagListTemplate = require('hbs!templates/tagListTemplate'),
+		Spinner         = require('spin'),
 
 		FooterView = Marionette.ItemView.extend({
 			className: 'command-buttons',
 			template : footerTemplate,
+			selectedGistItem : {},
 			
 			initialize: function(){
-				_.bindAll(this, 'setTagPopOverUI');
+				_.bindAll(this, 'setTagPopOverUI', 'onItemSelected', 'createTag', 'hideTagInfo', 'loading', 'onBtnCommentClick');
+				this.spinner = new Spinner({length:5,lines:9,width:4,radius:4});
 				this.subscription = postalWrapper.subscribe(constants.GIST_ITEM_SELECTED, this.onItemSelected);
 			},
 
@@ -24,11 +28,42 @@ define(function(require){
 				'click .btn-comments' : 'onBtnCommentClick',
 				'click .btn-reload'   : 'onReloadClick',
 				'click .tag'          : 'onTagClick',
-				'mouseleave .popover' : 'hideTagInfo'
+				'mouseleave .popover' : 'hideTagInfo',
+				'keydown #new-tag'   : 'createTag'
 			},
 
 			ui : {
 				btnTag : '.tag'
+			},
+
+			createTag: function(e){
+				var self = this;
+				var keyCode = e.keyCode || e.which;
+		    	if (keyCode === 13 && !self.saving){
+		    		self.saving = true;
+		    		self.loading(true, e.target);
+		    		
+		    		var text = $(e.target).val();
+		    		var tag = new TagItem({gistId: self.selectedGistItem.id, tagName:text});
+		    		tag.save()
+		    		.done(function(data){
+		    			if (self.tags){
+		    				self.tags.add(data);
+		    			}else{
+		    				self.tags = new TagItemList();
+		    				self.tags.set(data);
+		    			}
+		    			// self.render();
+		    			$('.tag-area').html(tagListTemplate({tags: self.tags.models}));
+		    			self.ui.btnTag.popover('show');
+
+		    			$(e.target).val('');
+		    		})
+		    		.always(function(){
+		    			self.saving = false;
+		    			self.loading(false);
+		    		});
+		    	}
 			},
 
 			onTagClick: function(){		
@@ -46,8 +81,9 @@ define(function(require){
 
 			setTagPopOverUI: function(){
 				var self = this;
-				var tags = new TagItemList();
-				tags.fetch().done(function(result){
+				if (!self.tags)
+					self.tags = new TagItemList();
+				self.tags.fetch().done(function(result){
 					if ($('div.tag-area')){
 						self.$el.append('<div class="tag-area"></div>');
 					}
@@ -91,10 +127,20 @@ define(function(require){
 			},
 
 			onItemSelected : function(gistItem){
+				this.selectedGistItem = gistItem;
 				if (gistItem && gistItem.comments > 0){
 					$('.comments-badge').text(gistItem.comments).show();
 				}else{
 					$('.comments-badge').text('').hide();
+				}
+			},
+
+			loading: function(showSpinner, el){
+				if (showSpinner){
+					var target = $(el).parents()[0];
+					this.spinner.spin(target);
+				}else{					
+					this.spinner.stop();					
 				}
 			},
 

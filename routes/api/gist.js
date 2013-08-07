@@ -5,7 +5,8 @@ var
 	moment    = require('moment'),
     async     = require('async'),
     service   = require('../../infra/service'),
-    util      = require('../../infra/util')
+    util      = require('../../infra/util'),
+    User      = require('../../models/user')
 ;
 var cacheSeconds = 60 * 60 * 1 // 1 hour	
 var cacheEnabled = true;			
@@ -40,7 +41,7 @@ exports.getPublicGists = function(req, res){
 	var linkHeader = req.param('linkHeader');	
 
 	if (!linkHeader){
-		github.gists.public({per_page: 10},
+		github.gists.public({},
 			function(err, data){		
 				if (data) {
 					sendData(data, req, res);
@@ -79,7 +80,7 @@ exports.getStarredGists = function(req, res){
 	console.log('getStarredGists');
 	var linkHeader = req.param('linkHeader');
 	if (!linkHeader){
-		github.gists.starred({}, 
+		github.gists.starred({per_page: config.options.perPage || 30}, 
 			function(err, data){		
 				if (data) sendData(data, req, res);
 			}
@@ -322,6 +323,58 @@ exports.getTags = function(req, res){
 	];
 
 	res.send(tags);
+};
+
+exports.createTag = function(req, res){
+	var tagName = req.param('tagName');
+	var gistId  = req.param('gistId');
+	var tagUrl  = util.convertToSlug(tagName);
+	var tagId;
+
+	/*var query = User.find({id: service.getUserId(req)});
+	var promise = query.where('tags').count().exec();
+	promise.then(function(count){
+		if (count === 0){
+			User.tags = [];
+		}
+
+		User.tags.push({ tag_id: 1, tag_name: tagName, tags });
+	});*/
+
+	var conditions = {id: service.getUserId(req)};
+	var update = {
+		$push: 
+		{
+			tags: 
+			{
+				tag_id: 1,
+				tag_name:tagName, 
+				tag_url:tagUrl, 
+				gists: [{gist_id:gistId}]
+			}
+		}
+	};
+	var options = {upsert:true};
+	User.update(conditions, update, options, function(err, numberAffected, raw){
+		User.find({id:service.getUserId(req)})
+		.select('tags')
+		.lean()
+		.exec(function(err, docs){
+			res.send(docs[0].tags);
+		});
+	});
+};
+
+exports.getGistsByTag = function(req, res){
+
+};
+
+exports.editTag = function(req, res){
+
+};
+
+exports.removeTag = function(req, res){
+
 };
 
 
