@@ -313,16 +313,21 @@ exports.getFriendsGist = function(req, res){
 };
 
 exports.getTags = function(req, res){
-	var tags = 
+	/*var tags = 
 	[
 		{tag_name: 'JavaScript', tagged_gists_count: 10, tag_id: 1, tag_url: util.convertToSlug('JavaScript')},
 		{tag_name: 'C#', tagged_gists_count: 23, tag_id: 2, tag_url: util.convertToSlug('C#')},
 		{tag_name: 'Ruby on Rails', tagged_gists_count: 5, tag_id: 3, tag_url: util.convertToSlug('Ruby On Rails')},
 		{tag_name: 'Backbone', tagged_gists_count: 45, tag_id: 4, tag_url: util.convertToSlug('Backbone')},
 		{tag_name: 'Java', tagged_gists_count: 5, tag_id: 5, tag_url: util.convertToSlug('Java')}
-	];
+	];*/
 
-	res.send(tags);
+	User.find({id:service.getUserId(req)})
+		.select('tags')
+		.lean()
+		.exec(function(err, docs){
+			res.send(docs[0].tags);
+		});
 };
 
 exports.createTag = function(req, res){
@@ -347,7 +352,6 @@ exports.createTag = function(req, res){
 		{
 			tags: 
 			{
-				tag_id: 1,
 				tag_name:tagName, 
 				tag_url:tagUrl, 
 				gists: [{gist_id:gistId}]

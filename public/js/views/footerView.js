@@ -20,8 +20,14 @@ define(function(require){
 			
 			initialize: function(){
 				_.bindAll(this, 'setTagPopOverUI', 'onItemSelected', 'createTag', 'hideTagInfo', 'loading', 'onBtnCommentClick');
+
+				this.tags = new TagItemList();
+
+				this.listenTo(this.tags, 'all', this.onTagCollectionChange);
 				this.spinner = new Spinner({length:5,lines:9,width:4,radius:4});
 				this.subscription = postalWrapper.subscribe(constants.GIST_ITEM_SELECTED, this.onItemSelected);
+
+				
 			},
 
 			events: {
@@ -29,11 +35,36 @@ define(function(require){
 				'click .btn-reload'   : 'onReloadClick',
 				'click .tag'          : 'onTagClick',
 				'mouseleave .popover' : 'hideTagInfo',
-				'keydown #new-tag'   : 'createTag'
+				'keydown #new-tag'    : 'createTag'
 			},
 
 			ui : {
 				btnTag : '.tag'
+			},
+
+			onRender: function(){
+				this.setTagPopOverUI();				
+			},
+
+			onTagCollectionChange: function(tags){
+				console.log('onTagCollectionChange event occured');
+				$('.tag-area').html(tagListTemplate({tags: this.tags.toJSON()}));
+
+			},
+
+			setTagPopOverUI: function(){
+				if ($('div.tag-area')){
+					this.$el.append('<div class="tag-area"></div>');
+				}
+
+				this.ui.btnTag.popover({
+					html	: true,
+					placement: 'top',
+					title	: function(){ return '<div><i class="icon-tag"></i> Tag the gist</div>'; },
+					content : function(){ return $('.tag-area').html(); }					
+			    });
+
+				this.tags.fetch();	
 			},
 
 			createTag: function(e){
@@ -47,16 +78,8 @@ define(function(require){
 		    		var tag = new TagItem({gistId: self.selectedGistItem.id, tagName:text});
 		    		tag.save()
 		    		.done(function(data){
-		    			if (self.tags){
-		    				self.tags.add(data);
-		    			}else{
-		    				self.tags = new TagItemList();
-		    				self.tags.set(data);
-		    			}
-		    			// self.render();
-		    			$('.tag-area').html(tagListTemplate({tags: self.tags.models}));
+		    			self.tags.reset(data);	    						    			
 		    			self.ui.btnTag.popover('show');
-
 		    			$(e.target).val('');
 		    		})
 		    		.always(function(){
@@ -73,30 +96,7 @@ define(function(require){
 
 			hideTagInfo: function(){
 				this.ui.btnTag.popover('hide');	
-			},
-
-			onRender: function(){
-				this.setTagPopOverUI();				
-			},
-
-			setTagPopOverUI: function(){
-				var self = this;
-				if (!self.tags)
-					self.tags = new TagItemList();
-				self.tags.fetch().done(function(result){
-					if ($('div.tag-area')){
-						self.$el.append('<div class="tag-area"></div>');
-					}
-					$('.tag-area').html(tagListTemplate({tags: result}));
-
-					self.ui.btnTag.popover({
-						html	: true,
-						placement: 'top',
-						title	: function(){ return '<div><i class="icon-tag"></i> Tag the gist</div>'; },
-						content : function(){ return $('.tag-area').html(); }					
-				    });	
-				});				
-			},
+			},			
 
 			onBtnCommentClick: function(e){
 				var showComments = true;

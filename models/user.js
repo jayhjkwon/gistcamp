@@ -35,7 +35,7 @@ var userSchema = new mongoose.Schema({
   tags 			        : 
     [
     	{
-        tag_id   : Number,
+        // tag_id   : Number,
       	tag_name : String,
         tag_url  : String, 
         gists    : 
