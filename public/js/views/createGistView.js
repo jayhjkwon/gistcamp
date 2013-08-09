@@ -22,7 +22,7 @@ define(function(require){
 				self.collection.add(item);
 				//$('.create-gist-container').niceScroll({cursorcolor: '#eee'});
 				//$('#main').niceScroll({cursorcolor: '#eee'});
-				
+
 				console.log( self.collection);
 
 			},
