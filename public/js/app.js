@@ -1,29 +1,12 @@
-<<<<<<< HEAD
-require(['jquery', 'underscore', 'application', 'router', 'views/shellView', 
-<<<<<<< HEAD
-	'views/topView', 'views/footerView', 'constants', 'models/user', 'global',
+require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
+	'views/topView', 'views/footerView', 'constants', 'models/user', 'global', 'async', 
+	'socketio', 'postalWrapper',
 	'bootstrap', 'prettify', 'nicescroll', 'autoGrow', 'scrollTo'], 
-	function($, _, Application, Router, shellView, topView, footerView, constants, User, global){
-=======
-require(['jquery', 'underscore', 'application', 'router', 'views/shellView', 'views/topView', 'views/footerView', 'io',
-	'bootstrap', 'prettify', 'nicescroll', 'autoGrow', 'scrollTo'], 
-	function($, _, Application, Router, shellView, topView, footerView, io){
->>>>>>> hotfixes/patched
-=======
-	'views/topView', 'views/footerView', 'constants', 'models/user', 'global', 'async',
-	'bootstrap', 'prettify', 'nicescroll', 'scrollTo'], 
-	function($, _, Application, Router, shellView, topView, footerView, constants, User, global, async){
->>>>>>> 967a7887dda2424a5611ec51c9628f1e6d9f4214
-
+	function($, _, Application, Router, shellView, topView, footerView, constants, User, global, async, socketio, postalWrapper){
 	$(function(){
 		var el = shellView.render().el;
 
-<<<<<<< HEAD
-		Application.addInitializer(function(options){
-<<<<<<< HEAD
-=======
 		var getLoginUserInfo = function(callback){
->>>>>>> 967a7887dda2424a5611ec51c9628f1e6d9f4214
 			var user = new User({mode: constants.USER_AUTH});
 			user.fetch().done(function(result){
 				global.user.id = result.id;
@@ -31,14 +14,29 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView', 'vi
 				global.user.name = result.name;
 				global.user.avatar = result.avatar_url;
 
+				var socket = socketio.connect('http://localhost:3000');
+				global.socket = socket;
+
+				// on connection to server, ask for user's name with an anonymous callback
+				global.socket.on('connect', function(){
+					// call the server-side function 'adduser' and send one parameter (value of prompt)
+					//global.socket.emit('adduser', prompt("What's your name?"));
+
+					global.socket.emit('adduser', global.user.login);
+				});
+
+				global.socket.on('updaterooms', function(rooms) {
+					global.rooms = rooms;
+					postalWrapper.publish(constants.CHAT_UPDATE_ROOM);
+				});
+
+				// listener, whenever the server emits 'updatechat', this updates the chat body
+				global.socket.on('updatechat', function (username, data) {
+					$('#conversation').append('<b>'+username + ':</b> ' + data + '<br>');
+				});
+
 				callback(null, user);
-			});			
-<<<<<<< HEAD
-=======
-			var socket = io.connect();
->>>>>>> hotfixes/patched
-		});
-=======
+			});
 		};
 
 		var loadView = function(callback){
@@ -52,7 +50,6 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView', 'vi
 			topView.showUserInfo();
 			callback(null, null);
 		};
->>>>>>> 967a7887dda2424a5611ec51c9628f1e6d9f4214
 
 		var startRouter = function(callback){
 			var router = new Router;
@@ -73,15 +70,6 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView', 'vi
 				]
 			);			
 		});
-
-<<<<<<< HEAD
-
-=======
-		// Application.on('initialize:after', function(options){
-		// 	// var router = new Router;
-		// 	// Backbone.history.start({pushState: false});
-		// });
->>>>>>> 967a7887dda2424a5611ec51c9628f1e6d9f4214
 
 		Application.start();
 

@@ -4,5 +4,7 @@ define({
 		login : '',
 		name  : '',
 		avatar: ''
-	}
+	},
+	socket : '',
+	rooms : {},
 })

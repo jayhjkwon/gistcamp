@@ -10,6 +10,10 @@ define(function(require){
 		FilesWrapperView    = require('views/filesWrapperView'),
 		CommentsWrapperView = require('views/CommentsWrapperView'),
 		CreateGistView = require('views/createGistView')
+		ChatView            = require('views/chatView'),
+		ChatItemListView    = require('views/chatItemListView'),
+		ConversationWrapperView = require('views/conversationWrapperView'),
+		global              = require('global')
 	;
 
 	var
@@ -22,6 +26,7 @@ define(function(require){
 			},
 
 			home : function(){
+
 				// LayoutView with regions
 				var gistListView = new GistListView({currentSelectedMenu: 'home'});
 				shellView.main.show(gistListView);
@@ -128,22 +133,24 @@ define(function(require){
 
 			chat : function(){
 				
-				// var chatView = new ChatView({currentSelectedMenu: 'chat'})
-				// shellView.main.show(chatView);
+				global.socket.emit('getrooms');
 
-				// // Chat List on the left region
-    //             var chatListWrapperView = new ChatListWrapperView;
-				// chatView.chatList.show(chatListWrapperView);
+				var chatView = new ChatView({currentSelectedMenu: 'chat'})
+				shellView.main.show(chatView);
 
-				// // Gist Files on the center region
-				// var filesWrapperView = new FilesWrapperView;
-				// chatView.filesWrapper.show(filesWrapperView);
+				// Chat List on the left region
+                var chatItemListView = new ChatItemListView;
+				chatView.chatList.show(chatItemListView);
 
-				// // Chat on the right region
-				// var conversationWrapperView = new ConversationWrapperView;
-				// chatView.chatWrapper.show(conversationWrapperView);
+				// Gist Files on the center region
+				var filesWrapperView = new FilesWrapperView;
+				chatView.filesWrapper.show(filesWrapperView);
 
-				// Application.execute(constants.MENU_SELECTED,'chat');
+				// Chat on the right region
+				var conversationWrapperView = new ConversationWrapperView;
+				chatView.chatWrapper.show(conversationWrapperView);
+
+				Application.execute(constants.MENU_SELECTED,'chat');
 			}
 		})
 	;

@@ -34,7 +34,10 @@ module.exports = function (grunt) {
                     out           : './public/js/app.min.js',
                     name          : 'app',
                     include       : ['../vendor/requirejs/require', 'require-config'],
-                    optimize      : 'uglify2'
+                    optimize      : 'uglify2',
+                    paths: {
+                        socketio : 'empty:'
+                    }
                 }
             }
         },
