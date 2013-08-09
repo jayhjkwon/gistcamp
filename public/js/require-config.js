@@ -21,7 +21,7 @@ require.config({
         async          : '../vendor/async/lib/async',
         store          : '../vendor/store.js/store',
         markdown       : '../vendor/markdown/lib/markdown',
-        ace            : '../vendor/ace/lib/ace/ace'
+        ace            : '../vendor/ace-builds/src/ace'
 	},
 	shim: {
 		underscore: {
