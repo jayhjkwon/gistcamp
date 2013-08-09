@@ -5,18 +5,23 @@ define(function(require){
 		postalWrapper   = require('postalWrapper'),
 		constants 		= require('constants'),		
 		store           = require('store'),
+		global          = require('global'),
+		Router          = require('router'),
 
 		FooterView = Marionette.Layout.extend({
 			className: 'command-buttons',
 			template : footerTemplate,
-			
+			internalGistItem : '',
+
 			initialize: function(){
 				this.subscription = postalWrapper.subscribe(constants.GIST_ITEM_SELECTED, this.onItemSelected);
+				this.router = new Router();
 			},
 
 			events: {
 				'click .btn-comments' : 'onBtnCommentClick',
-				'click .btn-reload'   : 'onReloadClick'
+				'click .btn-reload'   : 'onReloadClick',
+				'click .btn-chats' : 'onRoomCreated'
 			},
 
 			onBtnCommentClick: function(e){
@@ -45,21 +50,13 @@ define(function(require){
 
 			onReloadClick: function(e){
 				postalWrapper.publish(constants.GIST_ITEM_RELOAD);
-
-			events : {
-				'click .btn-command-wrapper btn-chats' : 'onRoomCreated'
 			},
-
+			
 			onRoomCreated : function(e){
-
-				// connect는 나중에 Access token을 받는 부분으로 이동해야 한다.
-				// on connection to server, ask for user's name with an anonymous callback
-				// socket.on('connect', function(){
-				// 	// call the server-side function 'adduser' and send one parameter (value of prompt)
-				// 	socket.emit('adduser', prompt("What's your name?"));
-				// });
-
-				// socket.emit('addroom', prompt("What's room name?"));
+				global.socket.emit('addroom', internalGistItem.id);
+				this.router.navigate('chat', {trigger: true});
+				
+				postalWrapper.publish(constants.CHAT_CREATE_ROOM, internalGistItem);
 			},
 
 			onItemSelected : function(gistItem){
@@ -68,6 +65,8 @@ define(function(require){
 				}else{
 					$('.comments-badge').text('').hide();
 				}
+
+				internalGistItem = gistItem;
 			},
 
 			onClose: function(){

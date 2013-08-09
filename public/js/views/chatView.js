@@ -29,17 +29,7 @@ define(function(require){
 			},
 
 			events : {
-				'click .pivot-headers a' : 'onFileNameClicked'
-			},
-			
-			onFileNameClicked : function(e){
-				e.preventDefault();
-		    	$('.pivot-headers a').removeClass('active');
-		    	$(e.currentTarget).addClass('active');
-			},
-
-			onMenuChanged: function(){
-				console.log('onMenuChanged');
+				
 			},
 
 			onClose: function(){

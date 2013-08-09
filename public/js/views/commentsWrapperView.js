@@ -46,7 +46,7 @@ define(function(require){
 		    		self.loading(true);
 		    		var text = $('#comment-input').val();
 		    		var comment = new CommentItem({gistId: this.selectedGistItem.id, commentText: text});
-		    		comment.save()
+		    		comment.fetch()
 		    		.done(function(data){
 		    			if (self.collection){
 		    				self.collection.add(data);

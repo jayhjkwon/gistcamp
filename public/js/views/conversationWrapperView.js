@@ -1,32 +1,4 @@
 define(function(require){
-
-/*
-	var socket = require('socketWrapper');
-	
-	// listener, whenever the server emits 'updatechat', this updates the chat body
-	socket.on('updatechat', function (username, data) {
-		$('#conversation').append('<b>'+username + ':</b> ' + data + '<br>');
-	});
-	
-	// on load of page
-	$(function(){
-		// when the client clicks SEND
-		$('#datasend').click( function() {
-			var message = $('#data').val();
-			$('#data').val('');
-			// tell server to execute 'sendchat' and send along one parameter
-			socket.emit('sendchat', message);
-		});
-
-		// when the client hits ENTER on their keyboard
-		$('#data').keypress(function(e) {
-			if(e.which == 13) {
-				$(this).blur();
-				$('#datasend').focus().click();
-			}
-		});
-	});
-*/
 	var
 		$ 				= require('jquery'),
 		_ 				= require('underscore'),
@@ -40,6 +12,7 @@ define(function(require){
 		postalWrapper   = require('postalWrapper'),	
 		util            = require('util'),
 		Spinner         = require('spin'),
+		global          = require('global'),
 
 		ConversationWrapperView = Marionette.CompositeView.extend({			
 			template : conversationWrapperTemplate,
@@ -47,11 +20,32 @@ define(function(require){
 			initialize: function(options){
 				var self = this;
 				console.log('ConversationWrapperView initialized');
-			}
+			},
 
-			//events: {
-			//	
-			//}
+			events: {
+				'click #datasend' : 'onDataSendClicked',
+				'keypress #data' : 'onDataSendKeyPress'
+			},
+
+			onDataSendClicked : function(){
+				var message = $('#data').val();
+
+				if (message)
+				{
+					$('#data').val('');
+					// tell server to execute 'sendchat' and send along one parameter
+					global.socket.emit('sendchat', message);	
+				}
+
+				$('data').focus();
+			},
+
+			onDataSendKeyPress : function(e){
+				if(e.which == 13) {
+					$(this).blur();
+					$('#datasend').click();
+				}
+			}
 		})
 	;
 
