@@ -20,8 +20,11 @@ require.config({
         postal         : '../vendor/postal.js/lib/postal',
         async          : '../vendor/async/lib/async',
         store          : '../vendor/store.js/store',
-        markdown       : '../vendor/markdown/lib/markdown'
-        io             : '../vendor/socket.io-client/lib/io'
+        markdown       : '../vendor/markdown/lib/markdown',
+        // TODO : Socket.Client는 왜 있는걸까? 나중에 다시 알아보기
+        // socketi        : '../vendor/socket.io-client/lib/socket.io-client'
+        //socketio       : 'http://localhost:3000/socket.io/socket.io'
+        socketio       : '/socket.io/socket.io'
 	},
 	shim: {
 		underscore: {
@@ -52,7 +55,8 @@ require.config({
         },
         markdown: {
             exports: 'markdown'
-        io: {
+        },
+        socketio: {
             exports: 'io'
         }
 	},

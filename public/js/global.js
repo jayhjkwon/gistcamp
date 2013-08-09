@@ -6,5 +6,7 @@ define({
 		id    : '',
 		login : '',
 		name  : ''
-	}
+	},
+	socket : '',
+	rooms : {},
 })

@@ -1,14 +1,7 @@
-<<<<<<< HEAD
 require(['jquery', 'underscore', 'application', 'router', 'views/shellView', 
-	'views/topView', 'views/footerView', 'constants', 'models/user', 'global',
+	'views/topView', 'views/footerView', 'constants', 'models/user', 'global', 'socketio', 'postalWrapper',
 	'bootstrap', 'prettify', 'nicescroll', 'autoGrow', 'scrollTo'], 
-	function($, _, Application, Router, shellView, topView, footerView, constants, User, global){
-=======
-require(['jquery', 'underscore', 'application', 'router', 'views/shellView', 'views/topView', 'views/footerView', 'io',
-	'bootstrap', 'prettify', 'nicescroll', 'autoGrow', 'scrollTo'], 
-	function($, _, Application, Router, shellView, topView, footerView, io){
->>>>>>> hotfixes/patched
-
+	function($, _, Application, Router, shellView, topView, footerView, constants, User, global, socketio, postalWrapper){
 	$(function(){
 		var el = shellView.render().el;
 		
@@ -19,7 +12,6 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView', 'vi
 		});
 
 		Application.addInitializer(function(options){
-<<<<<<< HEAD
 			var user = new User({mode: constants.USER_AUTH});
 			user.fetch().done(function(result){
 				global.user.id = result.id;
@@ -28,9 +20,29 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView', 'vi
 
 				topView.setUserInfo();
 			});			
-=======
-			var socket = io.connect();
->>>>>>> hotfixes/patched
+		});
+
+
+		Application.addInitializer(function(options){
+			var socket = socketio.connect('http://localhost:3000');
+			global.socket = socket;
+
+			// on connection to server, ask for user's name with an anonymous callback
+			global.socket.on('connect', function(){
+				// call the server-side function 'adduser' and send one parameter (value of prompt)
+				global.socket.emit('adduser', prompt("What's your name?"));
+			});
+
+			global.socket.on('updaterooms', function(rooms) {
+				global.rooms = rooms;
+				postalWrapper.publish(constants.CHAT_UPDATE_ROOM);
+			});
+
+			// listener, whenever the server emits 'updatechat', this updates the chat body
+			global.socket.on('updatechat', function (username, data) {
+				$('#conversation').append('<b>'+username + ':</b> ' + data + '<br>');
+			});
+			
 		});
 
 		Application.on('initialize:after', function(options){

@@ -37,9 +37,6 @@ app.get('/welcome', pages.welcome);
 
 // restful services
 app.get('/api/user/auth', user.getAuthUser);
-
-
-app.get('/api/users/:id', user.getUser);
 app.get('/api/gist/public', gist.getPublicGists);
 app.get('/api/gist/user', gist.getGistListByUser);
 app.get('/api/gist/starred', gist.getStarredGists);
@@ -48,7 +45,7 @@ app.get('/api/gist/rawfile', gist.getRawFile);
 app.get('/api/gist/:gistId/comments', gist.getComments);
 app.post('/api/gist/:gistId/comments', gist.createComment);
 app.get('/api/gist/friends', gist.getFriendsGist);
-
+app.get('/api/gists/:gistId', gist.getGistById);
 
 var server = http.createServer(app)
 	, io = require('socket.io').listen(server);
@@ -61,7 +58,6 @@ server.listen(app.get('port'), function(){
 //  console.log('Express server listening on port ' + app.get('port'));
 // });
 
-
 // usernames which are currently connected to the chat
 var usernames = {};
 
@@ -69,7 +65,7 @@ var usernames = {};
 var rooms = {};
 
 io.sockets.on('connection', function (socket) {
-	
+
 	// when the client emits 'adduser', this listens and executes
 	socket.on('adduser', function(username){
 		// store the username in the socket session for this client
@@ -85,7 +81,11 @@ io.sockets.on('connection', function (socket) {
 		// echo to room 1 that a person has connected to their room
 		// socket.broadcast.to('room1').emit('updatechat', 'SERVER', username + ' has connected to this room');
 		// socket.emit('updaterooms', rooms, 'room1');
-		socket.emit('updaterooms', rooms, null);
+		
+	});
+
+	socket.on('getrooms', function() {
+		socket.emit('updaterooms', rooms);
 	});
 	
 	socket.on('addroom', function(roomname){
@@ -95,7 +95,7 @@ io.sockets.on('connection', function (socket) {
 
 		socket.emit('updatechat', 'SERVER', 'you have connected to ' + roomname);
 		// socket.broadcast.to(roomname).emit('updatechat', 'SERVER', socket.username + ' has joined this room');
-		socket.emit('updaterooms', rooms, roomname);
+		socket.emit('updaterooms', rooms);
 	});
 
 	// when the client emits 'sendchat', this listens and executes
@@ -106,14 +106,18 @@ io.sockets.on('connection', function (socket) {
 	
 	socket.on('switchRoom', function(newroom){
 		socket.leave(socket.room);
+
+		rooms[newroom] = newroom;
 		socket.join(newroom);
-		socket.emit('updatechat', 'SERVER', 'you have connected to '+ newroom);
+		
+		// socket.emit('updatechat', 'SERVER', 'you have connected to '+ newroom);
 		// sent message to OLD room
 		socket.broadcast.to(socket.room).emit('updatechat', 'SERVER', socket.username+' has left this room');
+		
 		// update socket session room title
 		socket.room = newroom;
 		socket.broadcast.to(newroom).emit('updatechat', 'SERVER', socket.username+' has joined this room');
-		socket.emit('updaterooms', rooms, newroom);
+		//socket.emit('updaterooms', rooms);
 	});
 	
 	// when the user disconnects.. perform this
