@@ -1,25 +1,18 @@
 var 
-	GitHubApi = require('github'),
 	config    = require('../../infra/config'),
 	request   = require('request'),
 	_         = require('lodash'),
 	moment    = require('moment'),
-    async     = require('async')
+    async     = require('async'),
+    service   = require('../../infra/service'),
+    util      = require('../../infra/util')
 ;
-var accessToken = '2fdd28703ec694d5d39084ca424a6466510f2c7d';
 var cacheSeconds = 60 * 60 * 1 // 1 hour	
 var cacheEnabled = true;			
 
-var github = new GitHubApi({
-	version: '3.0.0'
-});
+var sendData = function(data, req, res){
+	var github = service.getGitHubApi(req);
 
-github.authenticate({
-	type: 'oauth',
-	token: accessToken
-});
-
-var sendData = function(data, res){
 	res.send({
 		data: data, 
 		hasNextPage: github.hasNextPage(data),
@@ -28,113 +21,83 @@ var sendData = function(data, res){
 };
 
 
-var getNextPage = function(linkHeader, res){
+var getNextPage = function(linkHeader, req, res){
+	var github = service.getGitHubApi(req);
+
 	github.getNextPage(linkHeader,
 		function(err, data){		
-			sendData(data, res);			
+			if (data) sendData(data, req, res);			
 		}
 	);		
 };
 
-/*var setFileContent = function(file, callback){
-	request.get(file.raw_url, function(error, response, body){	
-		if (file.language && file.language.toLowerCase() === 'markdown'){
-			github.markdown.render({text:body}, function(err, data){
-				file.file_content = data.data;		
-				callback(null, file);
-			});
-		}else{
-			file.file_content = body;
-			callback(null, file);
-		}			
-	});
-};
-
-var handleGist = function(gist, callback){
-	var files = _.values(gist.files);
-	async.each(files, setFileContent, function(error, result){
-		callback(null, gist);
-	});
-};
-*/
-
 
 exports.getPublicGists = function(req, res){
-	var self = this;
+	var self = this;	
+	var github = service.getGitHubApi(req);
+	
 	console.log('getPublicGists');
 	var linkHeader = req.param('linkHeader');	
-
-	var a = moment();
 
 	if (!linkHeader){
 		github.gists.public({per_page: 10},
 			function(err, data){		
 				if (data) {
-					sendData(data, res);
+					sendData(data, req, res);
 				}
 			}
 		);
 	}else{
-		getNextPage(linkHeader, res);
+		getNextPage(linkHeader, req, res);
 	}
 };
 
 exports.getGistListByUser = function(req, res){
 	var self = this;	
+	var github = service.getGitHubApi(req);
+	
 	console.log('getGistListByUser');
 	var linkHeader = req.param('linkHeader');
 	if (!linkHeader){
 		github.gists.getFromUser({
-			user: req.param('user') || 'RayKwon', 
+			user: req.param('login_name'), 
 			per_page: config.options.perPage || 30
 		}, 
 			function(err, data){		
-				if (data) sendData(data, res);
+				if (data) sendData(data, req, res);
 			}
 		);
 	}else{
-		getNextPage(linkHeader, res);
+		getNextPage(linkHeader, req, res);
 	}
 };
 
 exports.getStarredGists = function(req, res){
-	var self = this;	
+	var self = this;
+	var github = service.getGitHubApi(req);
+		
 	console.log('getStarredGists');
 	var linkHeader = req.param('linkHeader');
 	if (!linkHeader){
 		github.gists.starred({}, 
 			function(err, data){		
-				if (data) sendData(data, res);
+				if (data) sendData(data, req, res);
 			}
 		);
 	}else{
-		getNextPage(linkHeader, res);
+		getNextPage(linkHeader, req, res);
 	}
 };
 
 exports.getRawFiles = function(req, res){
 	var filesInfo = req.param('files');
+	var accessToken = service.getAccessToken(req);
 
 	var setFileContent = function(file, callback){
 		request.get({
 			url: file.raw_url + '?access_token=' + accessToken,
 			timeout: 5000
 		}, function(error, response, body){	
-			/*if (file.language && file.language.toLowerCase() === 'markdown'){
-				// github.markdown.render({text:body, mode:'markdown'}, function(err, data){
-				// 	if (data && data.data) {
-				// 		file.file_content = data.data;	
-				// 		file.isMarkdown = true;	
-				// 	}
-				// 	callback(null, file);
-				// });
-				file.file_content = markdown.toHTML(body);
-				file.isMarkdown = true;
-				callback(null, file);
-			}else{
-				file.file_content = body;
-				callback(null, file);
-			}*/			
 			file.file_content = body;
 			callback(null, file);
 		});
@@ -155,8 +118,8 @@ exports.getRawFiles = function(req, res){
 exports.getRawFile = function(req, res){
 	var rawUrl = req.param('file');
 	var isMarkdown = req.param('isMarkdown');
+	var accessToken = service.getAccessToken(req);
 	
-	// var a = moment();
 	var sendFileContent = function(body){
 		if (cacheEnabled){
 			res.set({
@@ -170,26 +133,15 @@ exports.getRawFile = function(req, res){
 		url: rawUrl + '?access_token=' + accessToken,
 		timeout: 5000
 	}, function(error, response, body){	
-		/*if (isMarkdown){
-			// github.markdown.render({text:body, mode:'markdown'}, function(err, data){
-			// 	if (data && data.data) 
-			// 		sendFileContent(data.data);
-			// });
-			sendFileContent(markdown.toHTML(body));
-		}else{
-			sendFileContent(body);
-		}*/
-
 		sendFileContent(body);
-
-		// var b = moment();
-		// console.log('time: ' + a.diff(b));
 	});
 };
 
 exports.getComments = function(req, res){
+	// var a = moment();
 	var gistId = req.params.gistId;
 	var comments = [];
+	var accessToken = service.getAccessToken(req);
 
 	// TODO : apply cache using etag or last-modified for avoiding rate-limit
 	var setUserName = function(comment, callback){
@@ -207,56 +159,67 @@ exports.getComments = function(req, res){
 		url: config.options.githubHost + '/gists/' + gistId + '/comments?access_token=' + accessToken
 	},
 		function(error, response, body){
-		if (body){
-			comments = JSON.parse(body);
-			/*async.each(comments, setUserName, function(error, result){
-				if (cacheEnabled){
-					res.set({
-					  'Cache-Control': 'public, max-age=' + cacheSeconds
-					});
-				}
-				res.send(comments);
-			});*/
-			if (cacheEnabled){
-				res.set({
-				  // 'Cache-Control': 'public, max-age=' + cacheSeconds
-				});
-			}
-			res.send(comments);
-		}else{
-			res.send(comments);
-		}		
+			// var b = moment();
+			// console.log('test:' + a.diff(b));
+			res.send(body);			
+
+		// if (body){
+		// 	// comments = JSON.parse(body);
+		// 	async.each(comments, setUserName, function(error, result){
+		// 		if (cacheEnabled){
+		// 			res.set({
+		// 			  'Cache-Control': 'public, max-age=' + cacheSeconds
+		// 			});
+		// 		}
+		// 		res.send(comments);
+		// 	});
+		// 	// if (cacheEnabled){
+		// 	// 	res.set({
+		// 	// 	  // 'Cache-Control': 'public, max-age=' + cacheSeconds
+		// 	// 	});
+		// 	// }
+		// 	// res.send(comments);
+		// }else{
+		// 	// res.send(comments);
+		// }		
 	});
 };
 
 exports.createComment = function(req, res){
 	var gistId = req.params.gistId;
 	var commentText = req.param('commentText');
+	var accessToken = service.getAccessToken(req);
 
-	var setUserName = function(comment, callback){
-		var url = config.options.githubHost + '/users/' + comment.user.login + '?access_token=' + accessToken; 
-		request.get(url, function(err, data){
-			if (data.body){
-				var user = JSON.parse(data.body);
-				comment.user.user_name = user.name;
-			}
-			callback(null, comments);
-		});
-	};
-	
 	request.post({
-		uri: config.options.githubHost + '/gists/' + gistId + '/comments?access_token=' + accessToken, 
+		url: config.options.githubHost + '/gists/' + gistId + '/comments?access_token=' + accessToken, 
 		body: JSON.stringify({body: commentText})
 	},
 		function(error, response, body){
-			//get user name
-			var comment = JSON.parse(body);
+			res.send(body);
+
+			/*var comment = JSON.parse(body);
 			var url = config.options.githubHost + '/users/' + comment.user.login + '?access_token=' + accessToken; 
 			request.get(url, function(err, data){
 				var user = JSON.parse(data.body);
 				comment.user.user_name = user.name;
 				res.send(comment);
-			});		
+			});*/
+		}		
+	);	
+};
+
+exports.editComment = function(req, res){
+	var id = req.params.id;
+	var gistId = req.params.gistId;
+	var commentText = req.param('commentText');
+	var accessToken = service.getAccessToken(req);
+
+	request.patch({
+		url: config.options.githubHost + '/gists/' + gistId + '/comments/' + id + '?access_token=' + accessToken, 
+		body: JSON.stringify({body: commentText})
+	},
+		function(error, response, body){
+			res.send(body);
 		}		
 	);	
 };
@@ -274,13 +237,15 @@ exports.getFriendsGist = function(req, res){
 	var followings = [];
 	var gistsFollower = [];
 	var gistsFollowing = [];
+	var github = service.getGitHubApi(req);
+	var loginName = service.getLoginName(req);
 
 	// get people's gists who I follow
 	var getGistsFollowing = function(user, callback){
 		github.gists.getFromUser({user: user.login, per_page: 5}, 
 			function(err, data){		
 				if (data) {
-					console.log('getGistsFollowing counts = ' + data.length);
+					// console.log('getGistsFollowing counts = ' + data.length);
 					_.each(data, function(d){
 						gistsFollowing.push(d);
 					});					
@@ -295,7 +260,7 @@ exports.getFriendsGist = function(req, res){
 		github.gists.getFromUser({user: user.login, per_page: 5}, 
 			function(err, data){		
 				if (data) {
-					console.log('getGistsFollower counts = ' + data.length);
+					// console.log('getGistsFollower counts = ' + data.length);
 					_.each(data, function(d){
 						gistsFollower.push(d);
 					});					
@@ -308,7 +273,7 @@ exports.getFriendsGist = function(req, res){
 	var sendGists = function(){
 		var gists = _.union(gistsFollower, gistsFollowing);
 		var sortedGists = _.sortBy(gists, function(gist){
-			return gist.updated_at;
+			return gist.created_at;
 		}).reverse();
 
 		res.send({data: sortedGists});
@@ -317,7 +282,7 @@ exports.getFriendsGist = function(req, res){
 	// get gists in parallel, send gists after getting all
 	async.parallel([
 		function(callback){
-			github.user.getFollowers({user: 'RayKwon'}, function(err, data){
+			github.user.getFollowers({user: loginName}, function(err, data){
 				if (data) {
 					console.log('github.user.getFollowers counts = ' + data.length);
 					async.each(data, getGistsFollower, function(error, result){
@@ -346,7 +311,18 @@ exports.getFriendsGist = function(req, res){
 	});
 };
 
+exports.getTags = function(req, res){
+	var tags = 
+	[
+		{tag_name: 'JavaScript', tagged_gists_count: 10, tag_id: 1, tag_url: util.convertToSlug('JavaScript')},
+		{tag_name: 'C#', tagged_gists_count: 23, tag_id: 2, tag_url: util.convertToSlug('C#')},
+		{tag_name: 'Ruby on Rails', tagged_gists_count: 5, tag_id: 3, tag_url: util.convertToSlug('Ruby On Rails')},
+		{tag_name: 'Backbone', tagged_gists_count: 45, tag_id: 4, tag_url: util.convertToSlug('Backbone')},
+		{tag_name: 'Java', tagged_gists_count: 5, tag_id: 5, tag_url: util.convertToSlug('Java')}
+	];
 
+	res.send(tags);
+};
 
 
 

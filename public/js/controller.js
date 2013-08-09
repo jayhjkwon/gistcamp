@@ -8,10 +8,8 @@ define(function(require){
 		shellView 			= require('views/shellView'),		
 		constants 			= require('constants'),
 		FilesWrapperView    = require('views/filesWrapperView'),
-		CommentsWrapperView = require('views/CommentsWrapperView')
-		// ChatView            = require('views/chatView'),
-		// ChatListWrapperView = require('views/chatListWrapperView'),
-		// ConversationWrapperView = require('views/conversationWrapperView')
+		CommentsWrapperView = require('views/CommentsWrapperView'),
+		CreateGistView = require('views/createGistView')
 	;
 
 	var
@@ -119,7 +117,13 @@ define(function(require){
 			},
 			
 			newGist : function(){
-				Application.execute(constants.MENU_SELECTED,'newgist');
+				var createListView = new CreateGistView({currentSelectedMenu:'newgist'});
+				shellView.main.show(createListView);
+
+				//createListView.getItemInit();
+
+
+				Application.vent.trigger(constants.MENU_SELECTED,'newgist');
 			},
 
 			chat : function(){
@@ -140,7 +144,6 @@ define(function(require){
 				// chatView.chatWrapper.show(conversationWrapperView);
 
 				// Application.execute(constants.MENU_SELECTED,'chat');
-				
 			}
 		})
 	;

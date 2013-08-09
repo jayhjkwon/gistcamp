@@ -20,7 +20,8 @@ require.config({
         postal         : '../vendor/postal.js/lib/postal',
         async          : '../vendor/async/lib/async',
         store          : '../vendor/store.js/store',
-        markdown       : '../vendor/markdown/lib/markdown'
+        markdown       : '../vendor/markdown/lib/markdown',
+        ace            : '../vendor/ace/lib/ace/ace',
         io             : '../vendor/socket.io-client/lib/io'
 	},
 	shim: {
@@ -52,8 +53,12 @@ require.config({
         },
         markdown: {
             exports: 'markdown'
+        },
         io: {
             exports: 'io'
+        },
+        ace : {
+            exports: 'ace'
         }
 	},
 	hbs : {

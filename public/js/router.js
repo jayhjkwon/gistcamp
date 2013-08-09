@@ -10,7 +10,7 @@ define(function(require){
 				'mygists'     : 'myGists',
 				'starred'     : 'starred',
 				'forked'      : 'forked',
-				'tagged/:tag' : 'tagged',
+				'tagged/:tag/:tag_id' : 'tagged',
 				'newgist'     : 'newGist',
 				'chat'        : 'chat'
 			},

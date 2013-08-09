@@ -1,22 +1,65 @@
 define(function(require){	
 	var
+		$               = require('jquery'),
+		_               = require('underscore'),
 		Marionette      = require('marionette'),
 		footerTemplate  = require('hbs!templates/footerTemplate'),
 		postalWrapper   = require('postalWrapper'),
 		constants 		= require('constants'),		
 		store           = require('store'),
+		bootstrap       = require('bootstrap'),
+		TagItemList     = require('models/tagItemList'),
+		tagListTemplate = require('hbs!templates/tagListTemplate'),
 
-		FooterView = Marionette.Layout.extend({
+		FooterView = Marionette.ItemView.extend({
 			className: 'command-buttons',
 			template : footerTemplate,
 			
 			initialize: function(){
+				_.bindAll(this, 'setTagPopOverUI');
 				this.subscription = postalWrapper.subscribe(constants.GIST_ITEM_SELECTED, this.onItemSelected);
 			},
 
 			events: {
 				'click .btn-comments' : 'onBtnCommentClick',
-				'click .btn-reload'   : 'onReloadClick'
+				'click .btn-reload'   : 'onReloadClick',
+				'click .tag'          : 'onTagClick',
+				'mouseleave .popover' : 'hideTagInfo'
+			},
+
+			ui : {
+				btnTag : '.tag'
+			},
+
+			onTagClick: function(){		
+				if ($('.popover')) return;
+			    this.ui.btnTag.popover('show');
+			},
+
+			hideTagInfo: function(){
+				this.ui.btnTag.popover('hide');	
+			},
+
+			onRender: function(){
+				this.setTagPopOverUI();				
+			},
+
+			setTagPopOverUI: function(){
+				var self = this;
+				var tags = new TagItemList();
+				tags.fetch().done(function(result){
+					if ($('div.tag-area')){
+						self.$el.append('<div class="tag-area"></div>');
+					}
+					$('.tag-area').html(tagListTemplate({tags: result}));
+
+					self.ui.btnTag.popover({
+						html	: true,
+						placement: 'top',
+						title	: function(){ return '<div><i class="icon-tag"></i> Tag the gist</div>'; },
+						content : function(){ return $('.tag-area').html(); }					
+				    });	
+				});				
 			},
 
 			onBtnCommentClick: function(e){

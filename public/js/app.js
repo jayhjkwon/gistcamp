@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 require(['jquery', 'underscore', 'application', 'router', 'views/shellView', 
+<<<<<<< HEAD
 	'views/topView', 'views/footerView', 'constants', 'models/user', 'global',
 	'bootstrap', 'prettify', 'nicescroll', 'autoGrow', 'scrollTo'], 
 	function($, _, Application, Router, shellView, topView, footerView, constants, User, global){
@@ -8,37 +9,79 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView', 'vi
 	'bootstrap', 'prettify', 'nicescroll', 'autoGrow', 'scrollTo'], 
 	function($, _, Application, Router, shellView, topView, footerView, io){
 >>>>>>> hotfixes/patched
+=======
+	'views/topView', 'views/footerView', 'constants', 'models/user', 'global', 'async',
+	'bootstrap', 'prettify', 'nicescroll', 'scrollTo'], 
+	function($, _, Application, Router, shellView, topView, footerView, constants, User, global, async){
+>>>>>>> 967a7887dda2424a5611ec51c9628f1e6d9f4214
 
 	$(function(){
 		var el = shellView.render().el;
-		
-		Application.addInitializer(function(options){
-			shellView.top.show(topView);
-			shellView.footer.show(footerView);
-			$('body').html(el);
-		});
 
+<<<<<<< HEAD
 		Application.addInitializer(function(options){
 <<<<<<< HEAD
+=======
+		var getLoginUserInfo = function(callback){
+>>>>>>> 967a7887dda2424a5611ec51c9628f1e6d9f4214
 			var user = new User({mode: constants.USER_AUTH});
 			user.fetch().done(function(result){
 				global.user.id = result.id;
 				global.user.login = result.login;
 				global.user.name = result.name;
+				global.user.avatar = result.avatar_url;
 
-				topView.setUserInfo();
+				callback(null, user);
 			});			
+<<<<<<< HEAD
 =======
 			var socket = io.connect();
 >>>>>>> hotfixes/patched
 		});
+=======
+		};
 
-		Application.on('initialize:after', function(options){
+		var loadView = function(callback){
+			shellView.top.show(topView);
+			shellView.footer.show(footerView);
+			$('body').html(el);
+			callback(null, shellView);
+		};
+
+		var showUserInfo = function(callback){
+			topView.showUserInfo();
+			callback(null, null);
+		};
+>>>>>>> 967a7887dda2424a5611ec51c9628f1e6d9f4214
+
+		var startRouter = function(callback){
 			var router = new Router;
 			Backbone.history.start({pushState: false});
+			callback(null, router);
+		};
+
+		Application.addInitializer(function(options){
+			async.series(
+				[
+					getLoginUserInfo,
+					loadView,
+					showUserInfo,
+					startRouter,
+					function(err, results){
+						console.log('Application initialization has completed');
+					}
+				]
+			);			
 		});
 
+<<<<<<< HEAD
 
+=======
+		// Application.on('initialize:after', function(options){
+		// 	// var router = new Router;
+		// 	// Backbone.history.start({pushState: false});
+		// });
+>>>>>>> 967a7887dda2424a5611ec51c9628f1e6d9f4214
 
 		Application.start();
 
@@ -112,7 +155,7 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView', 'vi
 
 		/*prettyPrint();	*/
 
-		$('.tag').popover({
+		/*$('.tag').popover({
 			html	: true,
 			trigger : 'click',
 			placement: 'top',
@@ -125,9 +168,9 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView', 'vi
 	                        '<li><input type="text" placeholder="New Tag" /></li>' +
 	                      '</ul>' +
 	                    '</div>'
-	    });
+	    });*/
 
-	    $('#comment-input').autoGrow();
+	    // $('#comment-input').autoGrow();
 
 	    // check if elem is visible
 	    var isScrolledIntoView = function(scrollElem, elem) {
@@ -159,9 +202,9 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView', 'vi
 		    		selectedGist.removeClass('selected');
 		    		var prevGist = gistList[selectedGistIndex - 1];
 		    		$(prevGist).addClass('selected');
-		    		if (!isScrolledIntoView('.gist-list', '.gist-list .gist-item.selected'))
-		    			$('.gist-list').scrollTo($(prevGist));
 		    		$(prevGist).trigger('click');
+		    		// if (!isScrolledIntoView('.gist-list', '.gist-list .gist-item.selected'))
+		    			$('.gist-list').scrollTo($(prevGist), {offset:-20});		    		
 
 		    		break;
 				case 40 : 	// arrow-down key
@@ -171,9 +214,9 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView', 'vi
 		    		selectedGist.removeClass('selected');
 		    		var nextGist = gistList[selectedGistIndex + 1];
 		    		$(nextGist).addClass('selected');
-		    		if (!isScrolledIntoView('.gist-list', '.gist-list .gist-item.selected'))
-		   				$('.gist-list').scrollTo($(nextGist));
-	   				$(nextGist).trigger('click');
+		    		$(nextGist).trigger('click');
+		    		// if (!isScrolledIntoView('.gist-list', '.gist-list .gist-item.selected'))
+		   				$('.gist-list').scrollTo($(nextGist), {offset:-20});	   				
 
 		   			break;
 				case 37 : 	// arrow-left key

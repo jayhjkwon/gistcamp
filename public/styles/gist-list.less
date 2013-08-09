@@ -27,6 +27,9 @@ body {
 	border:solid 2px #eee;
 	margin-bottom:15px;
 	height: 85px;
+	&:hover{
+		background-color: #eee;
+	}
 	&.selected {
 		background-color: #008641 !important;
 		color:#fff;
@@ -149,6 +152,9 @@ pre {
 			min-height:50px;
 			position:relative;
 			// top:0;
+			&:hover{
+				background-color: lighten(#eee, 1%);
+			}
 			.commenter-photo{
 				min-height:50px;
 				width:50px;
@@ -166,7 +172,8 @@ pre {
 				// left:50px;
 				// right:0;
 				margin-left:50px;
-				overflow-y:auto;
+				// overflow-y:auto;
+				overflow:hidden;
 				padding-right:5px;
 				font-size:12px;
 				word-wrap:break-word;
