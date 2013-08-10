@@ -1,0 +1,9 @@
+{
+  "name": "infinite-scroll",
+  "version": "0.0.0",
+  "commit": "bdf2f6f36331dd2b91360016a298f8a27e91a8b3",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/paulirish/infinite-scroll.git"
+  }
+}

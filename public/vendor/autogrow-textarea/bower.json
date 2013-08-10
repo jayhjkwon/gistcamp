@@ -1,0 +1,9 @@
+{
+  "name": "autogrow-textarea",
+  "version": "0.0.0",
+  "commit": "05396aaac3d0c16711d469a1e1f38d215c0b7509",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jevin/Autogrow-Textarea"
+  }
+}
