@@ -41,7 +41,7 @@ exports.getPublicGists = function(req, res){
 
 	if (!linkHeader){
 		github.gists.public({per_page: 10},
-			function(err, data){		
+			function(err, data){	
 				if (data) {
 					sendData(data, req, res);
 				}
@@ -70,6 +70,25 @@ exports.getGistListByUser = function(req, res){
 	}else{
 		getNextPage(linkHeader, req, res);
 	}
+};
+
+exports.getGistById = function(req, res){
+	var self = this;	
+	
+	var gistId = req.param('gistId');
+	//var accessToken = service.getAccessToken(req); 
+	var github = service.getGitHubApi(req);
+	
+	console.log('getGistById : ' + gistId);
+
+	github.gists.get({id : gistId}, 
+		function(err, data){	
+			console.log(err);
+			console.log(data);
+
+			if (data) sendData(data, req, res);
+		}
+	);
 };
 
 exports.getStarredGists = function(req, res){

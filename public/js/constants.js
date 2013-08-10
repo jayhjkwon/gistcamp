@@ -11,6 +11,9 @@ define(function(){
 		USER_AUTH           : 'USER_AUTH',
 		channels            : {
 			APPLICATION     : 'APPLICATION'
-		}
+		},
+		GIST_BY_ID : 'GIST_BY_ID',
+		CHAT_UPDATE_ROOM : 'CHAT_UPDATE_ROOM',
+		CHAT_CREATE_ROOM : 'CHAT_CREATE_ROOM'		
 	}
 });

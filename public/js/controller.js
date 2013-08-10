@@ -10,6 +10,10 @@ define(function(require){
 		FilesWrapperView    = require('views/filesWrapperView'),
 		CommentsWrapperView = require('views/CommentsWrapperView'),
 		CreateGistView = require('views/createGistView')
+		ChatView            = require('views/chatView'),
+		ChatItemListView    = require('views/chatItemListView'),
+		ConversationWrapperView = require('views/conversationWrapperView'),
+		global              = require('global')
 	;
 
 	var
@@ -22,6 +26,7 @@ define(function(require){
 			},
 
 			home : function(){
+
 				// LayoutView with regions
 				var gistListView = new GistListView({currentSelectedMenu: 'home'});
 				shellView.main.show(gistListView);
@@ -124,6 +129,28 @@ define(function(require){
 
 
 				Application.vent.trigger(constants.MENU_SELECTED,'newgist');
+			},
+
+			chat : function(){
+				
+				global.socket.emit('getrooms');
+
+				var chatView = new ChatView({currentSelectedMenu: 'chat'})
+				shellView.main.show(chatView);
+
+				// Chat List on the left region
+                var chatItemListView = new ChatItemListView;
+				chatView.chatList.show(chatItemListView);
+
+				// Gist Files on the center region
+				var filesWrapperView = new FilesWrapperView;
+				chatView.filesWrapper.show(filesWrapperView);
+
+				// Chat on the right region
+				var conversationWrapperView = new ConversationWrapperView;
+				chatView.chatWrapper.show(conversationWrapperView);
+
+				Application.execute(constants.MENU_SELECTED,'chat');
 			}
 		})
 	;

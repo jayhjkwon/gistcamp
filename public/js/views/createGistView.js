@@ -8,7 +8,6 @@ define(function(require){
 		NewGistItemList    = require('models/newGistItemList'),
 		nicescroll         = require('nicescroll'),
 		ace                = require('ace/ace'),
-
 		CreateGistView     = Marionette.CompositeView.extend({
 			template : createGistTemplate,
 			itemView : CreateGistItemView,

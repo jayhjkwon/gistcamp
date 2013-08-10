@@ -1,4 +1,4 @@
-define(function(require){
+define(function(require){	
 	var
 		$               = require('jquery'),
 		_               = require('underscore'),
@@ -10,21 +10,26 @@ define(function(require){
 		bootstrap       = require('bootstrap'),
 		TagItemList     = require('models/tagItemList'),
 		tagListTemplate = require('hbs!templates/tagListTemplate'),
+		global          = require('global'),
+		Router          = require('router'),
 
 		FooterView = Marionette.ItemView.extend({
 			className: 'command-buttons',
 			template : footerTemplate,
-			
+			internalGistItem : '',
+
 			initialize: function(){
 				_.bindAll(this, 'setTagPopOverUI');
 				this.subscription = postalWrapper.subscribe(constants.GIST_ITEM_SELECTED, this.onItemSelected);
+				this.router = new Router();
 			},
 
 			events: {
 				'click .btn-comments' : 'onBtnCommentClick',
 				'click .btn-reload'   : 'onReloadClick',
 				'click .tag'          : 'onTagClick',
-				'mouseleave .popover' : 'hideTagInfo'
+				'mouseleave .popover' : 'hideTagInfo',
+				'click .btn-chats' : 'onRoomCreated'
 			},
 
 			ui : {
@@ -89,6 +94,13 @@ define(function(require){
 			onReloadClick: function(e){
 				postalWrapper.publish(constants.GIST_ITEM_RELOAD);
 			},
+			
+			onRoomCreated : function(e){
+				global.socket.emit('addroom', internalGistItem.id);
+				this.router.navigate('chat', {trigger: true});
+				
+				postalWrapper.publish(constants.CHAT_CREATE_ROOM, internalGistItem);
+			},
 
 			onItemSelected : function(gistItem){
 				if (gistItem && gistItem.comments > 0){
@@ -96,6 +108,8 @@ define(function(require){
 				}else{
 					$('.comments-badge').text('').hide();
 				}
+
+				internalGistItem = gistItem;
 			},
 
 			onClose: function(){
