@@ -29,8 +29,6 @@ define(function(require){
 			},
 			
 			onDomRefresh: function(){
-				var self = this;
-
 				$('.files-wrapper').niceScroll({cursorcolor: '#eee'});
 				$('.carousel').carousel({interval: false});
 

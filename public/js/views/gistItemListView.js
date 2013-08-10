@@ -14,6 +14,7 @@ define(function(require){
 		async           = require('async'),
 		service         = require('service'),
 		File            = require('models/file'),
+		nicescroll      = require('nicescroll'),
 		
 		GistItemListView = Marionette.CollectionView.extend({
 			className: 'gist-item-container',
@@ -30,6 +31,7 @@ define(function(require){
 			},
 
 			events : {
+				// 'scroll .gist-list' : 'onScroll'
 			},
 			
 			getGistList: function(){
@@ -51,12 +53,13 @@ define(function(require){
 							self.showEndofDataSign();	
 						}						
 
-						async.eachLimit(res.data, 5, self.handleGist, function(error, result){
+						async.eachLimit(res.data, 3, self.handleGist, function(error, result){
 							// do nothing, because set file content in setFileContent method
 						});
 					})
 					.always(function(){
-						$('.gist-list').getNiceScroll().resize();
+						$('.gist-list').niceScroll({cursorcolor: '#eee'});
+						// $('.gist-list').getNiceScroll().resize();
 						self.loading(false);
 						util.loadSpinner(false);						
 					});
@@ -106,12 +109,11 @@ define(function(require){
 		    },		    
 			onRender : function(){
 				$('.gist-list').niceScroll({cursorcolor: '#eee'});
-
 				// register scroll event handler, this shuld be registered after view rendered
 				$('.gist-list').off('scroll').on('scroll', this.onScroll);
 			},
 			onDomRefresh: function(){
-				// util.loadSpinner(false);
+				// $('.gist-list').niceScroll({cursorcolor: '#eee'});
 			},
 			onScroll : function(){
 				var w = $('.gist-list');
@@ -120,7 +122,7 @@ define(function(require){
 			    }
 			},
 			loadMore: function(){
-				if(self.lastPage) return;
+				if(this.lastPage) return;
 				this.loading(true);
 				this.getGistList();
 			},
