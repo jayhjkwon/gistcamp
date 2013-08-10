@@ -13,8 +13,13 @@ var
 
 
 //2013.08.03
-var GITHUB_CLIENT_ID = "794dabc19ea9ed6aba0c"; 
-var GITHUB_CLIENT_SECRET = "d37b57ebbb1a9afa20a0b2ba035d2e4d894f5bca";
+var GITHUB_CLIENT_ID = "ae1eb04aec018fa21176"; 
+var GITHUB_CLIENT_SECRET = "6fecc344c5aa4dd89d1b46a7f3f8bc70b60db84b";
+var callbackURL;
+if(config.options.env === 'development')
+  callbackURL = 'http://localhost:3000/auth/github/callback';
+else
+  callbackURL = 'http://jaykwon-gistcamp.nodejitsu.com/auth/github/callback';
 
 var app = express();
 
@@ -52,7 +57,7 @@ passport.deserializeUser(function(obj, done) {
 passport.use(new GitHubStrategy({
     clientID: GITHUB_CLIENT_ID,
     clientSecret: GITHUB_CLIENT_SECRET,
-    callbackURL: "http://localhost:3000/auth/github/callback"
+    callbackURL: callbackURL
   },
   function(accessToken, refreshToken, profile, done) {
     process.nextTick(function () {
