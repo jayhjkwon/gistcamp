@@ -1,8 +1,9 @@
 require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 	'views/topView', 'views/footerView', 'constants', 'models/user', 'global', 'async', 
-	'socketio', 'postalWrapper',
+	'socketio', 'postalWrapper', 'toastr',
 	'bootstrap', 'prettify', 'nicescroll', 'autoGrow', 'scrollTo'], 
-	function($, _, Application, Router, shellView, topView, footerView, constants, User, global, async, socketio, postalWrapper){
+	function($, _, Application, Router, shellView, topView, footerView, constants, User, global, async, 
+		socketio, postalWrapper, toastr){
 	$(function(){
 		var el = shellView.render().el;
 
@@ -21,7 +22,6 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 				global.socket.on('connect', function(){
 					// call the server-side function 'adduser' and send one parameter (value of prompt)
 					//global.socket.emit('adduser', prompt("What's your name?"));
-
 					global.socket.emit('adduser', global.user.login);
 				});
 
@@ -33,6 +33,11 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 				// listener, whenever the server emits 'updatechat', this updates the chat body
 				global.socket.on('updatechat', function (username, data) {
 					$('#conversation').append('<b>'+username + ':</b> ' + data + '<br>');
+				});
+
+				global.socket.on('updatealarm', function(data) {
+					var title = 'Alarm';
+					toastr.info(data, title);
 				});
 
 				callback(null, user);

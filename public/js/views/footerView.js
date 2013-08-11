@@ -8,20 +8,27 @@ define(function(require){
 		constants 		= require('constants'),		
 		store           = require('store'),
 		bootstrap       = require('bootstrap'),
+		TagItem         = require('models/tagItem'),
 		TagItemList     = require('models/tagItemList'),
 		tagListTemplate = require('hbs!templates/tagListTemplate'),
 		global          = require('global'),
 		Router          = require('router'),
+		Spinner         = require('spin'),
 
 		FooterView = Marionette.ItemView.extend({
 			className: 'command-buttons',
 			template : footerTemplate,
 			internalGistItem : '',
+			selectedGistItem : {},
 
 			initialize: function(){
-				_.bindAll(this, 'setTagPopOverUI');
+				_.bindAll(this, 'setTagPopOverUI', 'onItemSelected', 'createTag', 'hideTagInfo', 'loading', 'onBtnCommentClick');
+
+				this.tags = new TagItemList();
+
+				this.listenTo(this.tags, 'all', this.onTagCollectionChange);
+				this.spinner = new Spinner({length:5,lines:9,width:4,radius:4});
 				this.subscription = postalWrapper.subscribe(constants.GIST_ITEM_SELECTED, this.onItemSelected);
-				this.router = new Router();
 			},
 
 			events: {
@@ -29,11 +36,59 @@ define(function(require){
 				'click .btn-reload'   : 'onReloadClick',
 				'click .tag'          : 'onTagClick',
 				'mouseleave .popover' : 'hideTagInfo',
-				'click .btn-chats' : 'onRoomCreated'
+				'click .btn-chats' : 'onRoomCreated',
+				'keydown #new-tag'    : 'createTag'
 			},
 
 			ui : {
 				btnTag : '.tag'
+			},
+
+			onRender: function(){
+				this.setTagPopOverUI();				
+			},
+
+			onTagCollectionChange: function(tags){
+				console.log('onTagCollectionChange event occured');
+				$('.tag-area').html(tagListTemplate({tags: this.tags.toJSON()}));
+
+			},
+
+			setTagPopOverUI: function(){
+				if ($('div.tag-area')){
+					this.$el.append('<div class="tag-area"></div>');
+				}
+
+				this.ui.btnTag.popover({
+					html	: true,
+					placement: 'top',
+					title	: function(){ return '<div><i class="icon-tag"></i> Tag the gist</div>'; },
+					content : function(){ return $('.tag-area').html(); }					
+			    });
+
+				this.tags.fetch();	
+			},
+
+			createTag: function(e){
+				var self = this;
+				var keyCode = e.keyCode || e.which;
+		    	if (keyCode === 13 && !self.saving){
+		    		self.saving = true;
+		    		self.loading(true, e.target);
+		    		
+		    		var text = $(e.target).val();
+		    		var tag = new TagItem({gistId: self.selectedGistItem.id, tagName:text});
+		    		tag.save()
+		    		.done(function(data){
+		    			self.tags.reset(data);	    						    			
+		    			self.ui.btnTag.popover('show');
+		    			$(e.target).val('');
+		    		})
+		    		.always(function(){
+		    			self.saving = false;
+		    			self.loading(false);
+		    		});
+		    	}
 			},
 
 			onTagClick: function(){		
@@ -43,29 +98,7 @@ define(function(require){
 
 			hideTagInfo: function(){
 				this.ui.btnTag.popover('hide');	
-			},
-
-			onRender: function(){
-				this.setTagPopOverUI();				
-			},
-
-			setTagPopOverUI: function(){
-				var self = this;
-				var tags = new TagItemList();
-				tags.fetch().done(function(result){
-					if ($('div.tag-area')){
-						self.$el.append('<div class="tag-area"></div>');
-					}
-					$('.tag-area').html(tagListTemplate({tags: result}));
-
-					self.ui.btnTag.popover({
-						html	: true,
-						placement: 'top',
-						title	: function(){ return '<div><i class="icon-tag"></i> Tag the gist</div>'; },
-						content : function(){ return $('.tag-area').html(); }					
-				    });	
-				});				
-			},
+			},			
 
 			onBtnCommentClick: function(e){
 				var showComments = true;
@@ -103,6 +136,7 @@ define(function(require){
 			},
 
 			onItemSelected : function(gistItem){
+				this.selectedGistItem = gistItem;
 				if (gistItem && gistItem.comments > 0){
 					$('.comments-badge').text(gistItem.comments).show();
 				}else{
@@ -110,6 +144,15 @@ define(function(require){
 				}
 
 				internalGistItem = gistItem;
+			},
+
+			loading: function(showSpinner, el){
+				if (showSpinner){
+					var target = $(el).parents()[0];
+					this.spinner.spin(target);
+				}else{					
+					this.spinner.stop();					
+				}
 			},
 
 			onClose: function(){

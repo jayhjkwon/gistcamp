@@ -51,6 +51,22 @@
 	}
 }
 
+@conversation-action-height:30px;
 .chat-wrapper {
 	border: solid 1px #eee;
+	//left:10px;
+	.conversation-content {
+		position: absolute;
+		top:0px;
+		bottom:@conversation-action-height;
+		overflow:auto;
+		width:100%;
+	}
+	.conversation-action {
+		position:absolute;
+	    bottom:0;
+	    height:@conversation-action-height;
+	    width:100%;
+	    //background-color:yellow;
+	}
 }
