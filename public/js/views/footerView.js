@@ -18,10 +18,9 @@ define(function(require){
 		FooterView = Marionette.ItemView.extend({
 			className: 'command-buttons',
 			template : footerTemplate,
-			internalGistItem : '',
 			selectedGistItem : {},
 			initialize: function(){
-				_.bindAll(this, 'setTagPopOverUI', 'onItemSelected', 'createTag', 'hideTagInfo', 'loading', 'onBtnCommentClick');
+				_.bindAll(this, 'setTagPopOverUI', 'onItemSelected', 'createTag', 'hideTagInfo', 'loading', 'onBtnCommentClick', 'onRoomCreated');
 
 				this.tags = new TagItemList();
 
@@ -36,7 +35,7 @@ define(function(require){
 				'click .btn-reload'   : 'onReloadClick',
 				'click .tag'          : 'onTagClick',
 				'mouseleave .popover' : 'hideTagInfo',
-				'click .btn-chats' : 'onRoomCreated'
+				'click .btn-chats'    : 'onRoomCreated',
 				'keydown #new-tag'    : 'createTag'
 			},
 
@@ -129,10 +128,11 @@ define(function(require){
 			},
 			
 			onRoomCreated : function(e){
-				global.socket.emit('addroom', internalGistItem.id);
-				this.router.navigate('chat', {trigger: true});
+				var self = this;
+				global.socket.emit('addroom', self.selectedGistItem.id);
+				self.router.navigate('chat', {trigger: true});
 				
-				postalWrapper.publish(constants.CHAT_CREATE_ROOM, internalGistItem);
+				postalWrapper.publish(constants.CHAT_CREATE_ROOM, self.selectedGistItem);
 			},
 
 			onItemSelected : function(gistItem){
@@ -142,8 +142,6 @@ define(function(require){
 				}else{
 					$('.comments-badge').text('').hide();
 				}
-
-				internalGistItem = gistItem;
 			},
 
 			loading: function(showSpinner, el){
