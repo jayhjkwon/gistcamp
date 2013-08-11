@@ -5,7 +5,8 @@ var
 	moment    = require('moment'),
     async     = require('async'),
     service   = require('../../infra/service'),
-    util      = require('../../infra/util')
+    util      = require('../../infra/util'),
+    User      = require('../../models/user')
 ;
 var cacheSeconds = 60 * 60 * 1 // 1 hour	
 var cacheEnabled = true;			
@@ -40,8 +41,8 @@ exports.getPublicGists = function(req, res){
 	var linkHeader = req.param('linkHeader');	
 
 	if (!linkHeader){
-		github.gists.public({per_page: 10},
-			function(err, data){	
+		github.gists.public({},
+			function(err, data){		
 				if (data) {
 					sendData(data, req, res);
 				}
@@ -98,7 +99,7 @@ exports.getStarredGists = function(req, res){
 	console.log('getStarredGists');
 	var linkHeader = req.param('linkHeader');
 	if (!linkHeader){
-		github.gists.starred({}, 
+		github.gists.starred({per_page: config.options.perPage || 30}, 
 			function(err, data){		
 				if (data) sendData(data, req, res);
 			}
@@ -331,16 +332,72 @@ exports.getFriendsGist = function(req, res){
 };
 
 exports.getTags = function(req, res){
-	var tags = 
+	/*var tags = 
 	[
 		{tag_name: 'JavaScript', tagged_gists_count: 10, tag_id: 1, tag_url: util.convertToSlug('JavaScript')},
 		{tag_name: 'C#', tagged_gists_count: 23, tag_id: 2, tag_url: util.convertToSlug('C#')},
 		{tag_name: 'Ruby on Rails', tagged_gists_count: 5, tag_id: 3, tag_url: util.convertToSlug('Ruby On Rails')},
 		{tag_name: 'Backbone', tagged_gists_count: 45, tag_id: 4, tag_url: util.convertToSlug('Backbone')},
 		{tag_name: 'Java', tagged_gists_count: 5, tag_id: 5, tag_url: util.convertToSlug('Java')}
-	];
+	];*/
 
-	res.send(tags);
+	User.find({id:service.getUserId(req)})
+		.select('tags')
+		.lean()
+		.exec(function(err, docs){
+			res.send(docs[0].tags);
+		});
+};
+
+exports.createTag = function(req, res){
+	var tagName = req.param('tagName');
+	var gistId  = req.param('gistId');
+	var tagUrl  = util.convertToSlug(tagName);
+	var tagId;
+
+	/*var query = User.find({id: service.getUserId(req)});
+	var promise = query.where('tags').count().exec();
+	promise.then(function(count){
+		if (count === 0){
+			User.tags = [];
+		}
+
+		User.tags.push({ tag_id: 1, tag_name: tagName, tags });
+	});*/
+
+	var conditions = {id: service.getUserId(req)};
+	var update = {
+		$push: 
+		{
+			tags: 
+			{
+				tag_name:tagName, 
+				tag_url:tagUrl, 
+				gists: [{gist_id:gistId}]
+			}
+		}
+	};
+	var options = {upsert:true};
+	User.update(conditions, update, options, function(err, numberAffected, raw){
+		User.find({id:service.getUserId(req)})
+		.select('tags')
+		.lean()
+		.exec(function(err, docs){
+			res.send(docs[0].tags);
+		});
+	});
+};
+
+exports.getGistsByTag = function(req, res){
+
+};
+
+exports.editTag = function(req, res){
+
+};
+
+exports.removeTag = function(req, res){
+
 };
 
 

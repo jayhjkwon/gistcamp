@@ -8,7 +8,8 @@ var
 	gist     = require('./routes/api/gist'),
 	constants= require('./infra/constants').constants,
 	passport = require('passport'),
-	GitHubStrategy = require('passport-github').Strategy
+	GitHubStrategy = require('passport-github').Strategy,
+  User     = require('./models/user')  
 ;
 
 
@@ -56,9 +57,14 @@ passport.use(new GitHubStrategy({
   },
   function(accessToken, refreshToken, profile, done) {
     process.nextTick(function () {
-      // TODO : associate profile and user info in DB      
-      // return done(null, profile);
-      return done(null, {access_token:accessToken, login:profile._json.login});
+      var userToSave = profile._json;
+      userToSave.access_token = accessToken;
+
+      // crate or update
+      User.findOneAndUpdate({id: userToSave.id}, userToSave, {upsert:true}, function(err, user){
+        return done(null, {access_token:user.access_token, login:user.login, id:user.id});  
+      });
+
     });
   }
 ));
@@ -95,8 +101,13 @@ app.get('/api/gist/:gistId/comments', ensureAuthenticated, gist.getComments);
 app.post('/api/gist/:gistId/comments', ensureAuthenticated, gist.createComment);
 app.put('/api/gist/:gistId/comments/:id', ensureAuthenticated, gist.editComment);
 app.get('/api/gist/friends', ensureAuthenticated, gist.getFriendsGist);
+
 app.get('/api/gist/tags', ensureAuthenticated, gist.getTags);
 app.get('/api/gists/:gistId', gist.getGistById);
+app.get('/api/gist/tags/:id', ensureAuthenticated, gist.getGistsByTag);
+app.post('/api/gist/tags', ensureAuthenticated, gist.createTag);
+app.put('/api/gist/tags/:id', ensureAuthenticated, gist.editTag);
+app.delete('/api/gist/tags/:id', ensureAuthenticated, gist.removeTag);
 
 var server = http.createServer(app)
 	, io = require('socket.io').listen(server);
