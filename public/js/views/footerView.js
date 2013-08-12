@@ -14,6 +14,7 @@ define(function(require){
 		global          = require('global'),
 		Router          = require('router'),
 		Spinner         = require('spin'),
+		service         = require('service'),
 
 		FooterView = Marionette.ItemView.extend({
 			className: 'command-buttons',
@@ -31,10 +32,11 @@ define(function(require){
 			},
 
 			events: {
-				'click .btn-comments' : 'onBtnCommentClick',
-				'click .btn-reload'   : 'onReloadClick',
-				'click .btn-chats'    : 'onRoomCreated',
-				'keydown #new-tag'    : 'createTag'
+				'click .btn-comments'    : 'onBtnCommentClick',
+				'click .btn-reload'      : 'onReloadClick',
+				'click .btn-chats'       : 'onRoomCreated',
+				'keydown #new-tag'       : 'createTag',
+				'click .add-tag ul li a' : 'onTagClick'
 			},
 
 			ui : {
@@ -43,6 +45,18 @@ define(function(require){
 
 			onRender: function(){
 				this.setTagPopOverUI();				
+			},
+
+			onTagClick: function(e){
+				e.preventDefault();
+				
+				var tagId = $(e.target).data('tag-id');
+				var gistId = this.selectedGistItem.id;
+
+				service.editTagGist(tagId, gistId).done(function(result){
+					$(e.target).append('<span class="pull-right tag-saved-msg">Saved</span>');
+					$('.tag-saved-msg').fadeOut(4000);
+				});
 			},
 
 			onTagCollectionChange: function(tags){

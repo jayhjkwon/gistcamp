@@ -6,7 +6,8 @@ var
     async     = require('async'),
     service   = require('../../infra/service'),
     util      = require('../../infra/util'),
-    User      = require('../../models/user')
+    User      = require('../../models/user'),
+    mongoose  = require('mongoose')
 ;
 var cacheSeconds = 60 * 60 * 1 // 1 hour	
 var cacheEnabled = true;			
@@ -279,6 +280,43 @@ exports.editComment = function(req, res){
 	);	
 };
 
+exports.editTagGist = function(req, res){
+	var tagId = req.params.tag_id;
+	var gistId = req.params.gist_id;
+	var userId = service.getUserId(req);
+
+	/*User.update({id:userId, 'tags._id':mongoose.Types.ObjectId(tagId)}, {$addToSet: {'tags.$.gists' : {'gist_id':gistId}}}, function(err, docs){
+		var d = docs;
+		res.send(docs);
+	});*/
+
+	User.count({id:userId, 'tags._id':mongoose.Types.ObjectId(tagId), 'tags.gists.gist_id':gistId}, function(err, count){
+		console.log(count);
+		if (count>0){
+			res.send(200);
+		}else{
+			User.update(
+				{id:userId, 'tags._id':mongoose.Types.ObjectId(tagId)}, 
+				{$push: {'tags.$.gists' : {'gist_id':gistId}}}, 
+				function(err, numberAffected, rawResponse){
+					res.send(200);
+				}
+			);	
+
+		}
+	});
+
+	/*User.findOneAndUpdate(
+		{id:userId, 'tags._id':mongoose.Types.ObjectId(tagId), 'tags.gists.gist_id':gistId}, 
+		{$push: {'tags.$.gists' : {'gist_id':gistId}}}, 
+		{upsert: true},
+		function(err, docs){
+			var d = docs;
+			res.send(docs);
+		}
+	);	*/
+};
+
 
 /*
 	1. get friends (following, follower)
@@ -367,15 +405,6 @@ exports.getFriendsGist = function(req, res){
 };
 
 exports.getTags = function(req, res){
-	/*var tags = 
-	[
-		{tag_name: 'JavaScript', tagged_gists_count: 10, tag_id: 1, tag_url: util.convertToSlug('JavaScript')},
-		{tag_name: 'C#', tagged_gists_count: 23, tag_id: 2, tag_url: util.convertToSlug('C#')},
-		{tag_name: 'Ruby on Rails', tagged_gists_count: 5, tag_id: 3, tag_url: util.convertToSlug('Ruby On Rails')},
-		{tag_name: 'Backbone', tagged_gists_count: 45, tag_id: 4, tag_url: util.convertToSlug('Backbone')},
-		{tag_name: 'Java', tagged_gists_count: 5, tag_id: 5, tag_url: util.convertToSlug('Java')}
-	];*/
-
 	User.find({id:service.getUserId(req)})
 		.select('tags')
 		.lean()
