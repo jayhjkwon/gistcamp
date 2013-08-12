@@ -9,7 +9,6 @@ define(function(require){
 				'following'   : 'following',
 				'mygists'     : 'myGists',
 				'starred'     : 'starred',
-				'forked'      : 'forked',
 				'tagged/:id/:tag_url' : 'tagged',
 				'newgist'     : 'newGist',
 				'chat'        : 'chat'

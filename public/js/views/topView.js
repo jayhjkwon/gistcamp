@@ -36,9 +36,6 @@ define(function(require){
 				var self = this;
 				self.collection = new TagItemList();
 				self.collection.fetch();
-				/*self.collection.fetch().done(function(result){
-					self.render();
-				});*/
 			},
 
 			onTagChanged: function(tags){

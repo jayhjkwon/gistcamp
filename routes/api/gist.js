@@ -109,6 +109,41 @@ exports.getStarredGists = function(req, res){
 	}
 };
 
+exports.getGistListByTag = function(req, res){
+	var tagId = req.params.tag_id;
+	var userId = service.getUserId(req);
+	var gistList = [];
+	var github = service.getGitHubApi(req);
+
+	var getGistById = function(gistId, callback){
+		github.gists.get({id : gistId}, 
+			function(err, data){	
+				gistList.push(data);
+				callback(null, data);
+			}
+		);
+	};
+
+	User
+	// .find({id: userId, 'tags._id': tagId})
+	.where('id', userId)
+	.where('tags._id', tagId)
+	.select('tags.$')
+	.lean()
+	.exec(function(err, docs){
+		var gists = [];
+		if (docs && docs[0].tags && docs[0].tags[0].gists){
+			var gists = docs[0].tags[0].gists;
+			var gistIds = _.pluck(gists, 'gist_id');
+			async.each(gistIds, getGistById, function(error, result){
+				res.send({data: gistList});
+			});
+		}else{
+			res.send({data: gistList});
+		}
+	});
+};
+
 exports.getRawFiles = function(req, res){
 	var filesInfo = req.param('files');
 	var accessToken = service.getAccessToken(req);
