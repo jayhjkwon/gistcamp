@@ -40,8 +40,10 @@ define(function(require){
 
 			onTagChanged: function(tags){
 				var self = this;
-				self.collection.reset(tags);
-				self.render();				
+				
+				self.collection.fetch().done(function(){
+					self.render();		
+				});
 			},
 
 			showUserInfo: function(){

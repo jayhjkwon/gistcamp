@@ -49,11 +49,13 @@ define(function(require){
 
 			onTagClick: function(e){
 				e.preventDefault();
+				var self = this;
 				
 				var tagId = $(e.target).data('tag-id');
 				var gistId = this.selectedGistItem.id;
 
 				service.editTagGist(tagId, gistId).done(function(result){
+					postalWrapper.publish(constants.TAG_CHANGED);
 					$(e.target).append('<span class="pull-right tag-saved-msg">Saved</span>');
 					$('.tag-saved-msg').fadeOut(4000);
 				});

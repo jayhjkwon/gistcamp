@@ -24,10 +24,21 @@ define(function(require){
 				});
 			
 			return xhr;
+		},
+
+		editTagGist= function(tagId, gistId){
+			var xhr =
+				$.ajax({
+					type: 'PUT',
+					url: '/api/gist/tagged/' + tagId + '/' + gistId
+				});
+			
+			return xhr;	
 		}		
 	;
 
 	return {
-		getFileContent: getFileContent
+		getFileContent : getFileContent,
+		editTagGist    : editTagGist
 	};
 });

@@ -285,14 +285,18 @@ exports.editTagGist = function(req, res){
 	var gistId = req.params.gist_id;
 	var userId = service.getUserId(req);
 
-	/*User.update({id:userId, 'tags._id':mongoose.Types.ObjectId(tagId)}, {$addToSet: {'tags.$.gists' : {'gist_id':gistId}}}, function(err, docs){
-		var d = docs;
-		res.send(docs);
-	});*/
+	User.find({id:userId}).select('tags').lean().exec(function(err, docs){
+		var tags = docs[0].tags;
 
-	User.count({id:userId, 'tags._id':mongoose.Types.ObjectId(tagId), 'tags.gists.gist_id':gistId}, function(err, count){
-		console.log(count);
-		if (count>0){
+		var tagCnt = _.find(tags, function(tag){
+			return tag._id.toString() === tagId;
+		});
+
+		var gistCnt = _.find(tagCnt.gists, function(gist){
+			return gist.gist_id === gistId;
+		});
+
+		if (gistCnt){
 			res.send(200);
 		}else{
 			User.update(
@@ -302,19 +306,8 @@ exports.editTagGist = function(req, res){
 					res.send(200);
 				}
 			);	
-
 		}
 	});
-
-	/*User.findOneAndUpdate(
-		{id:userId, 'tags._id':mongoose.Types.ObjectId(tagId), 'tags.gists.gist_id':gistId}, 
-		{$push: {'tags.$.gists' : {'gist_id':gistId}}}, 
-		{upsert: true},
-		function(err, docs){
-			var d = docs;
-			res.send(docs);
-		}
-	);	*/
 };
 
 
