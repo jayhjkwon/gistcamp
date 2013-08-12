@@ -21,7 +21,7 @@
         {{/unless}}
         {{#each items}}
         <li class="divider"></li>
-        <li><a href="#tagged/{{_id}}/{{tag_url}}">{{tag_name}}<span class="badge badge-inverse pull-right">{{countGists gists}}</span></a></li>        
+        <li><a href="#tagged/{{_id}}/{{tag_url}}"><span class="pull-left">{{tag_name}}</span><span class="badge badge-inverse pull-right">{{countGists gists}}</span></a></li>        
         {{/each}}
       </ul>
     </li>
