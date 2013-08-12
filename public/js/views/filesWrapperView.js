@@ -87,7 +87,7 @@ define(function(require){
 
 			loading: function(showSpinner){
 				if (showSpinner){
-					var target = $('#pivot')[0];
+					var target = $('.files-wrapper')[0];
 					this.spinner.spin(target);
 				}else{					
 					this.spinner.stop();					

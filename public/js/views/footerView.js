@@ -20,7 +20,7 @@ define(function(require){
 			template : footerTemplate,
 			selectedGistItem : {},
 			initialize: function(){
-				_.bindAll(this, 'setTagPopOverUI', 'onItemSelected', 'createTag', 'hideTagInfo', 'loading', 'onBtnCommentClick', 'onRoomCreated');
+				_.bindAll(this, 'setTagPopOverUI', 'onItemSelected', 'createTag', 'loading', 'onBtnCommentClick', 'onRoomCreated');
 
 				this.tags = new TagItemList();
 
@@ -33,8 +33,6 @@ define(function(require){
 			events: {
 				'click .btn-comments' : 'onBtnCommentClick',
 				'click .btn-reload'   : 'onReloadClick',
-				'click .tag'          : 'onTagClick',
-				'mouseleave .popover' : 'hideTagInfo',
 				'click .btn-chats'    : 'onRoomCreated',
 				'keydown #new-tag'    : 'createTag'
 			},
@@ -82,6 +80,7 @@ define(function(require){
 		    			self.tags.reset(data);	    						    			
 		    			self.ui.btnTag.popover('show');
 		    			$(e.target).val('');
+		    			postalWrapper.publish(constants.TAG_CHANGED, self.tags.toJSON());
 		    		})
 		    		.always(function(){
 		    			self.saving = false;
@@ -89,15 +88,6 @@ define(function(require){
 		    		});
 		    	}
 			},
-
-			onTagClick: function(){		
-				if ($('.popover')) return;
-			    this.ui.btnTag.popover('show');
-			},
-
-			hideTagInfo: function(){
-				this.ui.btnTag.popover('hide');	
-			},			
 
 			onBtnCommentClick: function(e){
 				var showComments = true;
