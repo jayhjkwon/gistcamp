@@ -20,10 +20,14 @@ define(function(require){
 			events : {
 				'click .gist-item' : 'onGistItemSelected'
 			},
-
+			
 			onGistItemSelected : function(e){
-				$('.gist-item').removeClass('selected');
+				/*$('.gist-item').removeClass('selected');
 				$(e.currentTarget).addClass('selected');
+				$('.comments-badge').hide().show(300);*/
+
+				$('.gist-item-container .row-fluid').removeClass('selected');
+				$(e.currentTarget).parents('.row-fluid').addClass('selected');
 				$('.comments-badge').hide().show(300);
 
 				// Application.execute(constants.GIST_ITEM_SELECTED, this.model.toJSON());
