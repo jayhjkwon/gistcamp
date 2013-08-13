@@ -21,14 +21,17 @@ if (config.options.env === 'development'){
 	GITHUB_CLIENT_ID = "d992e538e78bc563aae8"; 
 	GITHUB_CLIENT_SECRET = "64a09c87fea5e883c5d432b702876b81f8315e4c";
 }else{
-	GITHUB_CLIENT_ID = "982295ee088751687f4f"; 
-	GITHUB_CLIENT_SECRET = "77c8abfd402e9f310ecd051bc0e2acb4e257f798";
+	var github = require('./githubInfo');
+	GITHUB_CLIENT_ID = github.info.GITHUB_CLIENT_ID; 
+	GITHUB_CLIENT_SECRET = github.info.GITHUB_CLIENT_SECRET;
 }
 
-if(config.options.env === 'development')
-  callbackURL = 'http://localhost:3000/auth/github/callback';
-else
-  callbackURL = 'http://gistcamp.nodejitsu.com/auth/github/callback';
+if(config.options.env === 'development'){
+    callbackURL = 'http://localhost:3000/auth/github/callback';
+}else{
+	var github = require('./githubInfo');
+  	callbackURL = github.info.CALLBACK_URL;
+}
 
 var app = express();
 
@@ -104,6 +107,7 @@ app.get('/auth/github/callback',
 
 
 // restful services
+app.get('/api/server/options', ensureAuthenticated, function(req, res){ res.send(config.options);});
 app.get('/api/user/auth', ensureAuthenticated, user.getAuthUser);
 app.get('/api/gist/public', ensureAuthenticated, gist.getPublicGists);
 app.get('/api/gist/user/:login_name', ensureAuthenticated, gist.getGistListByUser);
@@ -116,7 +120,6 @@ app.get('/api/gist/:gistId/comments', ensureAuthenticated, gist.getComments);
 app.post('/api/gist/:gistId/comments', ensureAuthenticated, gist.createComment);
 app.put('/api/gist/:gistId/comments/:id', ensureAuthenticated, gist.editComment);
 app.get('/api/gist/friends', ensureAuthenticated, gist.getFriendsGist);
-
 app.get('/api/gist/tags', ensureAuthenticated, gist.getTags);
 app.get('/api/gists/:gistId', gist.getGistById);
 app.get('/api/gist/tags/:id', ensureAuthenticated, gist.getGistsByTag);

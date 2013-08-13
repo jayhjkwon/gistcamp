@@ -34,11 +34,22 @@ define(function(require){
 				});
 			
 			return xhr;	
+		},
+
+		getServerOptions = function(){
+			var xhr =
+				$.ajax({
+					type: 'GET',
+					url: '/api/server/options'
+				});
+			
+			return xhr;
 		}		
 	;
 
 	return {
 		getFileContent : getFileContent,
-		editTagGist    : editTagGist
+		editTagGist    : editTagGist,
+		getServerOptions:getServerOptions
 	};
 });
