@@ -1,34 +1,52 @@
 define(function(require){
 	var
-		$           = require('jquery'),
-		_           = require('underscore'),
-		Marionette  = require('marionette'),
-		topTemplate = require('hbs!templates/topTemplate'),
-		Application = require('application'),
-		constants   = require('constants'),
-		global      = require('global'),
+		$             = require('jquery'),
+		_             = require('underscore'),
+		Marionette    = require('marionette'),
+		topTemplate   = require('hbs!templates/topTemplate'),
+		Application   = require('application'),
+		constants     = require('constants'),
+		global        = require('global'),
+		TagItemList   = require('models/tagItemList'),
+		postalWrapper = require('postalWrapper'),		
 
 		TopView = Marionette.ItemView.extend({
 			className: 'navbar-inner',
 			template: topTemplate,
 
 			initialize: function(){
+				console.log('TopView initialized');
 				var self = this;
-				_.bindAll(this, 'activateMenu');
+				_.bindAll(this, 'activateMenu', 'showTagInfo', 'onTagChanged');
 
 				Application.commands.setHandler(constants.MENU_SELECTED, function(menu){
 					self.activateMenu(menu);
 				});				
+
+				this.showTagInfo();
+
+				this.subscription = postalWrapper.subscribe(constants.TAG_CHANGED, this.onTagChanged);
 			},
 
 			events: {
 				'click #btn-refresh' : 'onRefreshClick'
 			},
 
-			onDomRefresh: function(){
+			showTagInfo: function(){
+				var self = this;
+				self.collection = new TagItemList();
+				self.collection.fetch();
 			},
 
-			setUserInfo: function(){
+			onTagChanged: function(tags){
+				var self = this;
+				
+				self.collection.fetch().done(function(){
+					self.render();		
+				});
+			},
+
+			showUserInfo: function(){
 				$('#loggedin-user-name').text(global.user.name);
 				$('.loggedin-user-avatar').attr('src', global.user.avatar);
 			},
@@ -44,6 +62,10 @@ define(function(require){
 
 			removeActiveClass: function(){
 				$('.nav li').removeClass('active');
+			},
+
+			onClose: function(){
+				this.subscription.unsubscribe();
 			}
 
 		})

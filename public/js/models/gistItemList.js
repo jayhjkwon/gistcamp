@@ -9,6 +9,7 @@ define(function(require){
 			initialize: function(props){
 				console.log('GistItemList Collection initialized');
 				this.gistDataMode = props ? props.gistDataMode || '' : '';
+				this.tagId = props ? props.tagId || null : null;
 			},
 			url : function(){
 				var url = '';
@@ -22,6 +23,8 @@ define(function(require){
 						return '/api/gist/starred'
 					case constants.GIST_FRIENDS_GISTS :
 						return '/api/gist/friends';
+					case constants.GIST_TAGGED_GISTS :
+						return '/api/gist/tagged/' + this.tagId;
 					default :
 						return '/api/gist/public';	
 				}

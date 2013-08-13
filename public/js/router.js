@@ -9,9 +9,9 @@ define(function(require){
 				'following'   : 'following',
 				'mygists'     : 'myGists',
 				'starred'     : 'starred',
-				'forked'      : 'forked',
-				'tagged/:tag' : 'tagged',
-				'newgist'     : 'newGist'
+				'tagged/:id/:tag_url' : 'tagged',
+				'newgist'     : 'newGist',
+				'chat'        : 'chat'
 			},
 
 			controller: new Controller

@@ -8,7 +8,12 @@ define(function(require){
 		shellView 			= require('views/shellView'),		
 		constants 			= require('constants'),
 		FilesWrapperView    = require('views/filesWrapperView'),
-		CommentsWrapperView = require('views/CommentsWrapperView')
+		CommentsWrapperView = require('views/CommentsWrapperView'),
+		CreateGistView = require('views/createGistView')
+		ChatView            = require('views/chatView'),
+		ChatItemListView    = require('views/chatItemListView'),
+		ConversationWrapperView = require('views/conversationWrapperView'),
+		global              = require('global')
 	;
 
 	var
@@ -21,8 +26,9 @@ define(function(require){
 			},
 
 			home : function(){
+
 				// LayoutView with regions
-				var gistListView = new GistListView({currentSelectedMenu: 'home'});
+				var gistListView = new GistListView();
 				shellView.main.show(gistListView);
 
 				// Gist Item on the left region
@@ -43,12 +49,12 @@ define(function(require){
 			
 			following : function(){
 				// LayoutView with regions
-				var gistListView = new GistListView({currentSelectedMenu: 'following'});
+				var gistListView = new GistListView();
 				shellView.main.show(gistListView);
 
 				// Gist Item on the left region
 				var gistItemListView = new GistItemListView;
-				gistItemListView.getFriendsGist();				
+				gistItemListView.getFriendsGistList();				
 				gistListView.gistItemList.show(gistItemListView);
 
 				// Gist Files on the center region
@@ -64,7 +70,7 @@ define(function(require){
 			
 			myGists : function(){
 				// LayoutView with regions
-				var gistListView = new GistListView({currentSelectedMenu: 'mygists'});
+				var gistListView = new GistListView();
 				shellView.main.show(gistListView);
 
 				// Gist Item on the left region
@@ -85,7 +91,7 @@ define(function(require){
 			
 			starred : function(){
 				// LayoutView with regions
-				var gistListView = new GistListView({currentSelectedMenu: 'starred'});
+				var gistListView = new GistListView();
 				shellView.main.show(gistListView);
 
 				// Gist Item on the left region
@@ -104,19 +110,57 @@ define(function(require){
 				Application.execute(constants.MENU_SELECTED,'starred');
 			},
 			
-			forked : function(){
-				shellView.main.show(new GistListView({currentSelectedMenu: 'forked'}));
-				Application.execute(constants.MENU_SELECTED,'forked');
-			},
-			
-			tagged : function(tag){
-				// console.log(tag);
-				shellView.main.show(new GistListView({currentSelectedMenu: 'tagged', tag: tag}));
-				Application.execute(constants.MENU_SELECTED,'tagged');				
+			tagged : function(tagId, tagUrl){
+				// LayoutView with regions
+				var gistListView = new GistListView();
+				shellView.main.show(gistListView);
+
+				// Gist Item on the left region
+				var gistItemListView = new GistItemListView;
+				gistItemListView.getTaggedGistList(tagId, tagUrl);				
+				gistListView.gistItemList.show(gistItemListView);
+
+				// Gist Files on the center region
+				var filesWrapperView = new FilesWrapperView;
+				gistListView.filesWrapper.show(filesWrapperView);
+
+				// Comments on the right region
+				var commentsWrapperView = new CommentsWrapperView;
+				gistListView.commentsWrapper.show(commentsWrapperView);
+
+				Application.execute(constants.MENU_SELECTED,'tagged');
 			},
 			
 			newGist : function(){
-				Application.execute(constants.MENU_SELECTED,'newgist');
+				var createListView = new CreateGistView();
+				shellView.main.show(createListView);
+
+				//createListView.getItemInit();
+
+
+				Application.vent.trigger(constants.MENU_SELECTED,'newgist');
+			},
+
+			chat : function(){
+				
+				global.socket.emit('getrooms');
+
+				var chatView = new ChatView()
+				shellView.main.show(chatView);
+
+				// Chat List on the left region
+                var chatItemListView = new ChatItemListView;
+				chatView.chatList.show(chatItemListView);
+
+				// Gist Files on the center region
+				var filesWrapperView = new FilesWrapperView;
+				chatView.filesWrapper.show(filesWrapperView);
+
+				// Chat on the right region
+				var conversationWrapperView = new ConversationWrapperView;
+				chatView.chatWrapper.show(conversationWrapperView);
+
+				Application.execute(constants.MENU_SELECTED,'chat');
 			}
 		})
 	;

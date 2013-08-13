@@ -48,7 +48,7 @@ header {
 			overflow-y:auto;
 			// border-right:solid 1px #eee;
 			padding-top:10px;
-			border-right:0px solid #eee;
+			border-right:1px solid #eee;
 		}
 
 		.files-wrapper {
@@ -68,6 +68,42 @@ header {
 			top:@top-height;
 			bottom:@footer-height;
 			right:0px;//-@comments-wrapper-width;
+			// padding-top:-40px;
+			width:@comments-wrapper-width;
+			overflow-y:auto;
+			overflow-x:hidden;
+			transition: right 0.3s ease-out;	
+			-webkit-transition: right 0.3s ease-out;			
+
+			/*position: absolute;
+			top:0px;
+			bottom:0px;
+			left:100%;
+			margin-left:0;
+			width:@comments-wrapper-width;
+			overflow-y:auto;
+			overflow-x:hidden;
+			transition: right 0.3s ease-out;	
+			-webkit-transition: right 0.3s ease-out;			*/
+		}
+
+		.chat-list {
+			position: absolute;
+			top:0px;
+			bottom:0px;
+			left:0;
+			width:@gist-list-width;
+			overflow-y:auto;
+			// border-right:solid 1px #eee;
+			padding-top:10px;
+			border-right:0px solid #eee;
+		}
+
+		.chat-wrapper {
+			position: fixed;	// if the position is absolute, it is scrollable in mobile browser.
+			top:@top-height;
+			bottom:@footer-height;
+			right:0;//-@comments-wrapper-width;
 			// padding-top:-40px;
 			width:@comments-wrapper-width;
 			overflow-y:auto;
