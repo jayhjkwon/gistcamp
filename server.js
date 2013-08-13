@@ -9,18 +9,26 @@ var
 	constants= require('./infra/constants').constants,
 	passport = require('passport'),
 	GitHubStrategy = require('passport-github').Strategy,
-  User     = require('./models/user')  
+    User     = require('./models/user')  
 ;
 
 
-//2013.08.03
-var GITHUB_CLIENT_ID = "ae1eb04aec018fa21176"; 
-var GITHUB_CLIENT_SECRET = "6fecc344c5aa4dd89d1b46a7f3f8bc70b60db84b";
+var GITHUB_CLIENT_ID;
+var GITHUB_CLIENT_SECRET;
 var callbackURL;
+
+if (config.options.env === 'development'){
+	GITHUB_CLIENT_ID = "d992e538e78bc563aae8"; 
+	GITHUB_CLIENT_SECRET = "64a09c87fea5e883c5d432b702876b81f8315e4c";
+}else{
+	GITHUB_CLIENT_ID = "982295ee088751687f4f"; 
+	GITHUB_CLIENT_SECRET = "77c8abfd402e9f310ecd051bc0e2acb4e257f798";
+}
+
 if(config.options.env === 'development')
   callbackURL = 'http://localhost:3000/auth/github/callback';
 else
-  callbackURL = 'http://jaykwon-gistcamp.nodejitsu.com/auth/github/callback';
+  callbackURL = 'http://gistcamp.nodejitsu.com/auth/github/callback';
 
 var app = express();
 

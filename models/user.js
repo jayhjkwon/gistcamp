@@ -1,5 +1,11 @@
+var config   = require('../infra/config');
 var mongoose = require('mongoose');
-var db = mongoose.connect('mongodb://localhost/gistcamp');
+
+var db;
+if (config.options.env === 'development')
+  db = mongoose.connect('mongodb://localhost/gistcamp');
+else
+  db = mongoose.connect('mongodb://nodejitsu_jaykwon:2tfp3jqg1h68rnck494j8er0p3@ds027718.mongolab.com:27718/nodejitsu_jaykwon_nodejitsudb9892156787');
 
 var userSchema = new mongoose.Schema({
   login			        : String, // unique
