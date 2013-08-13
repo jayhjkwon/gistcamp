@@ -1,8 +1,8 @@
-
-$("#btnLogin").click(function() {
-alert("...");
-});
- 
+$(document).ready(
+			function() {  
+				$("html").niceScroll();
+			}
+		);
 
 $(".img-power").bind("click", function() {
   
