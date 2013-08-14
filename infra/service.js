@@ -17,7 +17,9 @@ exports.getGitHubApi = function(req){
 
 // this function is intend to be used after authentication
 exports.getAccessToken = function(req){
-	return req.user.access_token;
+	if (req && req.user)
+		return req.user.access_token;
+	return null;
 };
 
 exports.getUserId = function(req){

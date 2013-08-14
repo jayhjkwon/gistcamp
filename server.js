@@ -9,7 +9,9 @@ var
 	constants= require('./infra/constants').constants,
 	passport = require('passport'),
 	GitHubStrategy = require('passport-github').Strategy,
-    User     = require('./models/user')  
+    User     = require('./models/user'), 
+    request  = require('request'),
+    service   = require('./infra/service')    
 ;
 
 
@@ -35,6 +37,22 @@ if(config.options.env === 'development'){
 
 var app = express();
 
+var checkRateLimit = function(req, res, next){
+	var accessToken = service.getAccessToken(req);
+	if(accessToken){
+		request.get({
+			url: config.options.githubHost + '/rate_limit?access_token=' + accessToken,
+		}, function(error, response, body){	
+			console.log('*******************************************');
+			console.log('Rate Limit Checking');
+			console.log(body);
+			console.log('*******************************************');
+		});
+	}
+
+	next();
+};
+
 // all environments
 app.set('env', config.options.env);
 app.set('port', process.env.PORT || 3000);
@@ -48,8 +66,10 @@ app.use(express.cookieParser('your secret here'));
 app.use(express.session({cookie: { maxAge : 1000 * 60 * 24 * 30 }}));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(checkRateLimit);
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
+
 
 
 // development only
@@ -85,8 +105,13 @@ passport.use(new GitHubStrategy({
   }
 ));
 
+
+
 var ensureAuthenticated = function (req, res, next) {
-  if (req.isAuthenticated()) { return next(); }
+  if (req.isAuthenticated()) { 
+  	// checkRateLimit(req);
+  	return next(); 
+  }
   res.redirect('/welcome');
 };
 
