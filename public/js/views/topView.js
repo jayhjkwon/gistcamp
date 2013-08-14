@@ -37,17 +37,13 @@ define(function(require){
 			},
 
 			showTagInfo: function(){
-				var self = this;
-				self.collection = new TagItemList();
-				self.collection.fetch();
+				this.collection = new TagItemList();
+				this.collection.fetch();
 			},
 
 			onTagChanged: function(tags){
-				var self = this;
-				
-				self.collection.fetch().done(function(result){
-					self.render();		
-				});
+				this.collection.reset(tags);
+				this.render();
 			},
 
 			showUserInfo: function(){

@@ -301,36 +301,6 @@ exports.editComment = function(req, res){
 	);	
 };
 
-exports.editTagGist = function(req, res){
-	var tagId = req.params.tag_id;
-	var gistId = req.params.gist_id;
-	var userId = service.getUserId(req);
-
-	User.find({id:userId}).select('tags').lean().exec(function(err, docs){
-		var tags = docs[0].tags;
-
-		var tagCnt = _.find(tags, function(tag){
-			return tag._id.toString() === tagId;
-		});
-
-		var gistCnt = _.find(tagCnt.gists, function(gist){
-			return gist.gist_id === gistId;
-		});
-
-		if (gistCnt){
-			res.send(200);
-		}else{
-			User.update(
-				{id:userId, 'tags._id':mongoose.Types.ObjectId(tagId)}, 
-				{$push: {'tags.$.gists' : {'gist_id':gistId}}}, 
-				function(err, numberAffected, rawResponse){
-					res.send(200);
-				}
-			);	
-		}
-	});
-};
-
 
 /*
 	1. get friends (following, follower)
@@ -462,6 +432,39 @@ exports.createTag = function(req, res){
 		});
 	});
 };
+
+exports.editTagGist = function(req, res){
+	var tagId = req.params.tag_id;
+	var gistId = req.params.gist_id;
+	var userId = service.getUserId(req);
+
+	User.find({id:userId}).select('tags').lean().exec(function(err, docs){
+		var tags = docs[0].tags;
+
+		var tagCnt = _.find(tags, function(tag){
+			return tag._id.toString() === tagId;
+		});
+
+		var gistCnt = _.find(tagCnt.gists, function(gist){
+			return gist.gist_id === gistId;
+		});
+
+		if (gistCnt){
+			res.send(tags);
+		}else{
+			User.update(
+				{id:userId, 'tags._id':mongoose.Types.ObjectId(tagId)}, 
+				{$push: {'tags.$.gists' : {'gist_id':gistId}}}, 
+				function(err, numberAffected, rawResponse){
+					User.find({id:userId}).select('tags').lean().exec(function(err, docs){
+						res.send(docs[0].tags);
+					});					
+				}
+			);	
+		}
+	});
+};
+
 
 exports.getGistsByTag = function(req, res){
 

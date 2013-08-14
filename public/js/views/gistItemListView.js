@@ -53,7 +53,7 @@ define(function(require){
 						}						
 
 						async.eachLimit(res.data, 3, self.handleGist, function(error, result){
-							// do nothing, because set file content in setFileContent method
+							// do nothing, because file content is set in setFileContent method
 						});
 					})
 					.always(function(){
@@ -135,7 +135,7 @@ define(function(require){
 				}
 			},
 			showEndofDataSign: function(){
-				$('#gist-item-list').append('<div style="height:50px;font-size:15px;font-weight:bold;text-align:center;">End of Data..</div>');
+				// $('#gist-item-list').append('<div style="height:50px;font-size:15px;font-weight:bold;text-align:center;">End of Data..</div>');
 			}
 
 		})
