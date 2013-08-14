@@ -115,7 +115,7 @@ define(function(require){
 			},
 			onScroll : function(){
 				var w = $('.gist-list');
-				if(w.scrollTop() + w.height() == $('.gist-item-container').height()) {
+				if(w.scrollTop() + w.height() > $('.gist-item-container').height()) {
 		       		this.loadMore();
 			    }
 			},
