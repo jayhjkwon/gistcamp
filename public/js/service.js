@@ -44,12 +44,23 @@ define(function(require){
 				});
 			
 			return xhr;
+		},
+
+		setStar = function(gistId){
+			var xhr =
+				$.ajax({
+					type: 'POST',
+					url: '/api/gist/star/' + gistId
+				});
+			
+			return xhr;	
 		}		
 	;
 
 	return {
-		getFileContent : getFileContent,
-		editTagGist    : editTagGist,
-		getServerOptions:getServerOptions
+		getFileContent   : getFileContent,
+		editTagGist      : editTagGist,
+		getServerOptions : getServerOptions,
+		setStar          : setStar
 	};
 });

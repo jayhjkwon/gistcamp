@@ -478,7 +478,14 @@ exports.removeTag = function(req, res){
 
 };
 
+exports.setStar = function(req, res){
+	var github = service.getGitHubApi(req);
+	var gistId = req.params.gist_id;
 
+	github.gists.star({id:gistId}, function(err, data){		
+		res.send(data);
+	});	
+};
 
 
 

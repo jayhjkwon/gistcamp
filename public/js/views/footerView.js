@@ -21,7 +21,7 @@ define(function(require){
 			template : footerTemplate,
 			selectedGistItem : {},
 			initialize: function(){
-				_.bindAll(this, 'setTagPopOverUI', 'onItemSelected', 'createTag', 'loading', 'onBtnCommentClick', 'onRoomCreated', 'tagOnGist');
+				_.bindAll(this, 'setTagPopOverUI', 'onItemSelected', 'star', 'createTag', 'loading', 'onBtnCommentClick', 'onRoomCreated', 'tagOnGist');
 
 				this.tags = new TagItemList();
 
@@ -36,7 +36,8 @@ define(function(require){
 				'click .btn-reload'      : 'onReloadClick',
 				'click .btn-chats'       : 'onRoomCreated',
 				'keydown #new-tag'       : 'createTag',
-				'click .add-tag ul li a' : 'tagOnGist'
+				'click .add-tag ul li a' : 'tagOnGist',
+				'click .btn-star'        : 'star'
 			},
 
 			ui : {
@@ -45,6 +46,15 @@ define(function(require){
 
 			onRender: function(){
 				this.setTagPopOverUI();				
+			},
+
+			star: function(e){
+				service.setStar(this.selectedGistItem.id).done(function(data){
+					$('.starred-success').removeClass('starred-success-hide starred-success-show').addClass('starred-success-show');
+					setTimeout(function(){
+						$('.starred-success').removeClass('starred-success-hide starred-success-show').addClass('starred-success-hide');
+					}, 2000);
+				});
 			},
 
 			createTag: function(e){
