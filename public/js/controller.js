@@ -138,7 +138,7 @@ define(function(require){
 				//createListView.getItemInit();
 
 
-				Application.vent.trigger(constants.MENU_SELECTED,'newgist');
+				Application.execute(constants.MENU_SELECTED,'newgist');
 			},
 
 			chat : function(){
