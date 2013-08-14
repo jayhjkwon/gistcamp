@@ -75,10 +75,13 @@ define(function(require){
 				var self = this;
 				
 				var tagId = $(e.target).data('tag-id');
+				var tagName = $(e.target).data('tag-name');
 				var gistId = this.selectedGistItem.id;
 
-				service.editTagGist(tagId, gistId).done(function(result){
-					postalWrapper.publish(constants.TAG_CHANGED);
+				service.editTagGist(tagId, gistId).done(function(data){
+					self.tags.reset(data);
+					postalWrapper.publish(constants.TAG_CHANGED, self.tags.toJSON());
+					$(e.target).find('span.tag-saved-msg').remove();
 					$(e.target).append('<span class="pull-right tag-saved-msg">Saved</span>');
 					$('.tag-saved-msg').fadeOut(4000);
 				});
