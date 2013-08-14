@@ -21,7 +21,7 @@ define(function(require){
 			template : footerTemplate,
 			selectedGistItem : {},
 			initialize: function(){
-				_.bindAll(this, 'setTagPopOverUI', 'onItemSelected', 'createTag', 'loading', 'onBtnCommentClick', 'onRoomCreated');
+				_.bindAll(this, 'setTagPopOverUI', 'onItemSelected', 'createTag', 'loading', 'onBtnCommentClick', 'onRoomCreated', 'tagOnGist');
 
 				this.tags = new TagItemList();
 
@@ -36,7 +36,7 @@ define(function(require){
 				'click .btn-reload'      : 'onReloadClick',
 				'click .btn-chats'       : 'onRoomCreated',
 				'keydown #new-tag'       : 'createTag',
-				'click .add-tag ul li a' : 'onTagClick'
+				'click .add-tag ul li a' : 'tagOnGist'
 			},
 
 			ui : {
@@ -47,7 +47,30 @@ define(function(require){
 				this.setTagPopOverUI();				
 			},
 
-			onTagClick: function(e){
+			createTag: function(e){
+				var self = this;
+				var keyCode = e.keyCode || e.which;
+		    	if (keyCode === 13 && !self.saving){
+		    		self.saving = true;
+		    		self.loading(true, e.target);
+		    		
+		    		var text = $(e.target).val();
+		    		var tag = new TagItem({gistId: self.selectedGistItem.id, tagName:text});
+		    		tag.save()
+		    		.done(function(data){
+		    			self.tags.reset(data);	    						    			
+		    			self.ui.btnTag.popover('show');
+		    			$(e.target).val('');
+		    			postalWrapper.publish(constants.TAG_CHANGED, self.tags.toJSON());
+		    		})
+		    		.always(function(){
+		    			self.saving = false;
+		    			self.loading(false);
+		    		});
+		    	}
+			},
+
+			tagOnGist: function(e){
 				e.preventDefault();
 				var self = this;
 				
@@ -80,29 +103,6 @@ define(function(require){
 			    });
 
 				this.tags.fetch();	
-			},
-
-			createTag: function(e){
-				var self = this;
-				var keyCode = e.keyCode || e.which;
-		    	if (keyCode === 13 && !self.saving){
-		    		self.saving = true;
-		    		self.loading(true, e.target);
-		    		
-		    		var text = $(e.target).val();
-		    		var tag = new TagItem({gistId: self.selectedGistItem.id, tagName:text});
-		    		tag.save()
-		    		.done(function(data){
-		    			self.tags.reset(data);	    						    			
-		    			self.ui.btnTag.popover('show');
-		    			$(e.target).val('');
-		    			postalWrapper.publish(constants.TAG_CHANGED, self.tags.toJSON());
-		    		})
-		    		.always(function(){
-		    			self.saving = false;
-		    			self.loading(false);
-		    		});
-		    	}
 			},
 
 			onBtnCommentClick: function(e){

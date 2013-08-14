@@ -32,6 +32,10 @@ define(function(require){
 				'click #btn-refresh' : 'onRefreshClick'
 			},
 
+			onRender: function(){
+				this.showUserInfo();
+			},
+
 			showTagInfo: function(){
 				var self = this;
 				self.collection = new TagItemList();
@@ -41,7 +45,7 @@ define(function(require){
 			onTagChanged: function(tags){
 				var self = this;
 				
-				self.collection.fetch().done(function(){
+				self.collection.fetch().done(function(result){
 					self.render();		
 				});
 			},
