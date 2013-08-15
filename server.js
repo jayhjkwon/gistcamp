@@ -152,6 +152,7 @@ app.get('/api/gist/tags/:id', ensureAuthenticated, gist.getGistsByTag);
 app.post('/api/gist/tags', ensureAuthenticated, gist.createTag);
 app.put('/api/gist/tags/:id', ensureAuthenticated, gist.editTag);
 app.delete('/api/gist/tags/:id', ensureAuthenticated, gist.removeTag);
+app.post('/api/gist/newgist', ensureAuthenticated, gist.setNewGist);
 
 var server = http.createServer(app)
 	, io = require('socket.io').listen(server);

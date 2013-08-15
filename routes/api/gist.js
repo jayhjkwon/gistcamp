@@ -488,7 +488,12 @@ exports.setStar = function(req, res){
 };
 
 
+exports.setNewGist = function(req, res){
+	
+	var github = service.getGitHubApi(req);
 
+
+}
 
 
 
