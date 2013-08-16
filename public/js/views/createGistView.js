@@ -7,7 +7,8 @@ define(function(require){
 		CreateGistItemView = require('./createGistItemView'),
 		NewGistItem        = require('models/newGistItem'),
 		NewGistItemList    = require('models/newGistItemList'),
-		NewGist            = require('models/newGist'),
+		GistItem           = require('models/gistItem'),
+		//NewGist            = require('models/newGist'),
 		nicescroll         = require('nicescroll'),
 		ace                = require('ace/ace'),
 		editorList        = [],
@@ -66,20 +67,20 @@ define(function(require){
 				return false;
 			},
 			onCreateSecreteGist : function(e){
-				var newGist = this.setNewGist();
-				newGist.set('public', false);
-				console.log(newGist.toJSON());
+				var gistItem = this.setNewGist(false);
+				// newGist.set('public', false);
+				console.log(gistItem.toJSON());
 				return false;
 
 			},
 			onCreatePublicGist : function(e){
-				var newGist = this.setNewGist();
-				newGist.set('public', true);
+				var gistItem = this.setNewGist(true);
+				// newGist.set('public', true);
 
-				console.log(newGist.get('files'));
+				console.log(gistItem.toJSON());
 				return false;
 			},
-			setNewGist : function(e)
+			setNewGist : function(param)
 			{
 
 				// var newGist = new NewGist();
@@ -103,9 +104,9 @@ define(function(require){
 
 				});
 
-				var newGist = new NewGist({ description : description });
+				var gistItem = new GistItem({ description : description, public : param ,files : list});
 				// newGist.set('files', list);
-				newGist.save()
+				gistItem.save()
 				.done(function(data){
 					alert(1);
 				})
@@ -113,7 +114,7 @@ define(function(require){
 					alert(2);
 				});
 
-				return newGist;
+				return gistItem;
 			}
 
 

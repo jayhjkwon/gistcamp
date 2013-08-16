@@ -488,10 +488,24 @@ exports.setStar = function(req, res){
 };
 
 
-exports.setNewGist = function(req, res){
-	
-	var github = service.getGitHubApi(req);
+exports.createNewgGist = function(req, res){
 
+	var description = req.body.description;
+	var public = req.body.public;
+	var files = req.body.files;
+
+	var github = service.getGitHubApi(req);
+	github.gists.create({description : description, public : public, files : files}
+		, function(err, data){
+			if(err){
+
+			}else{
+				
+			}
+			res.send();
+	});
+	// console.log(req);
+	
 
 }
 
