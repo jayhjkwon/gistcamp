@@ -22,7 +22,7 @@ define(function(require){
 			selectedGistItem : {},
 
 			initialize: function(){
-				_.bindAll(this, 'setTagPopOverUI', 'onItemSelected', 'star', 'createTag', 'loading', 'onBtnCommentClick', 'onRoomCreated', 'tagOnGist');
+				_.bindAll(this, 'shareGg', 'shareFB', 'shareTW', 'shareFB', 'setTagPopOverUI', 'onItemSelected', 'star', 'createTag', 'loading', 'onBtnCommentClick', 'onRoomCreated', 'tagOnGist');
 
 				this.tags = new TagItemList();
 
@@ -38,7 +38,10 @@ define(function(require){
 				'click .btn-chats'       : 'onRoomCreated',
 				'keydown #new-tag'       : 'createTag',
 				'click .add-tag ul li a' : 'tagOnGist',
-				'click .btn-star'        : 'star'
+				'click .btn-star'        : 'star',
+				'click .btn-fb'          : 'shareFB',
+				'click .btn-tw'          : 'shareTW',
+				'click .btn-gp'          : 'shareGg'
 			},
 
 			ui : {
@@ -172,6 +175,41 @@ define(function(require){
 					this.spinner.stop();					
 				}
 			},
+
+			shareFB : function(){
+				var gistUrl = this.selectedGistItem.html_url;
+				var url = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(gistUrl);
+				var title = 'GistCamp';
+				this.popupWindow(url, title, '626', '436');
+			},
+
+			shareTW : function(){
+				var gistUrl = this.selectedGistItem.html_url;
+				var url = 'https://twitter.com/intent/tweet?via=gistcamp&url=' + encodeURIComponent(gistUrl);
+				var title = 'GistCamp';
+				this.popupWindow(url, title, '473', '216');	
+			},
+
+			shareGg : function(){
+				var gistUrl = this.selectedGistItem.html_url;
+				var url = 'https://plus.google.com/share?url=' + encodeURIComponent(gistUrl);
+				var title = 'GistCamp';
+				this.popupWindow(url, title, '473', '216');	
+			},
+
+			popupWindow: function(url, title, w, h){
+				var left, top, newWindow, dualScreenLeft, dualScreenTop;
+
+		    	dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : screen.left;
+		    	dualScreenTop = window.screenTop != undefined ? window.screenTop : screen.top;
+			    left = ((screen.width / 2) - (w / 2)) + dualScreenLeft;
+			    top = ((screen.height / 2) - (h / 2)) + dualScreenTop;
+			    newWindow = window.open(url, title, 'scrollbars=yes, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
+
+			    if (window.focus) {
+			        newWindow.focus();
+			    }
+			}, 
 
 			onClose: function(){
 				this.subscription.unsubscribe();
