@@ -34,7 +34,19 @@ define(function(require) {
 				// Application.execute(constants.GIST_ITEM_SELECTED, this.model.toJSON());
 				global.socket.emit('switchRoom', this.model.id);
 				postalWrapper.publish(constants.GIST_ITEM_SELECTED, this.model.toJSON());
-			}
+			},
+
+			onClose: function(){
+				
+				global.socket.emit('leaveRoom', this.model.id);
+				// var self = this;
+				// _.each(self.xhrs, function(xhr){
+				// 	var s = xhr.state();
+				// 	if (s === 'pending') {
+				// 		xhr.abort();	// abort ajax requests those are not completed
+				// 	}
+				// });
+			},
 		})
 	;
 

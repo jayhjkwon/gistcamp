@@ -42,7 +42,7 @@ exports.getPublicGists = function(req, res){
 
 	if (!linkHeader){
 		github.gists.public({per_page: 10},
-			function(err, data){	
+			function(err, data){
 				if (data) {
 					sendData(data, req, res);
 				}

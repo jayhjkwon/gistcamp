@@ -70,8 +70,12 @@ define(function(require){
 	    		var chatItem = new ChatItem({'gistId': gist.id});
 	    		chatItem.fetch()
 	    		.done(function(res){
-	    				self.collection.add(res.data);
-	    				self.setFirstItemSelected();
+	    			res.data['room'] = self.rooms[gist.id];
+
+					console.log(res.data['room'][0].login);
+
+    				self.collection.add(res.data);
+    				self.setLastItemSelected();
 	    				//$('.chat-item').last().trigger('click');
 	    		})
 	    		.always(function(){
@@ -107,7 +111,7 @@ define(function(require){
 				// });
 			},
 
-			setFirstItemSelected: function(){
+			setLastItemSelected: function(){
 		    	$('.chat-item').last().trigger('click');
 		    },		    
 			onRender : function(){

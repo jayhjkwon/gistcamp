@@ -21,7 +21,7 @@ require.config({
         async          : '../vendor/async/lib/async',
         store          : '../vendor/store.js/store',
         markdown       : '../vendor/markdown/lib/markdown',
-        ace            : '../vendor/ace/lib/ace/ace',
+        ace            : '../vendor/ace/lib/ace',
         // TODO : Socket.Client는 왜 있는걸까? 나중에 다시 알아보기
         // socketi        : '../vendor/socket.io-client/lib/socket.io-client'
         //socketio       : 'http://localhost:3000/socket.io/socket.io'
@@ -60,9 +60,6 @@ require.config({
         },
         socketio: {
             exports: 'io'
-        },
-        ace : {
-            exports: 'ace'
         }
 	},
 	hbs : {

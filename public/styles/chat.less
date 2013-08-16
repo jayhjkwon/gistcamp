@@ -54,15 +54,23 @@
 @conversation-action-height:30px;
 .chat-wrapper {
 	border: solid 1px #eee;
-	//left:10px;
 	.conversation-content {
+		margin-left:10px;
+		margin-top:10px;
 		position: absolute;
 		top:0px;
 		bottom:@conversation-action-height;
-		overflow:auto;
-		width:100%;
+		overflow-x: hidden;
+		width:90%;
+		white-space: pre-wrap;      /* CSS3 */   
+        white-space: -moz-pre-wrap; /* Firefox */    
+        white-space: -pre-wrap;     /* Opera <7 */   
+        white-space: -o-pre-wrap;   /* Opera 7 */    
+        word-wrap: break-word;      /* IE */
 	}
 	.conversation-action {
+		margin-left:10px;
+		margin-bottom:10px;
 		position:absolute;
 	    bottom:0;
 	    height:@conversation-action-height;

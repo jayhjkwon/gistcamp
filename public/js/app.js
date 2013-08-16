@@ -21,8 +21,10 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 				// on connection to server, ask for user's name with an anonymous callback
 				global.socket.on('connect', function(){
 					// call the server-side function 'adduser' and send one parameter (value of prompt)
-					//global.socket.emit('adduser', prompt("What's your name?"));
-					global.socket.emit('adduser', global.user.login);
+					// var userid = prompt("What's your name?");
+					// global.user.id = userid;
+
+					global.socket.emit('adduser', global.user);
 				});
 
 				global.socket.on('updaterooms', function(rooms) {
@@ -32,12 +34,19 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 
 				// listener, whenever the server emits 'updatechat', this updates the chat body
 				global.socket.on('updatechat', function (username, data) {
-					$('#conversation').append('<b>'+username + ':</b> ' + data + '<br>');
+					if (username == 'SERVER') {
+						$('#conversation').append('<b>'+username + ':</b> ' + data + '<br>');	
+					}
+					else {
+						
+						$('#conversation').append('<img src=' + username.avatar + ' style="width:20px;height:20px;"/>' +  ' <b>'+username.login + ':</b> ' + data + '<br>');
+						//$('#conversation').append('<img src="http://www.gravatar.com/avatar/13edb3b0d8881221c62c3674bcc6339f.png" style="width:20px;height:20px;"/>' +  ' <b>'+username.login + ':</b> ' + data + '<br>');		
+					}
 				});
 
-				global.socket.on('updatealarm', function(data) {
-					var title = 'Alarm';
-					toastr.info(data, title);
+				global.socket.on('updatealarm', function(user, data) {
+					var title = 'GistCamp';
+					toastr.info('From ' + user.login + '<br/>' + data, title);
 				});
 
 				callback(null, user);
