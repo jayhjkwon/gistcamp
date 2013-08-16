@@ -187,7 +187,7 @@ define(function(require){
 				var gistUrl = this.selectedGistItem.html_url;
 				var url = 'https://twitter.com/intent/tweet?via=gistcamp&url=' + encodeURIComponent(gistUrl);
 				var title = 'GistCamp';
-				this.popupWindow(url, title, '473', '216');	
+				this.popupWindow(url, title, '473', '258');	
 			},
 
 			shareGg : function(){
