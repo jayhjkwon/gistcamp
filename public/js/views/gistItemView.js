@@ -8,6 +8,7 @@ define(function(require){
 		Application 	= require('application'),
 		constants       = require('constants'),
 		postalWrapper   = require('postalWrapper'),
+		User            = require('models/user'),
 		
 		GistItemView 	= Marionette.ItemView.extend({
 			template: gistItemTemplate,
@@ -16,22 +17,52 @@ define(function(require){
 
 			initialize: function(){
 				var self = this;
-				_.bindAll(this, 'onGistItemSelected', 'onTagChanged', 'onClose', 'setIsSelectedGistFalse');
+				_.bindAll(this, 'onGistItemSelected', 'onTagChanged', 'onClose', 'setIsSelectedGistFalse', 'onFollowUserClicked');
 				this.subscription = postalWrapper.subscribe(constants.TAG_CHANGED, this.onTagChanged);
 				this.subscriptionRemoveIsSelected = postalWrapper.subscribe(constants.REMOVE_IS_SELECTED, this.setIsSelectedGistFalse);
 			},
 			
 			events : {
-				'click .gist-item' : 'onGistItemSelected'
+				'click .gist-item'   : 'onGistItemSelected',
+				'click .follow-user' : 'onFollowUserClicked'
+			},
+
+			ui : {
+				btnFollow : '.follow-user'
+			},
+
+			onFollowUserClicked: function(e){
+				var self = this;
+				var u = this.model.toJSON().user;
+				this.ui.btnFollow.prop('disabled', true);
+				if(this.ui.btnFollow.text() === 'Follow'){
+					var user = new User({mode: constants.USER_FOLLOW, id:u.id, loginId: u.login});
+					user.save().done(function(){
+						self.ui.btnFollow.prop('disabled', false);
+						self.ui.btnFollow.text('Unfollow'); 
+					});					
+				}else{
+					var user = new User({mode: constants.USER_UNFOLLOW, id:u.id, loginId: u.login});
+					user.destroy({
+						success: function(){ 
+							self.ui.btnFollow.prop('disabled', false);
+							self.ui.btnFollow.text('Follow'); 
+						}
+					});
+				}
 			},
 
 			setIsSelectedGistFalse: function(context){ 
-				if (context !== this) 
+				if (context !== this) {
 					this.isSelectedGist = false; 
+					this.ui.btnFollow.hide();
+				}
 			},
 			
 			onGistItemSelected : function(e){
 				this.isSelectedGist = true;
+
+				this.ui.btnFollow.show();
 
 				/*$('.gist-item').removeClass('selected');
 				$(e.currentTarget).addClass('selected');
