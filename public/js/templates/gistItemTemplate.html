@@ -1,16 +1,13 @@
 <div class="gist-item">
   <div class="span3">
-    <img src="{{user.avatar_url}}" />
+    <img src="{{user.avatar_url}}"/>
+    <button data-loading-text="..." class="btn btn-danger follow-user">Follow</button>
   </div>
   <div class="span9">
     <div class="detail">
       <div class="title">{{user.login}} / {{mainFileName files}}</div>
       <div class="subtitle">
-        <span>{{fromNow created_at}}</span>
-        <!-- <i class="icon-star is-starred"></i> -->
-        <!-- <span class="social pull-right">
-          <a href="#" ><i class="icon-star-empty"></i></a>
-        </span> -->
+        <span>{{fromNow created_at}}</span>     
       </div>
       <p class="gist-item-description">{{description}}</p>      
       <div class="tags pull-left">{{{tagList tags}}}</div>

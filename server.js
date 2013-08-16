@@ -133,7 +133,6 @@ app.get('/auth/github/callback',
 
 // restful services
 app.get('/api/server/options', ensureAuthenticated, function(req, res){ res.send(config.options);});
-app.get('/api/user/auth', ensureAuthenticated, user.getAuthUser);
 app.get('/api/gist/public', ensureAuthenticated, gist.getPublicGists);
 app.get('/api/gist/user/:login_name', ensureAuthenticated, gist.getGistListByUser);
 app.get('/api/gist/starred', ensureAuthenticated, gist.getStarredGists);
@@ -152,6 +151,11 @@ app.get('/api/gist/tags/:id', ensureAuthenticated, gist.getGistsByTag);
 app.post('/api/gist/tags', ensureAuthenticated, gist.createTag);
 app.put('/api/gist/tags/:id', ensureAuthenticated, gist.editTag);
 app.delete('/api/gist/tags/:id', ensureAuthenticated, gist.removeTag);
+app.post('/api/gist/newgist', ensureAuthenticated, gist.createNewgGist);
+app.get('/api/user/auth', ensureAuthenticated, user.getAuthUser);
+app.put('/api/user/following/:login_id', ensureAuthenticated, user.follow);
+app.delete('/api/user/following/:login_id', ensureAuthenticated, user.unfollow);
+
 
 var server = http.createServer(app)
 	, io = require('socket.io').listen(server);
