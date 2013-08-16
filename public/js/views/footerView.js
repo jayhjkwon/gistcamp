@@ -14,6 +14,7 @@ define(function(require){
 		global          = require('global'),
 		Router          = require('router'),
 		Spinner         = require('spin'),
+		service         = require('service'),
 
 		FooterView = Marionette.ItemView.extend({
 			className: 'command-buttons',
@@ -21,7 +22,7 @@ define(function(require){
 			selectedGistItem : {},
 
 			initialize: function(){
-				_.bindAll(this, 'setTagPopOverUI', 'onItemSelected', 'createTag', 'hideTagInfo', 'loading', 'onBtnCommentClick', 'onRoomCreated');
+				_.bindAll(this, 'setTagPopOverUI', 'onItemSelected', 'star', 'createTag', 'loading', 'onBtnCommentClick', 'onRoomCreated', 'tagOnGist');
 
 				this.tags = new TagItemList();
 
@@ -32,12 +33,12 @@ define(function(require){
 			},
 
 			events: {
-				'click .btn-comments' : 'onBtnCommentClick',
-				'click .btn-reload'   : 'onReloadClick',
-				'click .tag'          : 'onTagClick',
-				'mouseleave .popover' : 'hideTagInfo',
-				'click .btn-chats'    : 'onRoomCreated',
-				'keydown #new-tag'    : 'createTag'
+				'click .btn-comments'    : 'onBtnCommentClick',
+				'click .btn-reload'      : 'onReloadClick',
+				'click .btn-chats'       : 'onRoomCreated',
+				'keydown #new-tag'       : 'createTag',
+				'click .add-tag ul li a' : 'tagOnGist',
+				'click .btn-star'        : 'star'
 			},
 
 			ui : {
@@ -46,6 +47,55 @@ define(function(require){
 
 			onRender: function(){
 				this.setTagPopOverUI();				
+			},
+
+			star: function(e){
+				service.setStar(this.selectedGistItem.id).done(function(data){
+					$('.starred-success').removeClass('starred-success-hide starred-success-show').addClass('starred-success-show');
+					setTimeout(function(){
+						$('.starred-success').removeClass('starred-success-hide starred-success-show').addClass('starred-success-hide');
+					}, 2000);
+				});
+			},
+
+			createTag: function(e){
+				var self = this;
+				var keyCode = e.keyCode || e.which;
+		    	if (keyCode === 13 && !self.saving){
+		    		self.saving = true;
+		    		self.loading(true, e.target);
+		    		
+		    		var text = $(e.target).val();
+		    		var tag = new TagItem({gistId: self.selectedGistItem.id, tagName:text});
+		    		tag.save()
+		    		.done(function(data){
+		    			self.tags.reset(data);	    						    			
+		    			self.ui.btnTag.popover('show');
+		    			$(e.target).val('');
+		    			postalWrapper.publish(constants.TAG_CHANGED, self.tags.toJSON());
+		    		})
+		    		.always(function(){
+		    			self.saving = false;
+		    			self.loading(false);
+		    		});
+		    	}
+			},
+
+			tagOnGist: function(e){
+				e.preventDefault();
+				var self = this;
+				
+				var tagId = $(e.target).data('tag-id');
+				var tagName = $(e.target).data('tag-name');
+				var gistId = this.selectedGistItem.id;
+
+				service.editTagGist(tagId, gistId).done(function(data){
+					self.tags.reset(data);
+					postalWrapper.publish(constants.TAG_CHANGED, self.tags.toJSON());
+					$(e.target).find('span.tag-saved-msg').remove();
+					$(e.target).append('<span class="pull-right tag-saved-msg">Saved</span>');
+					$('.tag-saved-msg').fadeOut(4000);
+				});
 			},
 
 			onTagCollectionChange: function(tags){
@@ -68,37 +118,6 @@ define(function(require){
 
 				this.tags.fetch();	
 			},
-
-			createTag: function(e){
-				var self = this;
-				var keyCode = e.keyCode || e.which;
-		    	if (keyCode === 13 && !self.saving){
-		    		self.saving = true;
-		    		self.loading(true, e.target);
-		    		
-		    		var text = $(e.target).val();
-		    		var tag = new TagItem({gistId: self.selectedGistItem.id, tagName:text});
-		    		tag.save()
-		    		.done(function(data){
-		    			self.tags.reset(data);	    						    			
-		    			self.ui.btnTag.popover('show');
-		    			$(e.target).val('');
-		    		})
-		    		.always(function(){
-		    			self.saving = false;
-		    			self.loading(false);
-		    		});
-		    	}
-			},
-
-			onTagClick: function(){		
-				if ($('.popover')) return;
-			    this.ui.btnTag.popover('show');
-			},
-
-			hideTagInfo: function(){
-				this.ui.btnTag.popover('hide');	
-			},			
 
 			onBtnCommentClick: function(e){
 				var showComments = true;

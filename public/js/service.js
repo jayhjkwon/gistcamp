@@ -24,10 +24,43 @@ define(function(require){
 				});
 			
 			return xhr;
+		},
+
+		editTagGist= function(tagId, gistId){
+			var xhr =
+				$.ajax({
+					type: 'PUT',
+					url: '/api/gist/tagged/' + tagId + '/' + gistId
+				});
+			
+			return xhr;	
+		},
+
+		getServerOptions = function(){
+			var xhr =
+				$.ajax({
+					type: 'GET',
+					url: '/api/server/options'
+				});
+			
+			return xhr;
+		},
+
+		setStar = function(gistId){
+			var xhr =
+				$.ajax({
+					type: 'POST',
+					url: '/api/gist/star/' + gistId
+				});
+			
+			return xhr;	
 		}		
 	;
 
 	return {
-		getFileContent: getFileContent
+		getFileContent   : getFileContent,
+		editTagGist      : editTagGist,
+		getServerOptions : getServerOptions,
+		setStar          : setStar
 	};
 });

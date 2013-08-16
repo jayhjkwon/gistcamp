@@ -7,4 +7,7 @@ define({
 	},
 	socket : '',
 	rooms : {},
+	server : {
+		options : {}
+	}
 })

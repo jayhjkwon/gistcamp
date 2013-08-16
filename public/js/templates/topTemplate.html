@@ -11,28 +11,25 @@
     <li class="divider-vertical"></li>
     <li><a href="#mygists"><i class="icon-archive"></i>&nbsp;My Gists</a></li>
     <li class="divider-vertical"></li>
-    <li><a href="#starred"><i class="icon-star-empty"></i>&nbsp;Starred</a></li>
+    <li><a href="#starred"><i class="icon-star"></i>&nbsp;Starred</a></li>
     <li class="divider-vertical"></li>
-    <!-- <li><a href="#forked"><i class="icon-code-fork"></i>&nbsp;Forekd</a></li>
-    <li class="divider-vertical"></li> -->
     <li class="dropdown">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-tag"></i>&nbsp;Tagged <b class="caret"></b></a>
-      {{#if items}}
+      <a href="#tagged" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-tag"></i>&nbsp;Tagged <b class="caret"></b></a>
       <ul class="dropdown-menu">
+        {{#unless items}}
+        <li><a href="#">No tag yet, You can crate tag using the tag button on the bottom</a></li>        
+        {{/unless}}
         {{#each items}}
-        <li><a href="#tagged/{{tag_id}}/{{tag_url}}">{{tag_name}}<span class="badge badge-inverse pull-right">{{tagged_gists_count}}</span></a></li>
         <li class="divider"></li>
+        <li><a href="#tagged/{{_id}}/{{tag_url}}"><span class="pull-left">{{tag_name}}</span><span class="badge badge-inverse pull-right">{{countGists gists}}</span></a></li>        
         {{/each}}
       </ul>
-      {{/if}}
     </li>
     <li class="divider-vertical"></li>            
     <li><a href="#newgist"><i class="icon-plus"></i>&nbsp;New</a></li>
     <li class="divider-vertical"></li>
     <li><a href="#chat">&nbsp;Chat</a></li>
-    <li class="divider-vertical"></li>
-    <li><a href="#" id="btn-refresh"><i class="icon-refresh"></i>&nbsp;Refresh</a></li>
-    <li class="divider-vertical"></li>
+    <li class="divider-vertical"></li>    
  </ul>
  <ul class="nav pull-right">
    <li><a href="#" id="loggedin-user-name"></a></li>

@@ -7,11 +7,13 @@
       <div class="title">{{user.login}} / {{mainFileName files}}</div>
       <div class="subtitle">
         <span>{{fromNow created_at}}</span>
+        <!-- <i class="icon-star is-starred"></i> -->
         <!-- <span class="social pull-right">
           <a href="#" ><i class="icon-star-empty"></i></a>
         </span> -->
       </div>
-      <p class="gist-item-description">{{description}}</p>
+      <p class="gist-item-description">{{description}}</p>      
+      <div class="tags pull-left">{{{tagList tags}}}</div>
     </div>
-  </div>
+  </div>  
 </div>

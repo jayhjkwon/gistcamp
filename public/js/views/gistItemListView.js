@@ -20,7 +20,6 @@ define(function(require){
 			className: 'gist-item-container',
 			itemView: GistItemView,
 			collection: new GistItemList,
-			currentGistDataMode: '',
 			xhrs : [],
 
 			initialize: function(){				
@@ -34,9 +33,9 @@ define(function(require){
 				// 'scroll .gist-list' : 'onScroll'
 			},
 			
-			getGistList: function(){
+			getGistList: function(mode, tagId){
 				var self = this;
-				var gistItemList = new GistItemList({'gistDataMode': self.currentGistDataMode });
+				var gistItemList = new GistItemList({'gistDataMode': mode, tagId: tagId });
 				gistItemList.fetch({data: {linkHeader: self.linkHeader}})
 					.done(function(res){
 						if (!self.linkHeader){
@@ -54,7 +53,7 @@ define(function(require){
 						}						
 
 						async.eachLimit(res.data, 3, self.handleGist, function(error, result){
-							// do nothing, because set file content in setFileContent method
+							// do nothing, because file content is set in setFileContent method
 						});
 					})
 					.always(function(){
@@ -89,21 +88,20 @@ define(function(require){
 			},
 
 			getPublicGistList: function(){
-				this.currentGistDataMode = constants.GIST_PUBLIC;
 				this.getGistList(constants.GIST_PUBLIC);
 			},
 			getGistListByUser: function(){
-				this.currentGistDataMode = constants.GIST_LIST_BY_USER;
 				this.getGistList(constants.GIST_LIST_BY_USER);
 			},  
 			getStarredGistList: function(){
-				this.currentGistDataMode = constants.GIST_STARRED;
 				this.getGistList(constants.GIST_STARRED);
 			},
-			getFriendsGist: function(){
-				this.currentGistDataMode = constants.GIST_FRIENDS_GISTS;
+			getFriendsGistList: function(){
 				this.getGistList(constants.GIST_FRIENDS_GISTS);
 			},		
+			getTaggedGistList: function(tagId, tagUrl){
+				this.getGistList(constants.GIST_TAGGED_GISTS, tagId);
+			},
 			setFirstItemSelected: function(){
 		    	$('.gist-item').first().trigger('click');
 		    },		    
@@ -117,7 +115,7 @@ define(function(require){
 			},
 			onScroll : function(){
 				var w = $('.gist-list');
-				if(w.scrollTop() + w.height() == $('.gist-item-container').height()) {
+				if(w.scrollTop() + w.height() > $('.gist-item-container').height()) {
 		       		this.loadMore();
 			    }
 			},
@@ -137,7 +135,7 @@ define(function(require){
 				}
 			},
 			showEndofDataSign: function(){
-				$('#gist-item-list').append('<div style="height:50px;font-size:15px;font-weight:bold;text-align:center;">End of Data..</div>');
+				// $('#gist-item-list').append('<div style="height:50px;font-size:15px;font-weight:bold;text-align:center;">End of Data..</div>');
 			}
 
 		})

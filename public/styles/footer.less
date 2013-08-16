@@ -21,7 +21,29 @@ footer {
 			color:#fff;
 			font-size:11px;
 			margin-top:-2px;
-		}		
+		}	
+		.starred-success{
+			position:absolute;
+			top:-20px;
+			left:-40px;
+			font-size: 13px;
+			line-height: 30px;
+			z-index: 1;
+			padding:2px 10px;
+			opacity:0;
+			transition: top 0.5s ease-in, opacity 0.5s ease-out ;	
+			-webkit-transition: top 0.5s ease-in, opacity 0.5s ease-out ;	
+		}
+
+		.starred-success-show{
+			opacity:1;
+			top:-45px;
+		}
+
+		.starred-success-hide{
+			opacity:0;
+			top:-20px;
+		}	
 	}
 
 	button.btn-search{
@@ -98,3 +120,11 @@ footer {
 .show-comments-badge{
 	opacity:1;
 }
+
+.tag-saved-msg{
+	color: #008641;
+	font-weight:bold;
+	font-size: 15px;
+}
+
+

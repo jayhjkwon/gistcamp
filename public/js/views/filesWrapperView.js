@@ -39,11 +39,11 @@ define(function(require){
 				var self = this;
 				var filesArray = _.toArray(gistItem.files);
 
-				if (filesArray){
+				if (filesArray.length){
 					filesArray[0].isActive = true;
 				}
 
-				if (self.refreshRequested || (filesArray && !filesArray[0].file_content)){	// in case that file contents are not set yet
+				if (self.refreshRequested || (filesArray.length && !filesArray[0].file_content)){	// in case that file contents are not set yet
 					if (self.refreshRequested)
 						$('.btn-reload .icon-refresh').removeClass('icon-spin').addClass('icon-spin');
 					else
@@ -87,7 +87,7 @@ define(function(require){
 
 			loading: function(showSpinner){
 				if (showSpinner){
-					var target = $('#pivot')[0];
+					var target = $('.files-wrapper')[0];
 					this.spinner.spin(target);
 				}else{					
 					this.spinner.stop();					

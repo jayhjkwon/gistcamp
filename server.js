@@ -9,15 +9,49 @@ var
 	constants= require('./infra/constants').constants,
 	passport = require('passport'),
 	GitHubStrategy = require('passport-github').Strategy,
-  User     = require('./models/user')  
+    User     = require('./models/user'), 
+    request  = require('request'),
+    service   = require('./infra/service')    
 ;
 
 
-//2013.08.03
-var GITHUB_CLIENT_ID = "794dabc19ea9ed6aba0c"; 
-var GITHUB_CLIENT_SECRET = "d37b57ebbb1a9afa20a0b2ba035d2e4d894f5bca";
+var GITHUB_CLIENT_ID;
+var GITHUB_CLIENT_SECRET;
+var callbackURL;
+
+if (config.options.env === 'development'){
+	GITHUB_CLIENT_ID = "d992e538e78bc563aae8"; 
+	GITHUB_CLIENT_SECRET = "64a09c87fea5e883c5d432b702876b81f8315e4c";
+}else{
+	var github = require('./githubInfo');
+	GITHUB_CLIENT_ID = github.info.GITHUB_CLIENT_ID; 
+	GITHUB_CLIENT_SECRET = github.info.GITHUB_CLIENT_SECRET;
+}
+
+if(config.options.env === 'development'){
+    callbackURL = 'http://localhost:3000/auth/github/callback';
+}else{
+	var github = require('./githubInfo');
+  	callbackURL = github.info.CALLBACK_URL;
+}
 
 var app = express();
+
+var checkRateLimit = function(req, res, next){
+	var accessToken = service.getAccessToken(req);
+	if(accessToken){
+		request.get({
+			url: config.options.githubHost + '/rate_limit?access_token=' + accessToken,
+		}, function(error, response, body){	
+			console.log('*******************************************');
+			console.log('Rate Limit Checking');
+			console.log(body);
+			console.log('*******************************************');
+		});
+	}
+
+	next();
+};
 
 // all environments
 app.set('env', config.options.env);
@@ -32,8 +66,10 @@ app.use(express.cookieParser('your secret here'));
 app.use(express.session({cookie: { maxAge : 1000 * 60 * 24 * 30 }}));
 app.use(passport.initialize());
 app.use(passport.session());
+// app.use(checkRateLimit);
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
+
 
 
 // development only
@@ -53,7 +89,7 @@ passport.deserializeUser(function(obj, done) {
 passport.use(new GitHubStrategy({
     clientID: GITHUB_CLIENT_ID,
     clientSecret: GITHUB_CLIENT_SECRET,
-    callbackURL: "http://localhost:3000/auth/github/callback"
+    callbackURL: callbackURL
   },
   function(accessToken, refreshToken, profile, done) {
     process.nextTick(function () {
@@ -69,8 +105,13 @@ passport.use(new GitHubStrategy({
   }
 ));
 
+
+
 var ensureAuthenticated = function (req, res, next) {
-  if (req.isAuthenticated()) { return next(); }
+  if (req.isAuthenticated()) { 
+  	// checkRateLimit(req);
+  	return next(); 
+  }
   res.redirect('/welcome');
 };
 
@@ -91,17 +132,20 @@ app.get('/auth/github/callback',
 
 
 // restful services
+app.get('/api/server/options', ensureAuthenticated, function(req, res){ res.send(config.options);});
 app.get('/api/user/auth', ensureAuthenticated, user.getAuthUser);
 app.get('/api/gist/public', ensureAuthenticated, gist.getPublicGists);
 app.get('/api/gist/user/:login_name', ensureAuthenticated, gist.getGistListByUser);
 app.get('/api/gist/starred', ensureAuthenticated, gist.getStarredGists);
+app.post('/api/gist/star/:gist_id', ensureAuthenticated, gist.setStar);
 app.get('/api/gist/rawfiles', ensureAuthenticated, gist.getRawFiles);
 app.get('/api/gist/rawfile', ensureAuthenticated, gist.getRawFile);
+app.get('/api/gist/tagged/:tag_id', ensureAuthenticated, gist.getGistListByTag);
+app.put('/api/gist/tagged/:tag_id/:gist_id', ensureAuthenticated, gist.editTagGist);
 app.get('/api/gist/:gistId/comments', ensureAuthenticated, gist.getComments);
 app.post('/api/gist/:gistId/comments', ensureAuthenticated, gist.createComment);
 app.put('/api/gist/:gistId/comments/:id', ensureAuthenticated, gist.editComment);
 app.get('/api/gist/friends', ensureAuthenticated, gist.getFriendsGist);
-
 app.get('/api/gist/tags', ensureAuthenticated, gist.getTags);
 app.get('/api/gists/:gistId', gist.getGistById);
 app.get('/api/gist/tags/:id', ensureAuthenticated, gist.getGistsByTag);
