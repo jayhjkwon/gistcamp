@@ -1,4 +1,9 @@
 <div class="chat-item">
+  <div class="span3">
+    {{#each room}}
+        <img src={{avatar}} style="width:20px;height:20px;margin-left:3px;margin-top:3px" />
+    {{/each}}
+  </div>
   <div class="span9">
     <div class="detail">
       <div class="title">{{user.login}} / {{mainFileName files}}</div>

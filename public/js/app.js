@@ -1,8 +1,9 @@
 require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
-	'views/topView', 'views/footerView', 'constants', 'models/user', 'global', 'async', 
-	'socketio', 'postalWrapper', 'service',
+	'views/topView', 'views/footerView', 'constants', 'models/user', 'global', 'async',
+	'socketio', 'postalWrapper', 'toastr', 'service',
 	'bootstrap', 'prettify', 'nicescroll', 'autoGrow', 'scrollTo'], 
-	function($, _, Application, Router, shellView, topView, footerView, constants, User, global, async, socketio, postalWrapper, service){
+	function($, _, Application, Router, shellView, topView, footerView, constants, User, global, async, 
+		socketio, postalWrapper, toastr, service){
 	$(function(){
 		var el = shellView.render().el;
 
@@ -22,9 +23,23 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 				global.user.name = result.name;
 				global.user.avatar = result.avatar_url;
 
+// <<<<<<< HEAD
+// 				var socket = socketio.connect('http://localhost:3000');
+// 				global.socket = socket;
+
+// 				// on connection to server, ask for user's name with an anonymous callback
+// 				global.socket.on('connect', function(){
+// 					// call the server-side function 'adduser' and send one parameter (value of prompt)
+// 					// var userid = prompt("What's your name?");
+// 					// global.user.id = userid;
+
+// 					global.socket.emit('adduser', global.user);
+// 				});
+// =======
 				callback(null, user);
 			});
 		};
+// >>>>>>> c22b66bd90f092bb2943db6d486f01684491ee4e
 
 		var connectSocketIO = function(callback){
 			var socket;
@@ -40,17 +55,30 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 				// call the server-side function 'adduser' and send one parameter (value of prompt)
 				//global.socket.emit('adduser', prompt("What's your name?"));
 
-				global.socket.emit('adduser', global.user.login);
+				global.socket.emit('adduser', global.user);
+			});
+
+// <<<<<<< HEAD
+				// listener, whenever the server emits 'updatechat', this updates the chat body
+			global.socket.on('updatechat', function (username, data) {
+				if (username == 'SERVER') {
+					$('#conversation').append('<b>'+username + ':</b> ' + data + '<br>');	
+				}
+				else {
+					
+					$('#conversation').append('<img src=' + username.avatar + ' style="width:20px;height:20px;"/>' +  ' <b>'+username.login + ':</b> ' + data + '<br>');
+					//$('#conversation').append('<img src="http://www.gravatar.com/avatar/13edb3b0d8881221c62c3674bcc6339f.png" style="width:20px;height:20px;"/>' +  ' <b>'+username.login + ':</b> ' + data + '<br>');		
+				}
+			});
+
+			global.socket.on('updatealarm', function(user, data) {
+				var title = 'GistCamp';
+				toastr.info('From ' + user.login + '<br/>' + data, title);
 			});
 
 			global.socket.on('updaterooms', function(rooms) {
 				global.rooms = rooms;
 				postalWrapper.publish(constants.CHAT_UPDATE_ROOM);
-			});
-
-			// listener, whenever the server emits 'updatechat', this updates the chat body
-			global.socket.on('updatechat', function (username, data) {
-				$('#conversation').append('<b>'+username + ':</b> ' + data + '<br>');
 			});
 
 			callback(null, socket);
