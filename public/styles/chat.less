@@ -51,15 +51,13 @@
 	}
 }
 
-@conversation-action-height:30px;
 .chat-wrapper {
 	border: solid 1px #eee;
 	.conversation-content {
 		margin-left:10px;
-		margin-top:10px;
 		position: absolute;
-		top:0px;
-		bottom:@conversation-action-height;
+		top:10px;
+		bottom:50px;
 		overflow-x: hidden;
 		width:90%;
 		white-space: pre-wrap;      /* CSS3 */   
@@ -70,10 +68,9 @@
 	}
 	.conversation-action {
 		margin-left:10px;
-		margin-bottom:10px;
 		position:absolute;
-	    bottom:0;
-	    height:@conversation-action-height;
+	    bottom:10px;
+	    height:30px;
 	    width:100%;
 	    //background-color:yellow;
 	}

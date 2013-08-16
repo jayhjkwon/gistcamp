@@ -23,23 +23,9 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 				global.user.name = result.name;
 				global.user.avatar = result.avatar_url;
 
-// <<<<<<< HEAD
-// 				var socket = socketio.connect('http://localhost:3000');
-// 				global.socket = socket;
-
-// 				// on connection to server, ask for user's name with an anonymous callback
-// 				global.socket.on('connect', function(){
-// 					// call the server-side function 'adduser' and send one parameter (value of prompt)
-// 					// var userid = prompt("What's your name?");
-// 					// global.user.id = userid;
-
-// 					global.socket.emit('adduser', global.user);
-// 				});
-// =======
 				callback(null, user);
 			});
 		};
-// >>>>>>> c22b66bd90f092bb2943db6d486f01684491ee4e
 
 		var connectSocketIO = function(callback){
 			var socket;
@@ -58,17 +44,16 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 				global.socket.emit('adduser', global.user);
 			});
 
-// <<<<<<< HEAD
-				// listener, whenever the server emits 'updatechat', this updates the chat body
 			global.socket.on('updatechat', function (username, data) {
 				if (username == 'SERVER') {
 					$('#conversation').append('<b>'+username + ':</b> ' + data + '<br>');	
 				}
 				else {
 					
-					$('#conversation').append('<img src=' + username.avatar + ' style="width:20px;height:20px;"/>' +  ' <b>'+username.login + ':</b> ' + data + '<br>');
+					$('#conversation').append('<img src=' + username.avatar + ' style="margin-top:5px;width:20px;height:20px;"/>' +  ' <b>'+username.login + ':</b> ' + data + '<br>');
 					//$('#conversation').append('<img src="http://www.gravatar.com/avatar/13edb3b0d8881221c62c3674bcc6339f.png" style="width:20px;height:20px;"/>' +  ' <b>'+username.login + ':</b> ' + data + '<br>');		
 				}
+				$('#conversation').scrollTop($("#conversation")[0].scrollHeight);
 			});
 
 			global.socket.on('updatealarm', function(user, data) {
