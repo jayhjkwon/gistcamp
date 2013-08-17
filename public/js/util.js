@@ -23,13 +23,45 @@ define(function(require){
 
 		htmlDecode = function (value){
 		  return $('<div/>').html(value).text();
-		}
+		},
+		extensionList = [
+			{
+				filename : 'Text',
+				extension : 'txt'
+
+			},{
+				filename : 'C',
+				extension : 'c'
+
+			},{
+				filename : 'C#',
+				extension : 'cs'
+
+			},{
+				filename : 'C++',
+				extension : 'cpp'
+
+			},{
+				filename : 'HTML',
+				extension : 'html'
+
+			},{
+				filename : 'Java',
+				extension : 'java'
+
+			},{
+				filename : 'JavaScript',
+				extension : 'js'
+
+			}
+		];
 	;
 
 
 	return {
 		loadSpinner : loadSpinner,
 		htmlEncode  : htmlEncode,
-		htmlDecode  : htmlDecode
+		htmlDecode  : htmlDecode,
+		extensionList : extensionList
 	};
 });

@@ -10,7 +10,7 @@ define(function(require){
 		GistItem           = require('models/gistItem'),
 		nicescroll         = require('nicescroll'),
 		// Spinner            = require('spin'),
-		util            = require('util'),
+		util               = require('util'),
 		ace                = require('ace/ace'),
 		editorList         = [],
 		CreateGistView     = Marionette.CompositeView.extend({
@@ -55,6 +55,23 @@ define(function(require){
 				'click .create-secrete-gist' : 'onCreateSecreteGist',
 				'click .create-public-gist' : 'onCreatePublicGist'
 			},
+
+
+			// onFileExtensionClick : function(e){
+			// 	var $target = $(e.target);
+			// 	var targetTxt = $target.text();
+				
+			// 	console.log($target.closest('.file-extension-list').prev('.file-extension-name'));
+
+
+			// 	$target.closest('.file-extension-list').prev('.file-extension-name').first().text(targetTxt);
+
+			// 	e.stopPropagation();
+
+			// 	// $target.closest('.file-extension-name').text(targetTxt);
+				
+			// 	return false;
+			// },
 			onAddFile : function(e){
 				var self = this;
 				var item = new NewGistItem();
@@ -105,9 +122,10 @@ define(function(require){
 
 				_.each(items, function(item, idx){
 					var content = editorList[idx].getValue();
-					var fileName = $(item).find('.file-name').val() + '.txt';
-					files[fileName]= {'content' : content};
-
+					var fileName = $(item).find('.file-name').val();
+					var fileExtension = $(item).find('.file-extension-name').val()
+					var extension = _.where(util.extensionList, { 'filename' : fileExtension })[0].extension;
+					files[fileName + '.' + extension]= {'content' : content};
 				});
 
 				var gistItem = new GistItem({ description : description, public : param ,files : JSON.stringify(files)});
