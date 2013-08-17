@@ -2,10 +2,12 @@ var config   = require('../infra/config');
 var mongoose = require('mongoose');
 
 var db;
-if (config.options.env === 'development')
+if (config.options.env === 'development'){
   db = mongoose.connect('mongodb://localhost/gistcamp');
-else
-  db = mongoose.connect('mongodb://nodejitsu_jaykwon:2tfp3jqg1h68rnck494j8er0p3@ds027718.mongolab.com:27718/nodejitsu_jaykwon_nodejitsudb9892156787');
+}else{
+  var github   = require('../githubInfo');
+  db = mongoose.connect(github.info.MONGO_URL);
+}
 
 var userSchema = new mongoose.Schema({
   login			        : String, // unique
