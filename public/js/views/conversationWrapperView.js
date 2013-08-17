@@ -37,8 +37,9 @@ define(function(require){
 					global.socket.emit('sendchat', message);	
 				}
 
-				$('#conversation').scrollTop($("#conversation")[0].scrollHeight);
+				
 				$('data').focus();
+				
 			},
 
 			onDataSendKeyPress : function(e){

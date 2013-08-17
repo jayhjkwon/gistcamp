@@ -23,23 +23,9 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 				global.user.name = result.name;
 				global.user.avatar = result.avatar_url;
 
-// <<<<<<< HEAD
-// 				var socket = socketio.connect('http://localhost:3000');
-// 				global.socket = socket;
-
-// 				// on connection to server, ask for user's name with an anonymous callback
-// 				global.socket.on('connect', function(){
-// 					// call the server-side function 'adduser' and send one parameter (value of prompt)
-// 					// var userid = prompt("What's your name?");
-// 					// global.user.id = userid;
-
-// 					global.socket.emit('adduser', global.user);
-// 				});
-// =======
 				callback(null, user);
 			});
 		};
-// >>>>>>> c22b66bd90f092bb2943db6d486f01684491ee4e
 
 		var connectSocketIO = function(callback){
 			var socket;
@@ -58,17 +44,16 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 				global.socket.emit('adduser', global.user);
 			});
 
-// <<<<<<< HEAD
-				// listener, whenever the server emits 'updatechat', this updates the chat body
 			global.socket.on('updatechat', function (username, data) {
 				if (username == 'SERVER') {
 					$('#conversation').append('<b>'+username + ':</b> ' + data + '<br>');	
 				}
 				else {
 					
-					$('#conversation').append('<img src=' + username.avatar + ' style="width:20px;height:20px;"/>' +  ' <b>'+username.login + ':</b> ' + data + '<br>');
+					$('#conversation').append('<img src=' + username.avatar + ' style="margin-top:5px;width:20px;height:20px;"/>' +  ' <b>'+username.login + ':</b> ' + data + '<br>');
 					//$('#conversation').append('<img src="http://www.gravatar.com/avatar/13edb3b0d8881221c62c3674bcc6339f.png" style="width:20px;height:20px;"/>' +  ' <b>'+username.login + ':</b> ' + data + '<br>');		
 				}
+				$('#conversation').scrollTop($("#conversation")[0].scrollHeight);
 			});
 
 			global.socket.on('updatealarm', function(user, data) {
@@ -122,90 +107,8 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 
 
 
-
-
-
-
-
-		// $('.gist-list').niceScroll({cursorcolor: '#eee'});
-		// $('.files-wrapper').niceScroll({cursorcolor: '#eee'});
-		// $('.comments-wrapper').niceScroll({cursorcolor: '#eee'});
-
 		$('.btn-comments').tooltip();
 
-		/*$('.btn-comments').click(function (e) {
-		  	e.preventDefault();
-		  	if($('.comments-wrapper').css('right') == '-300px'){
-		  		$('.files-wrapper').css('right', '300px');
-		  		$('.comments-wrapper').css('right','0px');	  
-		  		setTimeout(function(){
-			  		$('#comment-input').focus();
-			  	},300);		
-		  	}else{
-		  		$('.files-wrapper').css('right', '0px');
-		  		$('.comments-wrapper').css('right','-300px');
-		  	}*/
-
-		  	/*if($('.comments-wrapper').css('margin-left') == '0px'){
-		  		// $('.files-wrapper').css('right', '300px');
-		  		$('.comments-wrapper').css('margin-left','-300px');	  
-		  		setTimeout(function(){
-			  		$('#comment-input').focus();
-			  	},300);		
-		  	}else{
-		  		// $('.files-wrapper').css('right', '0px');
-		  		$('.comments-wrapper').css('margin-left','0px');
-		  	}*/
-
-		  	/*setTimeout(function(){
-		  		$('.files-wrapper').getNiceScroll().resize();	
-		  	},300);
-		  	
-		});	*/
-
-	    /*$('.carousel').carousel({
-	    	interval: false
-	    });*/
-
-	    /*$('.pivot-headers a').click(function(e){
-	    	e.preventDefault();
-	    	// $('.files-wrapper').niceScroll();
-
-	    	$('.pivot-headers a').removeClass('active');
-	    	$(this).addClass('active');
-	    });*/
-
-	    // listen to slide event completion
-	    /*$('#pivot').on('slid', function(){
-	    	// Check for scrollbars resize (when content or position have changed)
-	    	$('.files-wrapper').getNiceScroll().resize();
-	    });*/
-
-	    /*$('.gist-item').click(function(){
-			$('.gist-item').removeClass('selected');
-			$(this).toggleClass('selected');
-
-			$('.comments-badge').hide().show(500);
-		});*/	
-
-		/*prettyPrint();	*/
-
-		/*$('.tag').popover({
-			html	: true,
-			trigger : 'click',
-			placement: 'top',
-			title	: '<div><i class="icon-plus"></i> Add Tag</div>',
-			content : '<div class="add-tag">' +
-	                      '<ul>' +
-	                        '<li><a href="#">Important <span class="badge badge-inverse pull-right">16</span></a></li>' +
-	                        '<li><a href="#">JavaScript <span class="badge badge-inverse pull-right">6</span></a></li>' +
-	                        '<li><a href="#">C# <span class="badge badge-inverse pull-right">1</span></a></li>' +
-	                        '<li><input type="text" placeholder="New Tag" /></li>' +
-	                      '</ul>' +
-	                    '</div>'
-	    });*/
-
-	    // $('#comment-input').autoGrow();
 
 	    // check if elem is visible
 	    var isScrolledIntoView = function(scrollElem, elem) {
