@@ -131,7 +131,7 @@ define(function(require){
 				var gistItem = new GistItem({ description : description, public : param ,files : JSON.stringify(files)});
 				gistItem.save()
 				.done(function(data){
-					alert(data);
+					window.location.hash = '#mygists';
 				})
 				.always(function(){
 					util.loadSpinner(false);
