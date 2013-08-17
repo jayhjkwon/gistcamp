@@ -497,12 +497,8 @@ exports.createNewgGist = function(req, res){
 	var github = service.getGitHubApi(req);
 
 	github.gists.create(msg, function(err, data){
-		if(data){
 
-		}else{
-				
-		}
-		res.send();
+		res.send(data);
 	});
 }
 

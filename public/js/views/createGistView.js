@@ -1,7 +1,7 @@
 define(function(require){
 	var 
 		$                  = require('jquery'),
-		_ 				= require('underscore'),
+		_ 				   = require('underscore'),
 		Marionette         = require('marionette'),
 		createGistTemplate = require('hbs!templates/createGistTemplate'),
 		CreateGistItemView = require('./createGistItemView'),
@@ -9,8 +9,10 @@ define(function(require){
 		NewGistItemList    = require('models/newGistItemList'),
 		GistItem           = require('models/gistItem'),
 		nicescroll         = require('nicescroll'),
+		// Spinner            = require('spin'),
+		util               = require('util'),
 		ace                = require('ace/ace'),
-		editorList        = [],
+		editorList         = [],
 		CreateGistView     = Marionette.CompositeView.extend({
 			template : createGistTemplate,
 			itemView : CreateGistItemView,
@@ -32,11 +34,15 @@ define(function(require){
 			addEditor : function(){
 				var self = this;
 				var editor = ace.edit('editor');
+				editor.setTheme("ace/theme/chrome");
+				editor.getSession().setMode("ace/mode/html");
 				editor.getSession().setValue("");
 				editorList.push(editor);
 
 				$('#editor').attr('id', 'editor' + this.editorSeq);
 				this.editorSeq++;
+
+				this.setDeleteIcon();
 
 				$('#main').niceScroll({cursorcolor: '#eee'});
 			},
@@ -49,12 +55,36 @@ define(function(require){
 				'click .create-secrete-gist' : 'onCreateSecreteGist',
 				'click .create-public-gist' : 'onCreatePublicGist'
 			},
+
+
+			// onFileExtensionClick : function(e){
+			// 	var $target = $(e.target);
+			// 	var targetTxt = $target.text();
+				
+			// 	console.log($target.closest('.file-extension-list').prev('.file-extension-name'));
+
+
+			// 	$target.closest('.file-extension-list').prev('.file-extension-name').first().text(targetTxt);
+
+			// 	e.stopPropagation();
+
+			// 	// $target.closest('.file-extension-name').text(targetTxt);
+				
+			// 	return false;
+			// },
 			onAddFile : function(e){
 				var self = this;
 				var item = new NewGistItem();
 				self.collection.add(item);
 				self.addEditor();
 				return false;
+			},
+			setDeleteIcon : function(){
+				if(editorList.length > 1){
+					$('.btn-delete').show();
+				}else{
+					$('.btn-delete').hide();
+				}
 			},
 			onFileDelete : function(e){
 				var target = $(e.target).closest('.item');
@@ -63,6 +93,7 @@ define(function(require){
 				editorList.splice(item.index(target), 1);
 				target.remove();
 
+				this.setDeleteIcon();
 				return false;
 			},
 			onCreateSecreteGist : function(e){
@@ -79,6 +110,9 @@ define(function(require){
 			},
 			setNewGist : function(param)
 			{
+				var self = this;
+				util.loadSpinner(true);
+
 				var list = [];
 				var description = $('.gists-description').val();
 
@@ -87,26 +121,42 @@ define(function(require){
 
 
 				_.each(items, function(item, idx){
-
 					var content = editorList[idx].getValue();
-					var fileName = $(item).find('.file-name').val() + '.txt';
-										
-					files[fileName]= {'content' : content};
-
+					var fileName = $(item).find('.file-name').val();
+					var fileExtension = $(item).find('.file-extension-name').val()
+					var extension = _.where(util.extensionList, { 'filename' : fileExtension })[0].extension;
+					files[fileName + '.' + extension]= {'content' : content};
 				});
 
 				var gistItem = new GistItem({ description : description, public : param ,files : JSON.stringify(files)});
 				gistItem.save()
 				.done(function(data){
-					
+					alert(data);
 				})
 				.always(function(){
-					alert('success');
+					util.loadSpinner(false);
 				});
 
 				return gistItem;
-			}
+			},
 
+			// loading: function(showSpinner){
+			// 	// if (showSpinner){
+			// 	// 	var target = $('.create-gist-container')[0];
+			// 	// 	this.spinner.spin(target);
+			// 	// }else{					
+			// 	// 	this.spinner.stop();					
+			// 	// }
+
+			// 	if (showSpinner){
+			// 		$('#main').append('<div style="height:100px;" class="loadSpinner"></div>');
+			// 		var target = $('#main .loadSpinner')[0];
+			// 		this.spinner.spin(target);
+			// 	}else{					
+			// 		this.spinner.stop();					
+			// 		$('.loading').remove();	
+			// 	}
+			// }
 
 
 		});
