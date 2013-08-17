@@ -8,7 +8,6 @@ define(function(require){
 		NewGistItem        = require('models/newGistItem'),
 		NewGistItemList    = require('models/newGistItemList'),
 		GistItem           = require('models/gistItem'),
-		//NewGist            = require('models/newGist'),
 		nicescroll         = require('nicescroll'),
 		ace                = require('ace/ace'),
 		editorList        = [],
@@ -17,13 +16,14 @@ define(function(require){
 			itemView : CreateGistItemView,
 			itemViewContainer : '#gist-item-container',			
 			editorSeq : 0,
+			tagName : 'div',
+			className : 'create-gist',
 
 			initialize : function(){
 				var self = this;
 				var item = new NewGistItem();
 				self.collection = new NewGistItemList();
 				self.collection.add(item);
-				//$('.create-gist-container').niceScroll({cursorcolor: '#eee'});
 			},
 			onShow : function(){
 				this.addEditor();
@@ -54,7 +54,6 @@ define(function(require){
 				var item = new NewGistItem();
 				self.collection.add(item);
 				self.addEditor();
-				//$('#main').niceScroll({cursorcolor: '#eee'});
 				return false;
 			},
 			onFileDelete : function(e){
@@ -68,50 +67,41 @@ define(function(require){
 			},
 			onCreateSecreteGist : function(e){
 				var gistItem = this.setNewGist(false);
-				// newGist.set('public', false);
 				console.log(gistItem.toJSON());
 				return false;
 
 			},
 			onCreatePublicGist : function(e){
 				var gistItem = this.setNewGist(true);
-				// newGist.set('public', true);
 
 				console.log(gistItem.toJSON());
 				return false;
 			},
 			setNewGist : function(param)
 			{
-
-				// var newGist = new NewGist();
 				var list = [];
 				var description = $('.gists-description').val();
 
-				// newGist.set("description", description);
-
 				var items = $('.file');
+				var files = {};
+
 
 				_.each(items, function(item, idx){
 
-					var contents = editorList[idx].getValue();
-
+					var content = editorList[idx].getValue();
 					var fileName = $(item).find('.file-name').val() + '.txt';
-					
-					var gist = {};
-					gist[fileName] = {'contents' : contents};
-
-					list.push(gist);
+										
+					files[fileName]= {'content' : content};
 
 				});
 
-				var gistItem = new GistItem({ description : description, public : param ,files : list});
-				// newGist.set('files', list);
+				var gistItem = new GistItem({ description : description, public : param ,files : JSON.stringify(files)});
 				gistItem.save()
 				.done(function(data){
-					alert(1);
+					
 				})
 				.always(function(){
-					alert(2);
+					alert('success');
 				});
 
 				return gistItem;
