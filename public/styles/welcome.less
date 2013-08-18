@@ -14,19 +14,27 @@
  
 html{
 	height: 100%; 
+	// overflow-x:hidden;
 }
+
 body{
 	background-color: white;
 	height: 100%;
 	font-family:  "Alial";
 	overflow-x:hidden; 
-	overflow-y:visible;   
+	// overflow-y:visible;   
+}
+
+.contents{
+	background-color: red;
+	height: 100%;
+	// overflow-x:hidden;
 }
 
 .power-font{ 
 	position: relative;
 	top:150px;
-	left:-100px;
+	left:-40px;
  	color: white ;
  	font-size: 30px;
  	
@@ -34,7 +42,7 @@ body{
 .power-font2{ 
 	position: relative;
 	top:190px;
-	left:-60px;
+	left:-40px;
  	color: white ;
  	font-size: 50px; 
 }
@@ -57,7 +65,7 @@ body{
 .sign-in{
 	position: relative ;
 	height: 55px;
-	width: 270px; 
+	width: 320px; 
 	top:230px;
 	right:130px;
 	color:white;
@@ -281,11 +289,7 @@ a:hover{
 	width:67% !important; 
 }
 //-------------------------------------------
-.contents{
-	background-color: red;
-	height: 100%;
-	overflow-x:hidden;
-}
+
 
 
 .headers {
@@ -363,6 +367,10 @@ a:hover{
 	top:50%;
 	width: @menu-size;
 	margin-top:  @menu-ico-size * -2;
+
+	div {
+		cursor:pointer;
+	}
 }
 
 .menu-top{
