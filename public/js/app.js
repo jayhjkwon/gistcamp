@@ -58,6 +58,11 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 
 			global.socket.on('updatealarm', function(user, data) {
 				var title = 'GistCamp';
+				toastr.options = {
+				  "positionClass": "toast-bottom-right",
+				  "timeOut": 5000
+				};
+				// data = data.replace(/\n/g, '<br />');
 				toastr.info('From ' + user.login + '<br/>' + data, title);
 			});
 
