@@ -66,6 +66,10 @@ define(function(require){
 		    				self.collection.add(data);
 		    			}
 		    			self.render();
+		    			var msg = global.user.name + ' just commented on your gist(' + self.selectedGistItem.description + ') ';
+		    			msg = msg + '</br>';
+		    			msg = text.length > 50 ? msg + '"' + text.substring(0,50) + '.."' : msg + '"' + text + '"';
+		    			global.socket.emit('sendalarm', self.selectedGistItem.user.id, msg);
 		    		})
 		    		.always(function(){
 		    			self.saving = false;
