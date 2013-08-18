@@ -129,6 +129,10 @@ app.get('/auth/github/callback',
     res.redirect('/');
   }
 );
+app.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/welcome');
+});
 
 
 // restful services

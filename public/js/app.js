@@ -22,6 +22,7 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 				global.user.login = result.login;
 				global.user.name = result.name;
 				global.user.avatar = result.avatar_url;
+				global.user.url = result.html_url;
 
 				callback(null, user);
 			});

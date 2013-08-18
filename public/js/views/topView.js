@@ -49,6 +49,7 @@ define(function(require){
 			showUserInfo: function(){
 				$('#loggedin-user-name').text(global.user.name);
 				$('.loggedin-user-avatar').attr('src', global.user.avatar);
+				$('.loggedin-user-url').attr('href', global.user.url);
 			},
 
 			onRefreshClick: function(e){
