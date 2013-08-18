@@ -17,6 +17,7 @@ define(function(require){
 		ChatItemList    = require('models/chatItemList'),
 		ChatItem        = require('models/chatItem'),
 		postalWrapper   = require('postalWrapper'),
+		global          = require('global'),
 		
 		ChatItemListView = Marionette.CollectionView.extend({
 			className: 'chat-item-container',
@@ -24,13 +25,16 @@ define(function(require){
 			collection: new ChatItemList,
 			currentGistDataMode: '',
 			rooms: {},
+			selectedRoomName: '',
 
 			initialize: function(){				
-				_.bindAll(this, 'getChatList', 'addChatList', 'onRender', 'onClose');
+				_.bindAll(this, 'getChatList', 'addChatList', 'onRender', 'onClose', 'removeChatList', 'onItemSelected');
 				
 				this.spinner = new Spinner();
 				this.subscriptionUpdateRoom = postalWrapper.subscribe(constants.CHAT_UPDATE_ROOM, this.getChatList);
 				this.subscriptionCreateRoom = postalWrapper.subscribe(constants.CHAT_CREATE_ROOM, this.addChatList);
+				this.subscriptionDeleteRoom = postalWrapper.subscribe(constants.CHAT_DELETE_ROOM, this.removeChatList);
+				this.subscriptionItemSelected = postalWrapper.subscribe(constants.GIST_ITEM_SELECTED, this.onItemSelected);
 			},
 
 			events : {
@@ -40,27 +44,49 @@ define(function(require){
 				var self = this;
 				self.rooms = global.rooms;
 
+				if (_.size(self.rooms) == 0){
+					self.collection.reset();	
+				}
+				// res.data['room'] = self.rooms[key];
+				// self.collection.reset(res.data);	
+
 				$.each(self.rooms, function(key, value) {
 		    		var chatItem = new ChatItem({'gistId': key});
 		    		chatItem.fetch()
-		    		.done(function(res){
-		    			if (self.collection){
-		    				res.data['room'] = self.rooms[key];
-		    				self.collection.add(res.data);
-		    				//self.setFirstItemSelected();
-		    			}else{
-		    				self.collection = new ChatItemList;
-		    				res.data['room'] = self.rooms[key];
-		    				self.collection.add(res.data);
-		    				
+		    		.done(function(res) {
+		    			var isUpdated = false;
+
+			    		for (var index = self.collection.models.length - 1; index >= 0; index--) {
+		    				if (self.collection.models[index].id === key) {
+	    						// if (_.size(res.data['room']) != _.size(self.rooms[key])) {
+	    							res.data['room'] = self.rooms[key];
+									self.collection.reset(res.data);
+									isUpdated = true;	
+	    						// }
+		    				}
+
+		    				if (self.collection.models[index].id === self.selectedRoomName) {
+		    					var childView = self.children.findByModel(self.collection.models[index]);
+								childView.onAddClassSelected();
+		    				}
+			    		}
+
+		    			if (isUpdated == false) {
+							res.data['room'] = self.rooms[key];
+							self.collection.add(res.data);	
 		    			}
 		    		});
 		    	});
-
-		    	self.render();
+				
+				//self.rendered();
 		    	self.loading(false);
 			},
-			
+
+			onDomRefresh: function(){
+				// if ( !$('#comment-input').val())
+				// 	$('.btn-comments').trigger('click');
+			},
+
 			addChatList: function(gist, callback){
 				var self = this;
 				self.rooms = global.rooms;
@@ -70,6 +96,8 @@ define(function(require){
 	    		var chatItem = new ChatItem({'gistId': gist.id});
 	    		chatItem.fetch()
 	    		.done(function(res){
+	    			self.selectedRoomName = gist.id;
+
 	    			res.data['room'] = self.rooms[gist.id];
 
 					console.log(res.data['room'][0].login);
@@ -83,6 +111,20 @@ define(function(require){
 			    	// $('.chat-item').last().addClass('selected');
 			    	self.loading(false);
 	    		});
+			},
+
+			onItemSelected: function(gistItem){
+				this.selectedRoomName = gistItem.id;
+			},
+
+			removeChatList: function(roomname) {
+				var self = this;
+				for (var index = self.collection.models.length - 1; index >= 0; index--) {
+    				if (self.collection.models[index].id === roomname) {
+						self.collection.remove(self.collection.models[index]);
+						break;
+    				}
+	    		}
 			},
 
 			// handleGist : function(gist, callback){
@@ -102,6 +144,11 @@ define(function(require){
 				
 				this.subscriptionUpdateRoom.unsubscribe();
 				this.subscriptionCreateRoom.unsubscribe();
+				this.subscriptionDeleteRoom.unsubscribe();
+				this.subscriptionItemSelected.unsubscribe();
+
+				global.socket.emit('leaveRoom', this.selectedRoomName);
+				
 				// var self = this;
 				// _.each(self.xhrs, function(xhr){
 				// 	var s = xhr.state();

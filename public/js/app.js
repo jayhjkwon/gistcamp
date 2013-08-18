@@ -42,7 +42,8 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 				
 				// var id = prompt("What's your name?");
 				// global.user.id = id;
-			
+				// global.user.login = id;
+
 				global.socket.emit('adduser', global.user);
 			});
 
@@ -71,6 +72,10 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 			global.socket.on('updaterooms', function(rooms) {
 				global.rooms = rooms;
 				postalWrapper.publish(constants.CHAT_UPDATE_ROOM);
+			});
+
+			global.socket.on('deleteroom', function(roomname) {
+				postalWrapper.publish(constants.CHAT_DELETE_ROOM, roomname);
 			});
 
 			callback(null, socket);
