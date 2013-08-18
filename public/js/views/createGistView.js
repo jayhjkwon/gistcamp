@@ -26,6 +26,8 @@ define(function(require){
 				var item = new NewGistItem();
 				self.collection = new NewGistItemList();
 				self.collection.add(item);
+
+				$('#main').niceScroll({cursorcolor: '#eee'});
 			},
 			onShow : function(){
 				this.addEditor();
@@ -44,7 +46,9 @@ define(function(require){
 
 				this.setDeleteIcon();
 
-				$('#main').niceScroll({cursorcolor: '#eee'});
+				$("#main").getNiceScroll().resize();
+
+				
 			},
 			onRender : function(){
 
