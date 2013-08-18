@@ -1,17 +1,17 @@
-#githubInfo.js
+githubInfo.js
 
 ### minified files ###
-#public/js/app.min.js
-#public/js/welcome.min.js
+public/js/app.min.js
+public/js/welcome.min.js
 
 ### auto generated css from less ###
-#public/styles/*.css
+public/styles/*.css
 
 ### bower ###
-#vendor
+vendor
 
 ### node.js ###
-#node_modules
+node_modules
 
 lib-cov
 *.seed
