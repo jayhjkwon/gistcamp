@@ -222,6 +222,8 @@ io.sockets.on('connection', function (socket) {
 		socket.emit('updatechat', 'SERVER', 'connected to ' + roomname + ' gist room');
 		// socket.broadcast.to(roomname).emit('updatechat', 'SERVER', socket.username + ' has joined this room');
 		socket.emit('updaterooms', rooms);
+
+		socket.broadcast.emit('updaterooms', rooms);
 	});
 
 	// when the client emits 'sendchat', this listens and executes
@@ -241,10 +243,14 @@ io.sockets.on('connection', function (socket) {
 	
 	socket.on('switchRoom', function(newroom){
 		socket.leave(socket.room);
-		rooms[socket.room].removeById(socket.userid);
 
-		if (rooms[socket.room].length == 0) {
-			delete rooms[socket.room];
+		if (rooms[socket.room] != undefined) {
+			rooms[socket.room].removeById(socket.userid);	
+
+			if (rooms[socket.room].length == 0) {
+				delete rooms[socket.room];
+				socket.broadcast.emit('updaterooms', rooms);
+			}
 		}
 
 		if (rooms[newroom] == undefined) {
@@ -276,8 +282,9 @@ io.sockets.on('connection', function (socket) {
 			}	
 		}
 		
-
-		socket.broadcast.to(socket.room).emit('updatechat', 'SERVER', usernames[socket.userid].login + ' has left this room');
+		if (usernames[socket.userid] != undefined) {
+			socket.broadcast.to(socket.room).emit('updatechat', 'SERVER', usernames[socket.userid].login + ' has left this room');	
+		}
 	});
 	
 	// when the user disconnects.. perform this

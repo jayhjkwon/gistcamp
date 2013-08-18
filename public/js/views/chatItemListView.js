@@ -40,17 +40,17 @@ define(function(require){
 				var self = this;
 				self.rooms = global.rooms;
 
-				self.loading(true);
-
 				$.each(self.rooms, function(key, value) {
-		    		var chatItem = new ChatItem({'gistId': value});
+		    		var chatItem = new ChatItem({'gistId': key});
 		    		chatItem.fetch()
 		    		.done(function(res){
 		    			if (self.collection){
+		    				res.data['room'] = self.rooms[key];
 		    				self.collection.add(res.data);
 		    				//self.setFirstItemSelected();
 		    			}else{
 		    				self.collection = new ChatItemList;
+		    				res.data['room'] = self.rooms[key];
 		    				self.collection.add(res.data);
 		    				
 		    			}

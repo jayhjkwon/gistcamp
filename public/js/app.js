@@ -39,8 +39,10 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 			// on connection to server, ask for user's name with an anonymous callback
 			global.socket.on('connect', function(){
 				// call the server-side function 'adduser' and send one parameter (value of prompt)
-				//global.socket.emit('adduser', prompt("What's your name?"));
-
+				
+				// var id = prompt("What's your name?");
+				// global.user.id = id;
+			
 				global.socket.emit('adduser', global.user);
 			});
 
