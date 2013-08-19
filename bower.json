@@ -1,6 +1,6 @@
 {
   "name": "gistcamp",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "dependencies": {
     "jquery": "1.9.1",
     "bootstrap": "2.3.2",
@@ -11,7 +11,6 @@
     "toastr": "*",
     "requirejs": "*",
     "require-handlebars-plugin": "*",
-    "requirejs-domready": "*",
     "handlebars.js": "*",
     "modernizr": "~2.6.2",
     "jquery.scrollTo": "~1.4.5",
