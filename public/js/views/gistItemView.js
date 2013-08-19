@@ -88,6 +88,7 @@ define(function(require){
 					var userTags = _.pluck(tagNames, 'tag_name');
 					self.model.set('tags', userTags);
 					self.render();
+					self.ui.btnFollow.show();
 				}
 			},
 
