@@ -41,8 +41,7 @@ define(function(require){
 				'click .btn-star'        : 'star',
 				'click .btn-fb'          : 'shareFB',
 				'click .btn-tw'          : 'shareTW',
-				'click .btn-gp'          : 'shareGg',
-				'blur .popover'          : 'hidePopover'
+				'click .btn-gp'          : 'shareGg'
 			},
 
 			ui : {
@@ -60,10 +59,6 @@ define(function(require){
 						$('.starred-success').removeClass('starred-success-hide starred-success-show').addClass('starred-success-hide');
 					}, 2000);
 				});
-			},
-
-			hidePopover: function(){
-				$('.popover').hide();
 			},
 
 			createTag: function(e){
