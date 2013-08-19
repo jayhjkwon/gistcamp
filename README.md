@@ -2,12 +2,12 @@
 [The GistCamp](http://gistcamp.nodejitsu.com) is an web app that helps organize and share your gists.
 
 ## Features
-* The GistCamp is an web interface of GitHub's GIST service, but more focuses on sharing your gists with your followings and followers of your GitHub account.
+* The GistCamp is an web interface of GitHub's GIST service, more focuses on sharing your gists with your followings and followers of your GitHub account.
 * You can organize your gists by tagging and starring.
 * You can watch your followings and followers' gists. 
 * If commenting on other gists is not enough, you can chat with other geeks.
+* You will get notification instantly once other geeks comment on your gist or send chat messages to you.
 * You can share the gists on Facebook, Twitter and Google+
-* You will get notification instantly if other geeks comment on your gist.
 * As you see here, all the source code of the GistCamp web app is open-sourced. Please help us make the GistCamp more robust and richer by forking this repository.
 
 ## How to run GistCamp on your local machine
