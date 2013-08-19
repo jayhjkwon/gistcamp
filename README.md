@@ -1,11 +1,33 @@
-# gistcamp #
+# GistCamp #
+[The GistCamp](http://gistcamp.nodejitsu.com) is an web app that helps organize and share your gists.
 
-## Run application
-	$ npm install
-	$ bower install
-	$ grunt
-	$ supervisor server
+## Features
+* The GistCamp is an web interface of GitHub's GIST service, but more focuses on sharing your gists with your followings and followers of your GitHub account.
+* You can organize your gists by tagging and starring.
+* You can watch your followings and followers' gists. 
+* If commenting on other gists is not enough, you can chat with other geeks.
+* You can share the gists on Facebook, Twitter and Google+
+* You will get notification instantly if other geeks comment on your gist.
+* As you see here, all the source code of the GistCamp web app is open-sourced. Please help us make the GistCamp more robust and richer by forking this repository.
 
+## How to run GistCamp on your local machine
+Prerequistes
+* Node.js
+* Bower
+* MongoDB
+
+In CLI:
+```bash
+npm install
+bower install
+bower install jquery-nicescroll
+bower install autogrow-textarea
+bower install ace
+grunt
+node server
+```
+
+Then go to http://localhost:3000 in your browser.
 
 
 
