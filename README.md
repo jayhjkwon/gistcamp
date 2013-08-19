@@ -12,9 +12,9 @@
 
 ## How to run GistCamp on your local machine
 Prerequistes
-* Node.js
-* Bower
-* MongoDB
+* [Node.js](http://nodejs.org)
+* [Bower](http://bower.io)
+* [MongoDB](http://www.mongodb.org)
 
 In CLI:
 ```bash
