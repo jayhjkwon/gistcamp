@@ -18,6 +18,7 @@ Prerequistes
 
 In CLI:
 ```bash
+mongod 
 npm install
 bower install
 bower install jquery-nicescroll
