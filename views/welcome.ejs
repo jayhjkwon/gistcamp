@@ -1,6 +1,12 @@
 <!DOCTYPE html>
-<html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
   <head>
+    <meta charset="utf-8">
+    <meta name="description" content="gist github">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title><%= title %></title>
     <link rel="shortcut icon" href="images/logo_black.png">
     <link rel="stylesheet" href="vendor/bootstrap/docs/assets/css/bootstrap.css">
@@ -10,6 +16,7 @@
     <% }else{ %> 
       <link rel='stylesheet' href='styles/welcome.min.css?v=<%= appVersion %>' />
     <% } %>
+    <script src="vendor/modernizr/modernizr.js"></script>
   </head>
   <body>
     <div class="contents">
@@ -32,6 +39,7 @@
             <p class="power-font4">
                or learn more about how to enjoy GISTCAMP
             </p>
+            <!--[if lt IE < 9]> <p> Please use Chrome or Safari, we are working on IE </p> <![endif]-->
           </div>
       </div>
       <div id="div-features">
