@@ -25,7 +25,7 @@ define(function(require){
 			},
 			
 			events : {	
-				'dblclick .comment-text' : 'onCommentDoubleClick',
+				'click .comment-text' : 'onCommentDoubleClick',
 				'blur .comment-edit'     : 'onCommentBlur',
 				'keydown .comment-edit'  : 'onCommentEditKeypress'
 			},
