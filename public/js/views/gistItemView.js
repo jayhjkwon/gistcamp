@@ -40,6 +40,7 @@ define(function(require){
 					user.save().done(function(){
 						self.ui.btnFollow.prop('disabled', false);
 						self.ui.btnFollow.text('Unfollow'); 
+						u.is_following_this_user = true;
 					});					
 				}else{
 					var user = new User({mode: constants.USER_UNFOLLOW, id:u.id, loginId: u.login});
@@ -47,6 +48,7 @@ define(function(require){
 						success: function(){ 
 							self.ui.btnFollow.prop('disabled', false);
 							self.ui.btnFollow.text('Follow'); 
+							u.is_following_this_user = false;
 						}
 					});
 				}

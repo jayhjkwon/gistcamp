@@ -1,7 +1,7 @@
 <div class="gist-item">
   <div class="span3">
     <img src="{{user.avatar_url}}"/>
-    <button data-loading-text="..." class="btn btn-danger follow-user">Follow</button>
+    <button data-loading-text="..." class="btn btn-danger follow-user">{{#if user.is_following_this_user}}Unfollow{{else}}Follow{{/if}}</button>
   </div>
   <div class="span9">
     <div class="detail">

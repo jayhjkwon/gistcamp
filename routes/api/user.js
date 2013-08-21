@@ -5,7 +5,8 @@ var
 	_         = require('lodash'),
 	moment    = require('moment'),
     async     = require('async'),
-    service   = require('../../infra/service')
+    service   = require('../../infra/service'),
+    User      = require('../../models/user')
 ;
 
 exports.getAuthUser = function(req, res){
@@ -19,18 +20,24 @@ exports.getAuthUser = function(req, res){
 exports.follow = function(req, res){
 	var github = service.getGitHubApi(req);
 	var login = req.params.login_id;
+	var userId = service.getUserId(req);
 	
 	github.user.followUser({user:login}, function(err, data){
-		res.send(data);
+		User.update({id:userId}, {$addToSet:{followings:login}}, {}, function(err, numberAffected, raw){
+			res.send(data);	
+		});		
 	});
 };
 
 exports.unfollow = function(req, res){
 	var github = service.getGitHubApi(req);
 	var login = req.params.login_id;
+	var userId = service.getUserId(req);
 	
 	github.user.unFollowUser({user:login}, function(err, data){
-		res.send(data);
+		User.update({id:userId}, {$addToSet:{followings:login}}, {}, function(err, numberAffected, raw){
+			res.send(data);	
+		});		
 	});
 };
 
@@ -63,7 +70,7 @@ exports.getAllFollowings = function(req, res, accessToken, callback){
 	else
 		github = service.getGitHubApi(req);
 
-	getAllFollowings(github, 1, 2, followings, function(result){
+	getAllFollowings(github, 1, 100, followings, function(result){
 		var a = result;
 		callback(result);
 	});

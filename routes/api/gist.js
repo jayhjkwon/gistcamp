@@ -17,6 +17,10 @@ var sendData = function(data, req, res){
 
 	async.series([
 		function(callback){
+			setIsFollowing(req, data, callback);
+		},
+
+		function(callback){
 			getTagsByGistId(req, data, callback);
 		},
 
@@ -39,6 +43,46 @@ var getNextPage = function(linkHeader, req, res){
 			if (data) sendData(data, req, res);			
 		}
 	);		
+};
+
+var setIsFollowing = function(req, gists, cb){
+	var userId = service.getUserId(req);
+	var followings = [];
+
+	async.series([
+		function(callback){
+			User.find({'id':userId}).select('followings').lean().exec(function(error, docs){
+				followings = docs[0].followings;
+				callback(null);
+			});
+		},
+
+		function(callback){
+			async.each(
+				gists, 
+				function(gist, cb){					
+					var exist = _.find(followings, function(login){
+						return login === gist.user.login;
+					});
+
+					if (exist){
+						gist.user.is_following_this_user = true;
+					}else{
+						gist.user.is_following_this_user = false;
+					}
+
+					cb(null);				
+				}, 
+				function(){
+					callback(null);
+				}
+			);	
+		},
+
+		function(callback){
+			cb(null);
+		}
+	]);
 };
 
 var getTagsByGistId = function(req, gists, cb){
@@ -182,8 +226,13 @@ exports.getGistListByTag = function(req, res){
 				// res.send({data: gistList});
 				async.series([
 					function(callback){
+						setIsFollowing(req, gistList, callback);
+					},
+
+					function(callback){
 						getTagsByGistId(req, gistList, callback);
 					},
+
 					function(callback){
 						res.send({data: gistList});
 						callback(null);
@@ -352,6 +401,10 @@ exports.getFriendsGist = function(req, res){
 		}).reverse();
 
 		async.series([
+			function(callback){
+				setIsFollowing(req, sortedGists, callback);
+			},
+
 			function(callback){
 				getTagsByGistId(req, sortedGists, callback);
 			},
