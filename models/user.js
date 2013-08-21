@@ -53,7 +53,8 @@ var userSchema = new mongoose.Schema({
             }
           ]
       }                  
-    ]
+    ],
+  followings        : []  // element of array is "login" property of user 
 });
 
 module.exports = db.model('User', userSchema);

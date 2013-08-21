@@ -93,14 +93,17 @@ passport.use(new GitHubStrategy({
   },
   function(accessToken, refreshToken, profile, done) {
     process.nextTick(function () {
-      var userToSave = profile._json;
-      userToSave.access_token = accessToken;
+		var userToSave = profile._json;
+      	userToSave.access_token = accessToken;
 
-      // crate or update
-      User.findOneAndUpdate({id: userToSave.id}, userToSave, {upsert:true}, function(err, user){
-        return done(null, {access_token:user.access_token, login:user.login, id:user.id});  
-      });
+      	user.getAllFollowings(null, null, accessToken, function(followings){
+      		userToSave.followings = followings;
 
+	      	// crate or update
+			User.findOneAndUpdate({id: userToSave.id}, userToSave, {upsert:true}, function(err, userInfo){
+				return done(null, {access_token:userInfo.access_token, login:userInfo.login, id:userInfo.id});  	
+			});      		
+      	});
     });
   }
 ));
