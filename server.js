@@ -63,7 +63,7 @@ app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.cookieParser('your secret here'));
-app.use(express.session({cookie: { maxAge : 1000 * 60 * 24 * 30 }}));
+app.use(express.session({cookie: { maxAge : 1000 * 60 * 60 * 24 * 30 }}));
 app.use(passport.initialize());
 app.use(passport.session());
 // app.use(checkRateLimit);
