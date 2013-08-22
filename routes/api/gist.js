@@ -17,11 +17,19 @@ var sendData = function(data, req, res){
 
 	async.series([
 		function(callback){
-			setIsFollowing(req, data, callback);
-		},
+			async.parallel([
+				function(cb){
+					setIsFollowing(req, data, cb);
+				},
 
-		function(callback){
-			getTagsByGistId(req, data, callback);
+				function(cb){
+					getTagsByGistId(req, data, cb);
+				}],
+
+				function(err, results){
+					callback(null);
+				}
+			)
 		},
 
 		function(callback){
@@ -226,11 +234,19 @@ exports.getGistListByTag = function(req, res){
 				// res.send({data: gistList});
 				async.series([
 					function(callback){
-						setIsFollowing(req, gistList, callback);
-					},
+						async.parallel([
+							function(cb){
+								setIsFollowing(req, gistList, cb);
+							},
 
-					function(callback){
-						getTagsByGistId(req, gistList, callback);
+							function(cb){
+								getTagsByGistId(req, gistList, cb);
+							}],
+
+							function(err, results){
+								callback(null);
+							}
+						)
 					},
 
 					function(callback){
@@ -402,11 +418,19 @@ exports.getFriendsGist = function(req, res){
 
 		async.series([
 			function(callback){
-				setIsFollowing(req, sortedGists, callback);
-			},
+				async.parallel([
+					function(cb){
+						setIsFollowing(req, sortedGists, cb);
+					},
 
-			function(callback){
-				getTagsByGistId(req, sortedGists, callback);
+					function(cb){
+						getTagsByGistId(req, sortedGists, cb);
+					}],
+
+					function(err, results){
+						callback(null);
+					}
+				)
 			},
 
 			function(callback){
