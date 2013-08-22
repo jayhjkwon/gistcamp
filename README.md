@@ -1,5 +1,5 @@
 # GistCamp #
-[The GistCamp](http://gistcamp.nodejitsu.com) is an web app that helps organize and share your gists.
+[The GistCamp](http://gistcamp.com) is an web app that helps organize and share your gists.
 
 ## Features
 * The GistCamp is an web interface of GitHub's GIST service, more focuses on sharing your gists with your followings and followers of your GitHub account.
@@ -14,6 +14,7 @@
 Prerequistes
 * [Node.js](http://nodejs.org)
 * [Bower](http://bower.io)
+* [Grunt](http://gruntjs.com)
 * [MongoDB](http://www.mongodb.org)
 
 In CLI:
