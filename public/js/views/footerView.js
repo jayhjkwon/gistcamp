@@ -22,13 +22,15 @@ define(function(require){
 			selectedGistItem : {},
 
 			initialize: function(){
-				_.bindAll(this, 'shareGg', 'shareFB', 'shareTW', 'shareFB', 'setTagPopOverUI', 'onItemSelected', 'star', 'createTag', 'loading', 'onBtnCommentClick', 'onRoomCreated', 'tagOnGist');
+				_.bindAll(this, 'shareGg', 'shareFB', 'shareTW', 'shareFB', 'setTagPopOverUI', 'onItemSelected', 'star', 'createTag', 'loading', 'onBtnCommentClick', 'onRoomCreated', 'tagOnGist', 'onCommentDeleted', 'onCommentAdded');
 
 				this.tags = new TagItemList();
 
 				this.listenTo(this.tags, 'all', this.onTagCollectionChange);
 				this.spinner = new Spinner({length:5,lines:9,width:4,radius:4});
 				this.subscription = postalWrapper.subscribe(constants.GIST_ITEM_SELECTED, this.onItemSelected);
+				this.subscriptionDeleteComment = postalWrapper.subscribe(constants.COMMENT_DELETE, this.onCommentDeleted);
+				this.subscriptionAddComment = postalWrapper.subscribe(constants.COMMENT_ADD, this.onCommentAdded);
 				this.router = new Router();
 			},
 
@@ -167,6 +169,28 @@ define(function(require){
 				}
 			},
 
+			onCommentDeleted: function(commentId){
+				var self = this;
+				if (self.selectedGistItem && self.selectedGistItem.comments - 1 > 0){
+					self.selectedGistItem.comments = self.selectedGistItem.comments - 1;
+					$('.comments-badge').text(self.selectedGistItem.comments).show();
+				}else{
+					self.selectedGistItem.comments = 0;
+					$('.comments-badge').text('').hide();
+				}	
+			},
+
+			onCommentAdded:  function(comment){
+				var self = this;
+				if (self.selectedGistItem && self.selectedGistItem.comments > 0){
+					self.selectedGistItem.comments = self.selectedGistItem.comments + 1;
+					$('.comments-badge').text(self.selectedGistItem.comments).show();
+				}else{
+					self.selectedGistItem.comments = 1;
+					$('.comments-badge').text(self.selectedGistItem.comments).show();
+				}	
+			},
+
 			loading: function(showSpinner, el){
 				if (showSpinner){
 					var target = $(el).parents()[0];
@@ -213,6 +237,8 @@ define(function(require){
 
 			onClose: function(){
 				this.subscription.unsubscribe();
+				this.subscriptionDeleteComment.unsubscribe();
+				this.subscriptionAddComment.unsubscribe();
 			}
 		})
 	;

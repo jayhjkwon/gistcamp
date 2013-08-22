@@ -151,6 +151,7 @@ app.put('/api/gist/tagged/:tag_id/:gist_id', ensureAuthenticated, gist.editTagGi
 app.get('/api/gist/:gistId/comments', ensureAuthenticated, gist.getComments);
 app.post('/api/gist/:gistId/comments', ensureAuthenticated, gist.createComment);
 app.put('/api/gist/:gistId/comments/:id', ensureAuthenticated, gist.editComment);
+app.delete('/api/gist/:gistId/comments/:id', ensureAuthenticated, gist.deleteComment);
 app.get('/api/gist/friends', ensureAuthenticated, gist.getFriendsGist);
 app.get('/api/gist/tags', ensureAuthenticated, gist.getTags);
 app.get('/api/gists/:gistId', gist.getGistById);

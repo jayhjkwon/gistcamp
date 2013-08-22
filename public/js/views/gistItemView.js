@@ -17,9 +17,11 @@ define(function(require){
 
 			initialize: function(){
 				var self = this;
-				_.bindAll(this, 'onGistItemSelected', 'onTagChanged', 'onClose', 'setIsSelectedGistFalse', 'onFollowUserClicked');
+				_.bindAll(this, 'onGistItemSelected', 'onTagChanged', 'onClose', 'setIsSelectedGistFalse', 'onFollowUserClicked', 'onCommentDeleted', 'onCommentAdded');
 				this.subscription = postalWrapper.subscribe(constants.TAG_CHANGED, this.onTagChanged);
 				this.subscriptionRemoveIsSelected = postalWrapper.subscribe(constants.REMOVE_IS_SELECTED, this.setIsSelectedGistFalse);
+				this.subscriptionDeleteComment = postalWrapper.subscribe(constants.COMMENT_DELETE, this.onCommentDeleted);
+				this.subscriptionAddComment = postalWrapper.subscribe(constants.COMMENT_ADD, this.onCommentAdded);
 			},
 			
 			events : {
@@ -78,6 +80,26 @@ define(function(require){
 				postalWrapper.publish(constants.REMOVE_IS_SELECTED, this);	// in order for setting isSelectedGist boolean variable as false in other instances of GistItemView
 			},
 
+			onCommentDeleted: function(commentId){
+				var self = this;
+				if (!self.isSelectedGist) return;
+				if (self.model.get('comments') && self.model.get('comments') > 0){
+					self.model.set('comments', self.model.get('comments') - 1);
+				}else{
+					self.model.set('comments', 0);
+				}	
+			},
+
+			onCommentAdded:  function(comment){
+				var self = this;
+				if (!self.isSelectedGist) return;
+				if (self.model.get('comments') && self.model.get('comments') > 0){
+					self.model.set('comments', self.model.get('comments') + 1);
+				}else{
+					self.model.set('comments', 1);
+				}	
+			},
+
 			onTagChanged: function(tags){
 				var self = this;
 				if (self.isSelectedGist){
@@ -97,6 +119,8 @@ define(function(require){
 			onClose: function(){
 				this.subscription.unsubscribe();
 				this.subscriptionRemoveIsSelected.unsubscribe();
+				this.subscriptionDeleteComment.unsubscribe();
+				this.subscriptionAddComment.unsubscribe();
 			}
 		});
 

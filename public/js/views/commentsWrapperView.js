@@ -25,13 +25,14 @@ define(function(require){
 			itemView : CommentItemView,
 			itemViewContainer: '.comment-list',
 			selectedGistItem : {},
-			xhrs : [],
+			// xhrs : [],
 			xhr: {},
 
 			initialize: function(options){
-				_.bindAll(this, 'onDomRefresh', 'onItemSelected', 'onCommentInputKeypress');
+				_.bindAll(this, 'onDomRefresh', 'onItemSelected', 'onCommentInputKeypress', 'onCommentDeleted');
 				this.spinner = new Spinner({length:5,lines:9,width:4,radius:4});
 				this.subscription = postalWrapper.subscribe(constants.GIST_ITEM_SELECTED, this.onItemSelected);
+				this.subscriptionDeleteComment = postalWrapper.subscribe(constants.COMMENT_DELETE, this.onCommentDeleted);
 			},
 
 			events: {
@@ -66,6 +67,10 @@ define(function(require){
 		    				self.collection.add(data);
 		    			}
 		    			self.render();
+
+		    			postalWrapper.publish(constants.COMMENT_ADD, data);
+
+		    			// send alarm
 		    			var msg = global.user.name + ' just commented on your gist(' + self.selectedGistItem.description + ') ';
 		    			msg = msg + '</br>';
 		    			msg = text.length > 50 ? msg + '"' + text.substring(0,50) + '.."' : msg + '"' + text + '"';
@@ -111,15 +116,22 @@ define(function(require){
 				}
 			},
 
+			onCommentDeleted: function(commentId){
+				var self = this;
+				self.collection.remove(self.collection.get(commentId));
+				self.render();
+			},
+
 			onClose: function(){
 				var self = this;
 				self.subscription.unsubscribe();
-				_.each(self.xhrs, function(xhr){
+				self.subscriptionDeleteComment.unsubscribe();
+				/*_.each(self.xhrs, function(xhr){
 					var s = xhr.state();
 					if (s === 'pending') {
 						xhr.abort();	// abort ajax requests those are not completed
 					}
-				});
+				});*/
 			},
 
 			loading: function(showSpinner){

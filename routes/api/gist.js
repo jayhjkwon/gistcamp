@@ -366,6 +366,20 @@ exports.editComment = function(req, res){
 	);	
 };
 
+exports.deleteComment = function(req, res){
+	var id = req.params.id;
+	var gistId = req.params.gistId;
+	var accessToken = service.getAccessToken(req);
+
+	request.del({
+		url: config.options.githubHost + '/gists/' + gistId + '/comments/' + id + '?access_token=' + accessToken
+	},
+		function(error, response, body){
+			res.send({});
+		}		
+	);	
+};
+
 
 /*
 	1. get friends (following, follower)
