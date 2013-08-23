@@ -6,7 +6,7 @@ define(function(require){
 		Router = Marionette.AppRouter.extend({
 			appRoutes: {
 				''            : 'home',
-				'following'   : 'following',
+				'friends'   : 'friends',
 				'mygists'     : 'myGists',
 				'starred'     : 'starred',
 				'tagged/:id/:tag_url' : 'tagged',

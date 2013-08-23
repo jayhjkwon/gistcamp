@@ -51,7 +51,7 @@ define(function(require){
 				self.showFooter();
 			},
 			
-			following : function(){
+			friends : function(){
 				
 
 				// LayoutView with regions
