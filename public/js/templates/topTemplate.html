@@ -19,9 +19,9 @@
         {{#unless items}}
         <li><a href="#">No tag yet, You can crate tag using the tag button on the bottom</a></li>        
         {{/unless}}
-        {{#each items}}
-        <li class="divider"></li>
+        {{#each items}}        
         <li><a href="#tagged/{{_id}}/{{tag_url}}"><span class="pull-left">{{tag_name}}</span><span class="badge badge-inverse pull-right">{{countGists gists}}</span></a></li>        
+        <li class="divider"></li>
         {{/each}}
       </ul>
     </li>
@@ -33,7 +33,8 @@
  </ul>
  <ul class="nav pull-right">
    <li><a href="#" id="loggedin-user-name"></a></li>
-   <li class="dropdown"><a href="#" class="gravatar-img dropdown-toggle" data-toggle="dropdown"><img class="loggedin-user-avatar" style="width:42px;height:42px;"></a>
+   <li class="dropdown">
+    <a href="#" class="gravatar-img dropdown-toggle" data-toggle="dropdown"><img class="loggedin-user-avatar" ></a>
     <ul class="dropdown-menu">
       <li><a href="/logout"><i class="icon-signout"></i>&nbsp;&nbsp;Signout</a></li>
       <li class="divider"></li>
