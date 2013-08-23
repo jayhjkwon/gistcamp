@@ -98,7 +98,7 @@ define(function(require){
 					self.tags.reset(data);
 					postalWrapper.publish(constants.TAG_CHANGED, self.tags.toJSON());
 					$(e.target).find('span.tag-saved-msg').remove();
-					$(e.target).append('<span class="pull-right tag-saved-msg">Saved</span>');
+					$(e.target).append('<span class="pull-right tag-saved-msg">Tagged</span>');
 					$('.tag-saved-msg').fadeOut(4000);
 				});
 			},
