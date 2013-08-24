@@ -71,7 +71,7 @@ define(function(require){
 				var commentsWrapperView = new CommentsWrapperView;
 				gistListView.commentsWrapper.show(commentsWrapperView);
 
-				Application.execute(constants.MENU_SELECTED,'following');
+				Application.execute(constants.MENU_SELECTED,'friends');
 
 				var self = this;
 				self.showFooter();
