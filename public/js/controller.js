@@ -26,8 +26,7 @@ define(function(require){
 			onClose: function(){
 			},
 
-			home : function(){
-				
+			home : function(){				
 				// LayoutView with regions
 				var gistListView = new GistListView();
 				shellView.main.show(gistListView);
@@ -52,8 +51,6 @@ define(function(require){
 			},
 			
 			friends : function(){
-				
-
 				// LayoutView with regions
 				var gistListView = new GistListView();
 				shellView.main.show(gistListView);
@@ -71,15 +68,13 @@ define(function(require){
 				var commentsWrapperView = new CommentsWrapperView;
 				gistListView.commentsWrapper.show(commentsWrapperView);
 
-				Application.execute(constants.MENU_SELECTED,'following');
+				Application.execute(constants.MENU_SELECTED,'friends');
 
 				var self = this;
 				self.showFooter();
 			},
 			
 			myGists : function(){
-				
-
 				// LayoutView with regions
 				var gistListView = new GistListView();
 				shellView.main.show(gistListView);
@@ -103,8 +98,7 @@ define(function(require){
 				self.showFooter();
 			},
 			
-			starred : function(){
-				
+			starred : function(){				
 				// LayoutView with regions
 				var gistListView = new GistListView();
 				shellView.main.show(gistListView);
@@ -128,6 +122,7 @@ define(function(require){
 				self.showFooter();
 
 			},
+
 			forked : function(){
 				shellView.main.show(new GistListView({currentSelectedMenu: 'forked'}));
 				Application.execute(constants.MENU_SELECTED,'forked');
@@ -135,6 +130,7 @@ define(function(require){
 				var self = this;
 				self.showFooter();
 			},
+			
 			tagged : function(tagId, tagUrl){
 				// LayoutView with regions
 				var gistListView = new GistListView();
