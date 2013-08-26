@@ -1,19 +1,4 @@
-* {
-	// box-shadow:none !important;
-}
-body {
-	// font-family: 'Roboto', sans-serif !important;
-	// font-family: 'Nanum Gothic', sans-serif !important;
-	// font-family: 'Nanum Gothic Coding', monospace !important;
-	.area {
-		// font-family: 'Roboto', 'Nanum Gothic', sans-serif !important;
-		pre span {
-			// font-family: 'Nanum Gothic Coding', monospace !important;
-		}
-	}
-}
-
-
+@gist-item-selected-color: #7bb33d;
 
 
 /* gist summary list */
@@ -24,7 +9,7 @@ body {
 	.row-fluid {
 		margin-bottom: 20px;
 		&.selected {
-			background-color: #008641 !important;
+			background-color: @gist-item-selected-color !important;
 			color:#fff;
 			.social i, .social a {
 				color:#fff !important;
@@ -37,7 +22,7 @@ body {
 }
 
 /*.selected {
-	background-color: #008641 !important;
+	background-color: @gist-item-selected-color !important;
 	color:#fff;
 	.social i, .social a {
 		color:#fff !important;
@@ -51,7 +36,7 @@ body {
 	height: 100%;
 	
 	/*&.selected {
-		background-color: #008641 !important;
+		background-color: @gist-item-selected-color !important;
 		color:#fff;
 		.social i, .social a {
 			color:#fff !important;
@@ -70,14 +55,14 @@ body {
 		padding-top:3px;
 		.title {
 			height:20px;
-			font-size:12px;
+			font-size:11px;
 			font-weight:500;
 			text-overflow:ellipsis;
 			overflow: hidden;
 			word-break: break-all;
 		}
 		.subtitle {
-			font-size: 12px !important;
+			font-size: 11px !important;
 			height:20px;
 			.social{
 				margin-right:7px;
@@ -96,7 +81,7 @@ body {
 		    -webkit-box-orient: vertical;*/
 		}
 		.social a{
-			color: #008641;
+			color: @gist-item-selected-color;
 			font-weight:400;
 		}		
 		.tags {
@@ -133,7 +118,7 @@ body {
 		font-size:16px;
 		font-weight: 300;
 		&.active{
-			border-bottom: solid 3px #008641;
+			border-bottom: solid 3px @gist-item-selected-color;
 			font-weight: bold;		
 		}
 		&:hover{
