@@ -17,7 +17,7 @@ define(function(require){
 		service         = require('service'),
 
 		FooterView = Marionette.ItemView.extend({
-			className: 'command-buttons',
+			className: 'navbar-inner',
 			template : footerTemplate,
 			selectedGistItem : {},
 

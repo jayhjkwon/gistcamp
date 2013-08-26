@@ -1,6 +1,9 @@
+// @button-icon-color: lighten(#802c59, 0%);
+@button-icon-color: #034482;
+
 /* footer */
 footer {	
-	background-color: lighten(#1b1b1b, 3%);
+	// background-color: lighten(#1b1b1b, 3%);
 	.command-buttons {
 		margin-top:10px;
 		text-align: center;
@@ -11,6 +14,12 @@ footer {
 		width:60px !important;
 		display:inline-block;
 		position:relative;
+		i:nth-child(1){
+			color:#fff;
+		}
+		i:nth-child(2){
+			color: @button-icon-color;
+		}
 		&:hover .icon-circle {
 			color:lighten(#000, 70%);
 		}
@@ -50,19 +59,6 @@ footer {
 		border: 2px solid gray !important;
 	}
 
-	/*.win-command.search {
-		margin-top:20px;
-	}
-	.win-commandicon{
-		width:30px;
-		height:30px;
-		line-height:30px;
-		font-size:18px;
-	}
-
-	button.win-command{
-		position:relative;
-	}*/
 	.comments-badge {
 		position:absolute;
 		left:37px;
