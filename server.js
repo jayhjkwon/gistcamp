@@ -97,7 +97,7 @@ passport.use(new GitHubStrategy({
 		var userToSave = profile._json;
       	userToSave.access_token = accessToken;
 
-      	async.series([
+      	async.parallel([
       		function(cb){
       			user.getAllFollowings(null, null, accessToken, function(followings){
       				userToSave.followings = followings;
