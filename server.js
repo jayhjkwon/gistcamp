@@ -11,7 +11,8 @@ var
 	GitHubStrategy = require('passport-github').Strategy,
     User     = require('./models/user'), 
     request  = require('request'),
-    service   = require('./infra/service')    
+    service   = require('./infra/service'),
+    async     = require('async')
 ;
 
 
@@ -96,14 +97,25 @@ passport.use(new GitHubStrategy({
 		var userToSave = profile._json;
       	userToSave.access_token = accessToken;
 
-      	user.getAllFollowings(null, null, accessToken, function(followings){
-      		userToSave.followings = followings;
+      	async.series([
+      		function(cb){
+      			user.getAllFollowings(null, null, accessToken, function(followings){
+      				userToSave.followings = followings;
+      				cb(null);
+      			});
+      		},
+      		function(cb){
+      			// TODO : get ALL starred gists and save it to the DB
+      			cb(null);
+      		}
 
-	      	// crate or update
-			User.findOneAndUpdate({id: userToSave.id}, userToSave, {upsert:true}, function(err, userInfo){
-				return done(null, {access_token:userInfo.access_token, login:userInfo.login, id:userInfo.id});  	
-			});      		
-      	});
+      	],
+      		function(err, results){
+      			User.findOneAndUpdate({id: userToSave.id}, userToSave, {upsert:true}, function(err, userInfo){
+					return done(null, {access_token:userInfo.access_token, login:userInfo.login, id:userInfo.id});  	
+				});      			
+      		}
+      	);      	
     });
   }
 ));

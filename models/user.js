@@ -54,7 +54,8 @@ var userSchema = new mongoose.Schema({
           ]
       }                  
     ],
-  followings        : []  // element of array is "login" property of user 
+  followings        : [],  // element of array is "login" property of user 
+  starred_gists     : []   // starred gists, element of array is gist's id
 });
 
 module.exports = db.model('User', userSchema);
