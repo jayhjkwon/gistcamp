@@ -103,11 +103,11 @@ passport.use(new GitHubStrategy({
       				userToSave.followings = followings;
       				cb(null);
       			});
-      		},
+      		}/*,
       		function(cb){
       			// TODO : get ALL starred gists and save it to the DB
       			cb(null);
-      		}
+      		}*/
 
       	],
       		function(err, results){
