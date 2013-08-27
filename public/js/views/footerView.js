@@ -22,7 +22,7 @@ define(function(require){
 			selectedGistItem : {},
 
 			initialize: function(){
-				_.bindAll(this, 'shareGg', 'shareFB', 'shareTW', 'shareFB', 'setTagPopOverUI', 'onItemSelected', 'star', 'createTag', 'loading', 'onBtnCommentClick', 'onRoomCreated', 'tagOnGist', 'onCommentDeleted', 'onCommentAdded');
+				_.bindAll(this, 'shareGg', 'shareFB', 'shareTW', 'shareFB', 'initializePopOverTag', 'onItemSelected', 'star', 'createTag', 'loading', 'onBtnCommentClick', 'onRoomCreated', 'tagOnGist', 'onCommentDeleted', 'onCommentAdded');
 
 				this.tags = new TagItemList();
 
@@ -47,20 +47,26 @@ define(function(require){
 			},
 
 			ui : {
-				btnTag : '.tag'
+				btnTag : '.btn-command-wrapper.tag'
 			},
 
 			onRender: function(){
-				this.setTagPopOverUI();				
+				this.initializePopOverTag();				
 			},
 
-			star: function(e){
-				service.setStar(this.selectedGistItem.id).done(function(data){
-					$('.starred-success').removeClass('starred-success-hide starred-success-show').addClass('starred-success-show');
-					setTimeout(function(){
-						$('.starred-success').removeClass('starred-success-hide starred-success-show').addClass('starred-success-hide');
-					}, 2000);
-				});
+			initializePopOverTag: function(){
+				this.ui.btnTag.popover({
+					html	: true,
+					placement: 'top',
+					title	: function(){ return '<div><i class="icon-tag"></i> Tag the gist</div>'; },
+					content : function(){ return $('.tag-area').html(); }					
+			    });
+
+				this.tags.fetch();	
+			},
+
+			onTagCollectionChange: function(tags){
+				$('.tag-area').html(tagListTemplate({tags: this.tags.toJSON()}));
 			},
 
 			createTag: function(e){
@@ -103,25 +109,13 @@ define(function(require){
 				});
 			},
 
-			onTagCollectionChange: function(tags){
-				console.log('onTagCollectionChange event occured');
-				$('.tag-area').html(tagListTemplate({tags: this.tags.toJSON()}));
-
-			},
-
-			setTagPopOverUI: function(){
-				if ($('div.tag-area')){
-					this.$el.append('<div class="tag-area"></div>');
-				}
-
-				this.ui.btnTag.popover({
-					html	: true,
-					placement: 'top',
-					title	: function(){ return '<div><i class="icon-tag"></i> Tag the gist</div>'; },
-					content : function(){ return $('.tag-area').html(); }					
-			    });
-
-				this.tags.fetch();	
+			star: function(e){
+				service.setStar(this.selectedGistItem.id).done(function(data){
+					$('.starred-success').removeClass('starred-success-hide starred-success-show').addClass('starred-success-show');
+					setTimeout(function(){
+						$('.starred-success').removeClass('starred-success-hide starred-success-show').addClass('starred-success-hide');
+					}, 2000);
+				});
 			},
 
 			onBtnCommentClick: function(e){

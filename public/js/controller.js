@@ -26,7 +26,7 @@ define(function(require){
 			onClose: function(){
 			},
 
-			home : function(){				
+			all : function(){				
 				// LayoutView with regions
 				var gistListView = new GistListView();
 				shellView.main.show(gistListView);
@@ -44,7 +44,7 @@ define(function(require){
 				var commentsWrapperView = new CommentsWrapperView;
 				gistListView.commentsWrapper.show(commentsWrapperView);
 
-				Application.execute(constants.MENU_SELECTED,'home');
+				Application.execute(constants.MENU_SELECTED,'all');
 
 				var self = this;
 				self.showFooter();
