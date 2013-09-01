@@ -4,13 +4,13 @@
   <span class="icon-bar"></span>
   <span class="icon-bar"></span>
 </button>          
-<a class="brand" href="#"><img src="images/logo_gray.gif" class="logo" />GistCamp</a>
+<span class="brand" href="#"><img src="images/logo_gray.gif" class="logo" />GistCamp</span>
 <div class="nav-collapse collapse">
   <ul class="nav">            
-    <li><a href="#following"><i class="icon-user"></i>&nbsp;Friends</a></li>
-    <li class="divider-vertical"></li>
     <li><a href="#mygists"><i class="icon-archive"></i>&nbsp;My Gists</a></li>
     <li class="divider-vertical"></li>
+    <li><a href="#friends"><i class="icon-user"></i>&nbsp;Friends</a></li>
+    <li class="divider-vertical"></li>    
     <li><a href="#starred"><i class="icon-star"></i>&nbsp;Starred</a></li>
     <li class="divider-vertical"></li>
     <li class="dropdown">
@@ -19,12 +19,14 @@
         {{#unless items}}
         <li><a href="#">No tag yet, You can crate tag using the tag button on the bottom</a></li>        
         {{/unless}}
-        {{#each items}}
-        <li class="divider"></li>
+        {{#each items}}        
         <li><a href="#tagged/{{_id}}/{{tag_url}}"><span class="pull-left">{{tag_name}}</span><span class="badge badge-inverse pull-right">{{countGists gists}}</span></a></li>        
+        <li class="divider"></li>
         {{/each}}
       </ul>
     </li>
+    <li class="divider-vertical"></li>            
+    <li><a href="#all"><i class="icon-github-alt"></i>&nbsp;All</a></li>
     <li class="divider-vertical"></li>            
     <li><a href="#newgist"><i class="icon-plus"></i>&nbsp;New</a></li>
     <li class="divider-vertical"></li>
@@ -33,11 +35,12 @@
  </ul>
  <ul class="nav pull-right">
    <li><a href="#" id="loggedin-user-name"></a></li>
-   <li class="dropdown"><a href="#" class="gravatar-img dropdown-toggle" data-toggle="dropdown"><img class="loggedin-user-avatar" style="width:42px;height:42px;"></a>
+   <li class="dropdown">
+    <a href="#" class="gravatar-img dropdown-toggle" data-toggle="dropdown"><img class="loggedin-user-avatar" ></a>
     <ul class="dropdown-menu">
-      <li><a href="#"><i class="icon-signout"></i>&nbsp;&nbsp;Signout</a></li>
+      <li><a href="/logout"><i class="icon-signout"></i>&nbsp;&nbsp;Signout</a></li>
       <li class="divider"></li>
-      <li><a href="#"><i class="icon-github"></i>&nbsp;&nbsp;Github Profile</a></li>
+      <li><a href="#" class="loggedin-user-url"><i class="icon-github"></i>&nbsp;&nbsp;Github Profile</a></li>
     </ul>
   </li>
  </ul>

@@ -18,7 +18,19 @@ var sendData = function(data, req, res){
 
 	async.series([
 		function(callback){
-			getTagsByGistId(req, data, callback);
+			async.parallel([
+				function(cb){
+					setIsFollowing(req, data, cb);
+				},
+
+				function(cb){
+					getTagsByGistId(req, data, cb);
+				}],
+
+				function(err, results){
+					callback(null);
+				}
+			)
 		},
 
 		function(callback){
@@ -40,6 +52,46 @@ var getNextPage = function(linkHeader, req, res){
 			if (data) sendData(data, req, res);			
 		}
 	);		
+};
+
+var setIsFollowing = function(req, gists, cb){
+	var userId = service.getUserId(req);
+	var followings = [];
+
+	async.series([
+		function(callback){
+			User.find({'id':userId}).select('followings').lean().exec(function(error, docs){
+				followings = docs[0].followings;
+				callback(null);
+			});
+		},
+
+		function(callback){
+			async.each(
+				gists, 
+				function(gist, cb){					
+					var exist = _.find(followings, function(login){
+						return login === gist.user.login;
+					});
+
+					if (exist){
+						gist.user.is_following_this_user = true;
+					}else{
+						gist.user.is_following_this_user = false;
+					}
+
+					cb(null);				
+				}, 
+				function(){
+					callback(null);
+				}
+			);	
+		},
+
+		function(callback){
+			cb(null);
+		}
+	]);
 };
 
 var getTagsByGistId = function(req, gists, cb){
@@ -197,8 +249,21 @@ exports.getGistListByTag = function(req, res){
 				// res.send({data: gistList});
 				async.series([
 					function(callback){
-						getTagsByGistId(req, gistList, callback);
+						async.parallel([
+							function(cb){
+								setIsFollowing(req, gistList, cb);
+							},
+
+							function(cb){
+								getTagsByGistId(req, gistList, cb);
+							}],
+
+							function(err, results){
+								callback(null);
+							}
+						)
 					},
+
 					function(callback){
 						res.send({data: gistList});
 						callback(null);
@@ -316,6 +381,20 @@ exports.editComment = function(req, res){
 	);	
 };
 
+exports.deleteComment = function(req, res){
+	var id = req.params.id;
+	var gistId = req.params.gistId;
+	var accessToken = service.getAccessToken(req);
+
+	request.del({
+		url: config.options.githubHost + '/gists/' + gistId + '/comments/' + id + '?access_token=' + accessToken
+	},
+		function(error, response, body){
+			res.send({});
+		}		
+	);	
+};
+
 
 /*
 	1. get friends (following, follower)
@@ -326,49 +405,50 @@ exports.editComment = function(req, res){
 
 exports.getFriendsGist = function(req, res){
 	var gists = [];
-	var followings = [];
-	var gistsFollower = [];
-	var gistsFollowing = [];
 	var github = service.getGitHubApi(req);
 	var loginName = service.getLoginName(req);
+	var userId = service.getUserId(req);
 
-	// get people's gists who I follow
-	var getGistsFollowing = function(user, callback){
-		github.gists.getFromUser({user: user.login, per_page: 5}, 
+	var getGistsByUser = function(login, callback){
+		github.gists.getFromUser({user: login, per_page: 5}, 
 			function(err, data){		
 				if (data) {
-					_.each(data, function(d){
-						gistsFollowing.push(d);
-					});					
+					async.each(data, 
+						function(gist, cb){
+							gists.push(gist);
+							cb(null);
+						}, 
+						function(err, result){
+							callback(null);
+						}
+					);									
+				}else{
+					callback(null);
 				}
-				callback(null, gistsFollowing);
-			}
-		);	
-	};
-
-	// get people's gists who follow me
-	var getGistsFollower = function(user, callback){
-		github.gists.getFromUser({user: user.login, per_page: 5}, 
-			function(err, data){		
-				if (data) {
-					_.each(data, function(d){
-						gistsFollower.push(d);
-					});					
-				}
-				callback(null, gistsFollower);
 			}
 		);	
 	};
 
 	var sendGists = function(){
-		var gists = _.union(gistsFollower, gistsFollowing);
 		var sortedGists = _.sortBy(gists, function(gist){
 			return gist.created_at;
 		}).reverse();
 
 		async.series([
 			function(callback){
-				getTagsByGistId(req, sortedGists, callback);
+				async.parallel([
+					function(cb){
+						setIsFollowing(req, sortedGists, cb);
+					},
+
+					function(cb){
+						getTagsByGistId(req, sortedGists, cb);
+					}],
+
+					function(err, results){
+						callback(null);
+					}
+				)
 			},
 
 			function(callback){
@@ -381,27 +461,33 @@ exports.getFriendsGist = function(req, res){
 	// get gists in parallel, send gists after getting all
 	async.parallel([
 		function(callback){
+			// TODO : get followers from the DB not github
 			github.user.getFollowers({user: loginName}, function(err, data){
 				if (data) {
-					console.log('github.user.getFollowers counts = ' + data.length);
-					async.each(data, getGistsFollower, function(error, result){
-						callback(null, gistsFollower);
-					});
+					async.map(data, 
+						function(item, cb){ 
+							cb(null, item.login)
+						}, 
+						function(err, result){
+							async.each(result, getGistsByUser, function(error, result){
+								callback(null);
+							});
+						});					
 				}else{
-					callback(null, []);
+					callback(null);
 				}
 			});
 		},
 		
 		function(callback){
-			github.user.getFollowing({}, function(err, data){
-				if (data){
-					console.log('github.user.getFollowing counts = ' + data.length);
-					async.each(data, getGistsFollowing, function(error, result){
-						callback(null, gistsFollowing);
+			User.find({'id':userId}).select('followings').lean().exec(function(error, docs){
+				var followings = docs[0].followings;
+				if(followings.length){
+					async.each(followings, getGistsByUser, function(error, result){
+						callback(null);
 					});
 				}else{
-					callback(null, []);
+					callback(null);
 				}
 			});
 		}

@@ -12,7 +12,8 @@ var
     User     = require('./models/user'), 
     request  = require('request'),
     service   = require('./infra/service'),
-    chat     = require('./routes/chat')    
+    async     = require('async'),
+    chat     = require('./routes/chat')
 ;
 
 
@@ -64,7 +65,7 @@ app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.cookieParser('your secret here'));
-app.use(express.session({cookie: { maxAge : 1000 * 60 * 24 * 30 }}));
+app.use(express.session({cookie: { maxAge : 1000 * 60 * 60 * 24 * 30 }}));
 app.use(passport.initialize());
 app.use(passport.session());
 // app.use(checkRateLimit);
@@ -94,14 +95,28 @@ passport.use(new GitHubStrategy({
   },
   function(accessToken, refreshToken, profile, done) {
     process.nextTick(function () {
-      var userToSave = profile._json;
-      userToSave.access_token = accessToken;
+		var userToSave = profile._json;
+      	userToSave.access_token = accessToken;
 
-      // crate or update
-      User.findOneAndUpdate({id: userToSave.id}, userToSave, {upsert:true}, function(err, user){
-        return done(null, {access_token:user.access_token, login:user.login, id:user.id});  
-      });
+      	async.parallel([
+      		function(cb){
+      			user.getAllFollowings(null, null, accessToken, function(followings){
+      				userToSave.followings = followings;
+      				cb(null);
+      			});
+      		}/*,
+      		function(cb){
+      			// TODO : get ALL starred gists and save it to the DB
+      			cb(null);
+      		}*/
 
+      	],
+      		function(err, results){
+      			User.findOneAndUpdate({id: userToSave.id}, userToSave, {upsert:true}, function(err, userInfo){
+					return done(null, {access_token:userInfo.access_token, login:userInfo.login, id:userInfo.id});  	
+				});      			
+      		}
+      	);      	
     });
   }
 ));
@@ -130,6 +145,10 @@ app.get('/auth/github/callback',
     res.redirect('/');
   }
 );
+app.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/welcome');
+});
 
 
 // restful services
@@ -145,6 +164,7 @@ app.put('/api/gist/tagged/:tag_id/:gist_id', ensureAuthenticated, gist.editTagGi
 app.get('/api/gist/:gistId/comments', ensureAuthenticated, gist.getComments);
 app.post('/api/gist/:gistId/comments', ensureAuthenticated, gist.createComment);
 app.put('/api/gist/:gistId/comments/:id', ensureAuthenticated, gist.editComment);
+app.delete('/api/gist/:gistId/comments/:id', ensureAuthenticated, gist.deleteComment);
 app.get('/api/gist/friends', ensureAuthenticated, gist.getFriendsGist);
 app.get('/api/gist/tags', ensureAuthenticated, gist.getTags);
 app.get('/api/gists/:gistId', gist.getGistById);

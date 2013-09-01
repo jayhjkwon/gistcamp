@@ -20,17 +20,55 @@ define(function(require){
 			initialize: function(options){		
 				var self = this;		
 				this.gistItem = options.gistItem;
-				_.bindAll(this, 'onCommentDoubleClick', 'onCommentEditKeypress');
+				_.bindAll(this, 'onRender', 'onCommentClick', 'onCommentEditKeypress', 'onCommentHover', 'deleteComment');
 				this.spinner = new Spinner({length:5,lines:9,width:4,radius:4});
 			},
 			
 			events : {	
-				'dblclick .comment-text' : 'onCommentDoubleClick',
-				'blur .comment-edit'     : 'onCommentBlur',
-				'keydown .comment-edit'  : 'onCommentEditKeypress'
+				'click .comment-text'        : 'onCommentClick',
+				'blur .comment-edit'         : 'onCommentBlur',
+				'keydown .comment-edit'      : 'onCommentEditKeypress',
+				'click .btn-del-comment'     : 'deleteComment'
 			},
 
-			onCommentDoubleClick : function(e){
+			onRender: function(){
+				var self = this;
+				$(this.el).hover(this.onCommentHover, function(){
+					self.$el.find('.btn-del-comment').fadeOut(100);
+				});
+			},
+
+			onCommentHover: function(e){
+				var self = this;
+				if (!self.model || !self.model.get('user')) return;
+				if (self.model.get('user').id === global.user.id){
+					self.$el.find('.btn-del-comment').show();
+				}
+			},
+
+			deleteComment: function(){
+				var self = this;
+				
+				if (self.model.get('user').id !== global.user.id) return;
+
+				if (!self.deleting){
+		    		self.deleting = true;
+		    		self.loading(true, self.el);
+		    		self.$el.find('.btn-del-comment').attr('disabled', 'disabled');
+		    		var comment = new CommentItem({gistId: self.gistItem.id, id: self.model.get('id')});
+		    		comment.destroy()
+		    		.done(function(){
+		    			postalWrapper.publish(constants.COMMENT_DELETE, self.model.get('id'));
+		    		})
+		    		.always(function(){
+		    			self.deleting = false;
+		    			self.$el.find('.btn-del-comment').removeAttr('disabled');
+		    			self.loading(false);	
+		    		});
+		    	}
+			},
+
+			onCommentClick : function(e){
 				if (this.model.get('user').id === global.user.id){
 					$(e.target).hide().next('.comment-edit').show().focus().autoGrow();
 				}
@@ -65,7 +103,7 @@ define(function(require){
 
 			loading: function(showSpinner, el){
 				if (showSpinner){
-					var target = $(el).parents()[0];
+					var target = $(el)[0];
 					this.spinner.spin(target);
 				}else{					
 					this.spinner.stop();					

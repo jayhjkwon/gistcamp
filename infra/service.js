@@ -6,12 +6,27 @@ var github = new GitHubApi({
 	version: '3.0.0'
 });
 
-exports.getGitHubApi = function(req){
+var authenticate = function(req){
 	github.authenticate({
 		type: 'oauth',
 		token: req.user.access_token
 	});
+};
 
+var authenticateByAccessToken = function(accessToken){
+	github.authenticate({
+		type: 'oauth',
+		token: accessToken
+	});
+};
+
+exports.getGitHubApi = function(req){
+	authenticate(req);
+	return github;	
+};
+
+exports.getGitHubApiByAccessToken = function(accessToken){
+	authenticateByAccessToken(accessToken);
 	return github;	
 };
 

@@ -1,7 +1,14 @@
 <!DOCTYPE html>
-<html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
   <head>
+    <meta charset="utf-8">
+    <meta name="description" content="gist github">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title><%= title %></title>
+    <link rel="shortcut icon" href="images/logo_black.png">
     <link rel="stylesheet" href="vendor/bootstrap/docs/assets/css/bootstrap.css">
     <link rel='stylesheet' href="vendor/font-awesome/css/font-awesome.min.css">
     <% if (devMode === 'development') { %>
@@ -9,6 +16,7 @@
     <% }else{ %> 
       <link rel='stylesheet' href='styles/welcome.min.css?v=<%= appVersion %>' />
     <% } %>
+    <script src="vendor/modernizr/modernizr.js"></script>
   </head>
   <body>
     <div class="contents">
@@ -21,7 +29,7 @@
               The campground for the Geeks
             </p>
             <p class="power-font2">
-              "Create,  Share <span style="font-size:35px;">and</span> Enjoy GIST!"
+              Create,  Share <span style="font-size:35px;">and</span> Enjoy GIST!
             </p>
             <a href="/auth/github" >
               <p class="sign-in">
@@ -31,6 +39,8 @@
             <p class="power-font4">
                or learn more about how to enjoy GISTCAMP
             </p>
+            <div class="power-alert"><h1>Warning</h1>The GistCamp is in the testing stages at the moment. <br/>You could run into errors and downtime. <br/>We are going to release official version at the end of Septemper 2013.</div>
+            <!--[if lt IE 10]> <p class="power-ie"> Please use Chrome or Safari, we are working on IE </p> <![endif]-->
           </div>
       </div>
       <div id="div-features">
@@ -84,7 +94,12 @@
         </div> <!--end features2-->
       </div>
 
-      <div id="div-video"></div>
+      <div id="div-video">
+        <center>
+          <iframe id="demo-player" style="margin-top:150px;" width="800" height="480" frameborder="0" src="http://www.youtube.com/embed/OUMCoE1q_mE?modestbranding=1&autoplay=0" type="text/html"></iframe>
+        </center>
+      </div>
+<!-- 
       <div id="div-person">
         <p class="person-font">
           Let's Talk
@@ -102,7 +117,7 @@
                </p> 
           </div>
         </div>
-    </div>
+    </div> -->
 
     <div class="menu"> 
         <div class="menu-top"></div>  
@@ -116,9 +131,9 @@
           <div class="menu-video">
             <img src="images/icon3.png" class="img-video"/>
           </div>
-          <div class="menu-person">
+         <!--  <div class="menu-person">
             <img src="images/icon4.png" class="img-person"/>
-          </div>
+          </div> -->
         </div> 
         <div class="headers"> 
         <img src="images/logo.png" class="img-logo"/> 

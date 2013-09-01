@@ -22,6 +22,7 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 				global.user.login = result.login;
 				global.user.name = result.name;
 				global.user.avatar = result.avatar_url;
+				global.user.url = result.html_url;
 
 				callback(null, user);
 			});
@@ -116,70 +117,6 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 		});
 
 		Application.start();
-
-
-
-		$('.btn-comments').tooltip();
-
-
-	    // check if elem is visible
-	    var isScrolledIntoView = function(scrollElem, elem) {
-		    var docViewTop = $(scrollElem).scrollTop();
-		    var docViewBottom = docViewTop + $(scrollElem).height();
-
-		    var elemTop = $(elem).offset().top;
-		    var elemBottom = elemTop + $(elem).height();
-
-		    return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
-		};
-
-	    $(document).keydown(function(e){
-	    	var gistList, selectedGist, selectedGistIndex;
-	    	var keyCode = e.keyCode || e.which;
-
-	    	if (keyCode === 38 || keyCode === 40){
-	    		gistList = $('.gist-list .gist-item');
-	    		selectedGist = $('.gist-list .gist-item.selected');
-	    		selectedGistIndex = gistList.index(selectedGist);
-	    	}
-
-	    	switch (keyCode) 
-	    	{
-				case 38 : 	// arrow-up key
-		    		if (selectedGistIndex === 0)
-		    			return;
-
-		    		selectedGist.removeClass('selected');
-		    		var prevGist = gistList[selectedGistIndex - 1];
-		    		$(prevGist).addClass('selected');
-		    		$(prevGist).trigger('click');
-		    		// if (!isScrolledIntoView('.gist-list', '.gist-list .gist-item.selected'))
-		    			$('.gist-list').scrollTo($(prevGist), {offset:-20});		    		
-
-		    		break;
-				case 40 : 	// arrow-down key
-		    		if (gistList.length === (selectedGistIndex + 1))
-		    			return;
-
-		    		selectedGist.removeClass('selected');
-		    		var nextGist = gistList[selectedGistIndex + 1];
-		    		$(nextGist).addClass('selected');
-		    		$(nextGist).trigger('click');
-		    		// if (!isScrolledIntoView('.gist-list', '.gist-list .gist-item.selected'))
-		   				$('.gist-list').scrollTo($(nextGist), {offset:-20});	   				
-
-		   			break;
-				case 37 : 	// arrow-left key
-					if ( !$('#comment-input').val())
-						$('.btn-comments').trigger('click');
-					break;
-				case 39 : 	// arrow-right key
-					if (!$('#comment-input').val())
-						$('.btn-comments').trigger('click');
-					break;
-				default:
-					break;
-			}
-		});
+   
 	});
 });
