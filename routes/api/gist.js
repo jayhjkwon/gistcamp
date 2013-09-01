@@ -7,6 +7,7 @@ var
     service   = require('../../infra/service'),
     util      = require('../../infra/util'),
     User      = require('../../models/user'),
+    ChatContent      = require('../../models/chatContent'),
     mongoose  = require('mongoose')
 ;
 var cacheSeconds = 60 * 60 * 1 // 1 hour	
@@ -126,14 +127,28 @@ exports.getGistById = function(req, res){
 	
 	console.log('getGistById : ' + gistId);
 
-	github.gists.get({id : gistId}, 
-		function(err, data){	
-			console.log(err);
-			console.log(data);
+	// var getGistByid = function(gistId, callback) {
+		github.gists.get({id : gistId}, 
+			function(err, data){	
+				console.log(err);
+				console.log(data);
 
-			if (data) sendData(data, req, res);
-		}
-	);
+				if (data) {
+					ChatContent
+					.where('room_key', gistId)
+					.select()
+					.lean()
+					.exec(function(err, docs){
+						if (docs) {
+							data.content = docs;
+						}
+					});
+
+					sendData(data, req, res);
+				}
+			}
+		);
+	// };
 };
 
 exports.getStarredGists = function(req, res){

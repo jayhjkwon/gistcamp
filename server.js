@@ -11,7 +11,8 @@ var
 	GitHubStrategy = require('passport-github').Strategy,
     User     = require('./models/user'), 
     request  = require('request'),
-    service   = require('./infra/service')    
+    service   = require('./infra/service'),
+    chat     = require('./routes/chat')    
 ;
 
 
@@ -157,8 +158,10 @@ app.put('/api/user/following/:login_id', ensureAuthenticated, user.follow);
 app.delete('/api/user/following/:login_id', ensureAuthenticated, user.unfollow);
 
 
-var server = http.createServer(app)
-	, io = require('socket.io').listen(server);
+var server = http.createServer(app);
+io = require('socket.io').listen(server);
+
+chat.start(io);
 
 server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
@@ -168,147 +171,3 @@ server.listen(app.get('port'), function(){
 //  console.log('Express server listening on port ' + app.get('port'));
 // });
 
-Array.prototype.removeById = function(val) {
-    for(var i=0; i<this.length; i++) {
-        if(this[i].id == val) {
-            this.splice(i, 1);
-            break;
-        }
-    }
-}
-
-// usernames which are currently connected to the chat
-var usernames = {};
-
-// rooms which are currently available in chat
-var rooms = {};
-
-io.sockets.on('connection', function (socket) {
-
-	// when the client emits 'adduser', this listens and executes
-	socket.on('adduser', function(user){
-		// store the username in the socket session for this client
-		socket.userid = user.id;
-		// store the room name in the socket session for this client
-		//socket.room = 'room1';
-		// add the client's username to the global list
-		user.socketid = socket.id;
-		usernames[user.id] = user;
-		// send client to room 1
-		// socket.join('room1');
-		// echo to client they've connected
-		// socket.emit('updatechat', 'SERVER', 'you have connected to room1');
-		// echo to room 1 that a person has connected to their room
-		// socket.broadcast.to('room1').emit('updatechat', 'SERVER', username + ' has connected to this room');
-		// socket.emit('updaterooms', rooms, 'room1');
-		
-	});
-
-	socket.on('getrooms', function() {
-		socket.emit('updaterooms', rooms);
-	});
-	
-	socket.on('addroom', function(roomname){
-		socket.room = roomname;
-
-		if (rooms[roomname] == undefined) {
-		    rooms[roomname] = new Array();
-		}
-
-		rooms[roomname].push(usernames[socket.userid]);
-		
-		console.log('addroom length ' + rooms[roomname].length);
-
-		socket.join(roomname);
-
-		socket.emit('updatechat', 'SERVER', 'connected to ' + roomname + ' gist room');
-		// socket.broadcast.to(roomname).emit('updatechat', 'SERVER', socket.username + ' has joined this room');
-		socket.broadcast.emit('updaterooms', rooms);
-	});
-
-	// when the client emits 'sendchat', this listens and executes
-	socket.on('sendchat', function (data) {
-		// we tell the client to execute 'updatechat' with 2 parameters
-		io.sockets.in(socket.room).emit('updatechat', usernames[socket.userid], data);
-
-		//io.sockets.socket(socket.id).emit('updatealarm', usernames[socket.userid], data);
-	});
-
-	socket.on('sendalarm', function (userid, data) {
-		var receiver = usernames[userid];
-		if (receiver != undefined) {
-			io.sockets.socket(receiver.socketid).emit('updatealarm', usernames[socket.userid], data);
-		}
-	});
-	
-	socket.on('switchRoom', function(newroom) {
-		if (rooms[socket.room] != undefined) {	
-			socket.leave(socket.room);
-			rooms[socket.room].removeById(socket.userid);	
-
-			socket.broadcast.to(socket.room).emit('updatechat', 'SERVER', usernames[socket.userid].login + ' has left this room');
-
-			if (rooms[socket.room].length == 0) {
-				delete rooms[socket.room];
-				socket.broadcast.emit('deleteroom', socket.room)
-			}
-		}
-
-		if (rooms[newroom] == undefined) {
-		    rooms[newroom] = new Array();
-		}
-
-		rooms[newroom].push(usernames[socket.userid]);
-		
-		socket.join(newroom);
-		//socket.emit('updatechat', 'SERVER', 'you have connected to '+ newroom);
-		// sent message to OLD room
-		
-		// update socket session room title
-		socket.room = newroom;
-		socket.broadcast.to(newroom).emit('updatechat', 'SERVER', usernames[socket.userid].login + ' has joined this room');
-		socket.emit('updaterooms', rooms);
-		socket.broadcast.emit('updaterooms', rooms);
-		
-	});
-
-	socket.on('leaveRoom', function(leaveRoom) {
-		if (rooms[leaveRoom] != undefined) {
-			socket.leave(leaveRoom);
-			rooms[leaveRoom].removeById(socket.userid);
-
-			if (rooms[leaveRoom].length == 0) {
-				delete rooms[leaveRoom];
-				socket.broadcast.emit('deleteroom', leaveRoom);
-			}	
-
-			if (usernames[socket.userid] != undefined) {
-				socket.broadcast.to(leaveRoom).emit('updatechat', 'SERVER', usernames[socket.userid].login + ' has left this room');	
-			}
-
-			socket.broadcast.emit('updaterooms', rooms);
-		}
-	});
-	
-	// when the user disconnects.. perform this
-	socket.on('disconnect', function(){
-		// remove the username from global usernames list
-		var userid = socket.userid;
-		delete usernames[socket.userid];
-		// update list of users in chat, client-side
-		// io.sockets.emit('updateusers', usernames[socket.userid]);
-		// echo globally that this client has left
-		// socket.broadcast.emit('updatechat', 'SERVER', userid + ' has disconnected');
-		
-		if (socket.room != undefined && rooms[socket.room] != undefined) {
-			socket.leave(socket.room);
-			rooms[socket.room].removeById(socket.userid);	
-			if (rooms[socket.room].length == 0) {				
-				delete rooms[socket.room];
-				socket.broadcast.emit('deleteroom', socket.room);
-			}
-
-			socket.broadcast.emit('updaterooms', rooms);
-		}
-	});
-});

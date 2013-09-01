@@ -54,13 +54,15 @@ define(function(require){
 		    		var chatItem = new ChatItem({'gistId': key});
 		    		chatItem.fetch()
 		    		.done(function(res) {
+		    						
 		    			var isUpdated = false;
 
 			    		for (var index = self.collection.models.length - 1; index >= 0; index--) {
 		    				if (self.collection.models[index].id === key) {
-	    						// if (_.size(res.data['room']) != _.size(self.rooms[key])) {
-	    							res.data['room'] = self.rooms[key];
-									self.collection.reset(res.data);
+	    							// if (_.size(res.data['room']) != _.size(self.rooms[key])) {
+	    						res.data['room'] = self.rooms[key];
+								self.collection.reset(res.data);
+								
 									isUpdated = true;	
 	    						// }
 		    				}
