@@ -71,10 +71,12 @@ define(function(require){
 		    			postalWrapper.publish(constants.COMMENT_ADD, data);
 
 		    			// send alarm
-		    			var msg = global.user.name + ' just commented on your gist(' + self.selectedGistItem.description + ') ';
-		    			msg = msg + '</br>';
-		    			msg = text.length > 50 ? msg + '"' + text.substring(0,50) + '.."' : msg + '"' + text + '"';
-		    			global.socket.emit('sendalarm', self.selectedGistItem.user.id, msg);
+		    			if (self.selectedGistItem.user.id !== global.user.id){
+			    			var msg = global.user.name + ' just commented on your gist(' + self.selectedGistItem.description + ') ';
+			    			msg = msg + '</br>';
+			    			msg = text.length > 50 ? msg + '"' + text.substring(0,50) + '.."' : msg + '"' + text + '"';
+			    			global.socket.emit('sendalarm', self.selectedGistItem.user.id, msg);
+			    		}
 		    		})
 		    		.always(function(){
 		    			self.saving = false;
