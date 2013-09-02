@@ -104,12 +104,13 @@ passport.use(new GitHubStrategy({
       				userToSave.followings = followings;
       				cb(null);
       			});
-      		}/*,
+      		},
       		function(cb){
-      			// TODO : get ALL starred gists and save it to the DB
-      			cb(null);
-      		}*/
-
+            gist.getAllStarredGists(null, null, accessToken, function(allStarredGists){
+              userToSave.starred_gists = allStarredGists;
+              cb(null);
+            });      			
+      		}
       	],
       		function(err, results){
       			User.findOneAndUpdate({id: userToSave.id}, userToSave, {upsert:true}, function(err, userInfo){

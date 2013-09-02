@@ -210,7 +210,7 @@ exports.getStarredGists = function(req, res){
 	console.log('getStarredGists');
 	var linkHeader = req.param('linkHeader');
 	if (!linkHeader){
-		github.gists.starred({per_page: config.options.perPage || 30}, 
+		github.gists.starred({}, 
 			function(err, data){		
 				if (data) sendData(data, req, res);
 			}
@@ -218,6 +218,58 @@ exports.getStarredGists = function(req, res){
 	}else{
 		getNextPage(linkHeader, req, res);
 	}
+};
+var addStarredGists = function(gists, containerArray){
+	var gistIds = _.pluck(gists, 'id');			
+	_.each(gistIds, function(gistId){
+		containerArray.push(gistId);
+	});
+};
+
+var getStarredGistsByPage = function(github, containerArray, isFirstPage, linkHeader, callback){
+	if (isFirstPage){
+		github.gists.starred({}, function(err, data){
+			if (data){
+				addStarredGists(data, containerArray);
+
+				if (github.hasNextPage(data)){
+					var linkHeader = data.meta ? data.meta.link ? data.meta.link : null : null
+					getStarredGistsByPage(github, containerArray, false, linkHeader, callback);
+				}else{
+					callback(containerArray);
+				}
+			}else{
+				callback(containerArray);
+			}
+		});
+	}else{
+		github.getNextPage(linkHeader,
+			function(err, data){		
+				if (data) {
+					addStarredGists(data, containerArray);
+					var linkHeader = data.meta ? data.meta.link ? data.meta.link : null : null
+					getStarredGistsByPage(github, containerArray, false, linkHeader, callback);
+				}else{
+					callback(containerArray);		
+				}
+			}
+		);		
+	}
+	
+};
+
+exports.getAllStarredGists = function(req, res, accessToken, callback){
+	var allGists = [];
+	var github;
+
+	if(accessToken)
+		github = service.getGitHubApiByAccessToken(accessToken);
+	else
+		github = service.getGitHubApi(req);
+
+	getStarredGistsByPage(github, allGists, true, null, function(result){
+		callback(result);
+	});
 };
 
 exports.getGistListByTag = function(req, res){

@@ -71,7 +71,6 @@ exports.getAllFollowings = function(req, res, accessToken, callback){
 		github = service.getGitHubApi(req);
 
 	getAllFollowings(github, 1, 100, followings, function(result){
-		var a = result;
 		callback(result);
 	});
 };
