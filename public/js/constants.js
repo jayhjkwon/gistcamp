@@ -12,7 +12,7 @@ define(function(){
 		channels            : {
 			APPLICATION     : 'APPLICATION'
 		},
-		GIST_BY_ID : 'GIST_BY_ID',
+		GIST_BY_ID          : 'GIST_BY_ID',
 		CHAT_UPDATE_ROOM    : 'CHAT_UPDATE_ROOM',
 		CHAT_CREATE_ROOM    : 'CHAT_CREATE_ROOM',
 		TAG_CHANGED         : 'TAG_CHANGED',
@@ -22,6 +22,7 @@ define(function(){
 		USER_UNFOLLOW       : 'USER_UNFOLLOW',
 		CHAT_DELETE_ROOM    : 'CHAT_DELETE_ROOM',
 		COMMENT_DELETE      : 'COMMENT_DELETE',
-		COMMENT_ADD         : 'COMMENT_ADD'
+		COMMENT_ADD         : 'COMMENT_ADD',
+		GIST_STAR_CHANGED   : 'GIST_STAR_CHANGED'
 	}
 });

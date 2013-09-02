@@ -54,6 +54,16 @@ define(function(require){
 				});
 			
 			return xhr;	
+		},
+
+		deleteStar = function(gistId){
+			var xhr =
+				$.ajax({
+					type: 'DELETE',
+					url: '/api/gist/star/' + gistId
+				});
+			
+			return xhr;	
 		}		
 	;
 
@@ -61,6 +71,7 @@ define(function(require){
 		getFileContent   : getFileContent,
 		editTagGist      : editTagGist,
 		getServerOptions : getServerOptions,
-		setStar          : setStar
+		setStar          : setStar,
+		deleteStar       : deleteStar
 	};
 });

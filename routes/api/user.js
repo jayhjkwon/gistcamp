@@ -35,7 +35,7 @@ exports.unfollow = function(req, res){
 	var userId = service.getUserId(req);
 	
 	github.user.unFollowUser({user:login}, function(err, data){
-		User.update({id:userId}, {$addToSet:{followings:login}}, {}, function(err, numberAffected, raw){
+		User.update({id:userId}, {$pull:{followings:login}}, {}, function(err, numberAffected, raw){
 			res.send(data);	
 		});		
 	});

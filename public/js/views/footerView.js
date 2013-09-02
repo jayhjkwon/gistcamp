@@ -110,12 +110,34 @@ define(function(require){
 			},
 
 			star: function(e){
-				service.setStar(this.selectedGistItem.id).done(function(data){
-					$('.starred-success').removeClass('starred-success-hide starred-success-show').addClass('starred-success-show');
+				var self = this;
+				if (self.selectedGistItem.is_starred){
+					service.deleteStar(this.selectedGistItem.id).done(function(data){
+						self.selectedGistItem.is_starred = false;
+						self.showStarActionMessage(false);
+						postalWrapper.publish(constants.GIST_STAR_CHANGED, self.selectedGistItem);		
+					});	
+				}else{
+					service.setStar(this.selectedGistItem.id).done(function(data){
+						self.selectedGistItem.is_starred = true;
+						self.showStarActionMessage(true);
+						postalWrapper.publish(constants.GIST_STAR_CHANGED, self.selectedGistItem);		
+					});	
+				}						
+			},
+
+			showStarActionMessage: function(isStarred){
+				if (isStarred){
+					$('.starred-success').text('Starred Successfully').removeClass('starred-success-hide starred-success-show').addClass('starred-success-show');
 					setTimeout(function(){
 						$('.starred-success').removeClass('starred-success-hide starred-success-show').addClass('starred-success-hide');
 					}, 2000);
-				});
+				}else{
+					$('.starred-success').text('Unstarred Successfully').removeClass('starred-success-hide starred-success-show').addClass('starred-success-show');
+					setTimeout(function(){
+						$('.starred-success').removeClass('starred-success-hide starred-success-show').addClass('starred-success-hide');
+					}, 2000);
+				}				
 			},
 
 			onBtnCommentClick: function(e){

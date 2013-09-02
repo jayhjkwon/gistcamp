@@ -17,11 +17,12 @@ define(function(require){
 
 			initialize: function(){
 				var self = this;
-				_.bindAll(this, 'onGistItemSelected', 'onTagChanged', 'onClose', 'setIsSelectedGistFalse', 'onFollowUserClicked', 'onCommentDeleted', 'onCommentAdded');
+				_.bindAll(this, 'onGistItemSelected', 'onTagChanged', 'onClose', 'setIsSelectedGistFalse', 'onFollowUserClicked', 'onCommentDeleted', 'onCommentAdded', 'onStarChanged');
 				this.subscription = postalWrapper.subscribe(constants.TAG_CHANGED, this.onTagChanged);
 				this.subscriptionRemoveIsSelected = postalWrapper.subscribe(constants.REMOVE_IS_SELECTED, this.setIsSelectedGistFalse);
 				this.subscriptionDeleteComment = postalWrapper.subscribe(constants.COMMENT_DELETE, this.onCommentDeleted);
 				this.subscriptionAddComment = postalWrapper.subscribe(constants.COMMENT_ADD, this.onCommentAdded);
+				this.subscriptionStar = postalWrapper.subscribe(constants.GIST_STAR_CHANGED, this.onStarChanged);
 			},
 			
 			events : {
@@ -114,6 +115,22 @@ define(function(require){
 					self.render();
 					self.ui.btnFollow.show();
 				}
+			},
+
+			onStarChanged: function(gist){
+				var self = this;
+				if (!self.isSelectedGist) return;
+
+				self.model.set('is_starred', gist.is_starred);
+
+				setTimeout(function(){
+					if(gist.is_starred){
+						self.$el.find('.span9').prepend('<i class="is-starred icon-star"></i>');
+					}else{
+						self.$el.find('.is-starred').remove();
+					}
+				}, 100);
+				
 			},
 
 			onClose: function(){

@@ -158,6 +158,7 @@ app.get('/api/gist/public', ensureAuthenticated, gist.getPublicGists);
 app.get('/api/gist/user/:login_name', ensureAuthenticated, gist.getGistListByUser);
 app.get('/api/gist/starred', ensureAuthenticated, gist.getStarredGists);
 app.post('/api/gist/star/:gist_id', ensureAuthenticated, gist.setStar);
+app.delete('/api/gist/star/:gist_id', ensureAuthenticated, gist.deleteStar);
 app.get('/api/gist/rawfiles', ensureAuthenticated, gist.getRawFiles);
 app.get('/api/gist/rawfile', ensureAuthenticated, gist.getRawFile);
 app.get('/api/gist/tagged/:tag_id', ensureAuthenticated, gist.getGistListByTag);
