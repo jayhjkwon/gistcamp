@@ -31,7 +31,7 @@ node server
 
 Then go to `http://localhost:3000` in your browser.
 
-If you do not want to install the gistcamp on your machine just come to the [GistCamp](http://gistcamp.com)
+If you do not want to install the gistcamp on your machine just come to the [http://gistcamp.com](http://gistcamp.com)
 
 ## License
 
