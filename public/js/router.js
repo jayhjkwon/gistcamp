@@ -5,7 +5,7 @@ define(function(require){
 
 		Router = Marionette.AppRouter.extend({
 			appRoutes: {
-				''            : 'myGists',
+				''            : 'friends',
 				'friends'     : 'friends',
 				'mygists'     : 'myGists',
 				'starred'     : 'starred',

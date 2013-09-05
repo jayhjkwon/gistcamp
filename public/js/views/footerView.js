@@ -15,11 +15,11 @@ define(function(require){
 		Router          = require('router'),
 		Spinner         = require('spin'),
 		service         = require('service'),
+		GistItem        = require('models/gistItem'),
 
 		FooterView = Marionette.ItemView.extend({
 			className: 'command-buttons',
 			template : footerTemplate,
-			selectedGistItem : {},
 
 			initialize: function(){
 				_.bindAll(this, 'shareGg', 'shareFB', 'shareTW', 'shareFB', 'initializePopOverTag', 'onItemSelected', 'star', 'createTag', 'loading', 'onBtnCommentClick', 'onRoomCreated', 'tagOnGist', 'onCommentDeleted', 'onCommentAdded');
@@ -77,7 +77,7 @@ define(function(require){
 		    		self.loading(true, e.target);
 		    		
 		    		var text = $(e.target).val();
-		    		var tag = new TagItem({gistId: self.selectedGistItem.id, tagName:text});
+		    		var tag = new TagItem({gistId: self.model.get('id'), tagName:text});
 		    		tag.save()
 		    		.done(function(data){
 		    			self.tags.reset(data);	    						    			
@@ -98,7 +98,7 @@ define(function(require){
 				
 				var tagId = $(e.target).data('tag-id');
 				var tagName = $(e.target).data('tag-name');
-				var gistId = this.selectedGistItem.id;
+				var gistId = this.model.get('id');
 
 				service.editTagGist(tagId, gistId).done(function(data){
 					self.tags.reset(data);
@@ -111,17 +111,17 @@ define(function(require){
 
 			star: function(e){
 				var self = this;
-				if (self.selectedGistItem.is_starred){
-					service.deleteStar(this.selectedGistItem.id).done(function(data){
-						self.selectedGistItem.is_starred = false;
+				if (self.model.get('is_starred')){
+					service.deleteStar(this.model.get('id')).done(function(data){
+						self.model.set('is_starred', false);
 						self.showStarActionMessage(false);
-						postalWrapper.publish(constants.GIST_STAR_CHANGED, self.selectedGistItem);		
+						postalWrapper.publish(constants.GIST_STAR_CHANGED, self.model.toJSON());		
 					});	
 				}else{
-					service.setStar(this.selectedGistItem.id).done(function(data){
-						self.selectedGistItem.is_starred = true;
+					service.setStar(this.model.get('id')).done(function(data){
+						self.model.set('is_starred', true);
 						self.showStarActionMessage(true);
-						postalWrapper.publish(constants.GIST_STAR_CHANGED, self.selectedGistItem);		
+						postalWrapper.publish(constants.GIST_STAR_CHANGED, self.model.toJSON());		
 					});	
 				}						
 			},
@@ -170,14 +170,14 @@ define(function(require){
 			
 			onRoomCreated : function(e){
 				var self = this;
-				global.socket.emit('addroom', self.selectedGistItem.id);
+				global.socket.emit('addroom', self.model.get('id'));
 				self.router.navigate('chat', {trigger: true});
 				
-				postalWrapper.publish(constants.CHAT_CREATE_ROOM, self.selectedGistItem);
+				postalWrapper.publish(constants.CHAT_CREATE_ROOM, self.model.toJSON());
 			},
 
 			onItemSelected : function(gistItem){
-				this.selectedGistItem = gistItem;
+				this.model = new GistItem(gistItem);
 				if (gistItem && gistItem.comments > 0){
 					$('.comments-badge').text(gistItem.comments).show();
 				}else{
@@ -187,23 +187,23 @@ define(function(require){
 
 			onCommentDeleted: function(commentId){
 				var self = this;
-				if (self.selectedGistItem && self.selectedGistItem.comments - 1 > 0){
-					self.selectedGistItem.comments = self.selectedGistItem.comments - 1;
-					$('.comments-badge').text(self.selectedGistItem.comments).show();
+				if (self.model && self.model.get('comments') - 1 > 0){
+					self.model.set('comments', self.model.get('comments') - 1);
+					$('.comments-badge').text(self.model.get('comments')).show();
 				}else{
-					self.selectedGistItem.comments = 0;
+					self.model.set('comments', 0);
 					$('.comments-badge').text('').hide();
 				}	
 			},
 
 			onCommentAdded:  function(comment){
 				var self = this;
-				if (self.selectedGistItem && self.selectedGistItem.comments > 0){
-					self.selectedGistItem.comments = self.selectedGistItem.comments + 1;
-					$('.comments-badge').text(self.selectedGistItem.comments).show();
+				if (self.model && self.model.get('comments') > 0){
+					self.model.set('comments', self.model.get('comments') + 1);
+					$('.comments-badge').text(self.model.get('comments')).show();
 				}else{
-					self.selectedGistItem.comments = 1;
-					$('.comments-badge').text(self.selectedGistItem.comments).show();
+					self.model.set('comments', 1);
+					$('.comments-badge').text(self.model.get('comments')).show();
 				}	
 			},
 
@@ -217,21 +217,21 @@ define(function(require){
 			},
 
 			shareFB : function(){
-				var gistUrl = this.selectedGistItem.html_url;
+				var gistUrl = this.model.get('html_url');
 				var url = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(gistUrl);
 				var title = 'GistCamp';
 				this.popupWindow(url, title, '626', '436');
 			},
 
 			shareTW : function(){
-				var gistUrl = this.selectedGistItem.html_url;
+				var gistUrl = this.model.get('html_url');
 				var url = 'https://twitter.com/intent/tweet?via=gistcamp&url=' + encodeURIComponent(gistUrl);
 				var title = 'GistCamp';
 				this.popupWindow(url, title, '473', '258');	
 			},
 
 			shareGg : function(){
-				var gistUrl = this.selectedGistItem.html_url;
+				var gistUrl = this.model.get('html_url');
 				var url = 'https://plus.google.com/share?url=' + encodeURIComponent(gistUrl);
 				var title = 'GistCamp';
 				this.popupWindow(url, title, '473', '216');	
