@@ -156,24 +156,31 @@ app.get('/logout', function(req, res){
 app.get('/api/server/options', ensureAuthenticated, function(req, res){ res.send(config.options);});
 app.get('/api/gist/public', ensureAuthenticated, gist.getPublicGists);
 app.get('/api/gist/user/:login_name', ensureAuthenticated, gist.getGistListByUser);
+
+app.get('/api/gists/:gistId', gist.getGistById);
+app.get('/api/gist/friends', ensureAuthenticated, gist.getFriendsGist);
 app.get('/api/gist/starred', ensureAuthenticated, gist.getStarredGists);
 app.post('/api/gist/star/:gist_id', ensureAuthenticated, gist.setStar);
 app.delete('/api/gist/star/:gist_id', ensureAuthenticated, gist.deleteStar);
+
 app.get('/api/gist/rawfiles', ensureAuthenticated, gist.getRawFiles);
 app.get('/api/gist/rawfile', ensureAuthenticated, gist.getRawFile);
+
 app.get('/api/gist/tagged/:tag_id', ensureAuthenticated, gist.getGistListByTag);
-app.put('/api/gist/tagged/:tag_id/:gist_id', ensureAuthenticated, gist.editTagGist);
+app.put('/api/gist/tagged/:tag_id/:gist_id', ensureAuthenticated, gist.setTagOnGist);
+app.delete('/api/gist/tagged/:tag_id/:gist_id', ensureAuthenticated, gist.deleteTagOnGist);
+
 app.get('/api/gist/:gistId/comments', ensureAuthenticated, gist.getComments);
 app.post('/api/gist/:gistId/comments', ensureAuthenticated, gist.createComment);
 app.put('/api/gist/:gistId/comments/:id', ensureAuthenticated, gist.editComment);
 app.delete('/api/gist/:gistId/comments/:id', ensureAuthenticated, gist.deleteComment);
-app.get('/api/gist/friends', ensureAuthenticated, gist.getFriendsGist);
+
 app.get('/api/gist/tags', ensureAuthenticated, gist.getTags);
-app.get('/api/gists/:gistId', gist.getGistById);
 app.get('/api/gist/tags/:id', ensureAuthenticated, gist.getGistsByTag);
 app.post('/api/gist/tags', ensureAuthenticated, gist.createTag);
 app.put('/api/gist/tags/:id', ensureAuthenticated, gist.editTag);
 app.delete('/api/gist/tags/:id', ensureAuthenticated, gist.removeTag);
+
 app.post('/api/gist/newgist', ensureAuthenticated, gist.createNewgGist);
 app.get('/api/user/auth', ensureAuthenticated, user.getAuthUser);
 app.put('/api/user/following/:login_id', ensureAuthenticated, user.follow);
