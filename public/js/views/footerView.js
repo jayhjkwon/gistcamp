@@ -22,7 +22,7 @@ define(function(require){
 			template : footerTemplate,
 
 			initialize: function(){
-				_.bindAll(this, 'shareGg', 'shareFB', 'shareTW', 'shareFB', 'initializePopOverTag', 'onItemSelected', 'star', 'createTag', 'loading', 'onBtnCommentClick', 'onRoomCreated', 'tagOnGist', 'onCommentDeleted', 'onCommentAdded');
+				_.bindAll(this, 'shareGg', 'shareFB', 'shareTW', 'shareFB', 'initializePopOverTag', 'onItemSelected', 'star', 'createTag', 'loading', 'onBtnCommentClick', 'onRoomCreated', 'tagOnGist', 'onCommentDeleted', 'onCommentAdded', 'onTagCollectionChange');
 
 				this.tags = new TagItemList();
 
@@ -39,7 +39,7 @@ define(function(require){
 				'click .btn-reload'      : 'onReloadClick',
 				'click .btn-chats'       : 'onRoomCreated',
 				'keydown #new-tag'       : 'createTag',
-				'click .add-tag ul li a' : 'tagOnGist',
+				'click .tag-popup ul li a' : 'tagOnGist',
 				'click .btn-star'        : 'star',
 				'click .btn-fb'          : 'shareFB',
 				'click .btn-tw'          : 'shareTW',
@@ -65,8 +65,27 @@ define(function(require){
 				this.tags.fetch();	
 			},
 
-			onTagCollectionChange: function(tags){
-				$('.tag-area').html(tagListTemplate({tags: this.tags.toJSON()}));
+			onTagCollectionChange: function(event_name){
+				var self = this;
+
+				//get tags for the selected gist
+				if (self.model){
+					var tagNames = 	self.model.get('tags');
+					self.tags.each(function(tag){
+						var exist = _.contains(tagNames, tag.get('tag_name'));
+						if (exist) 
+							tag.set('is_tagged', true);
+						else
+							tag.set('is_tagged', false);
+					});
+				}
+
+				// refresh only tag popup contents
+				if ($('.tag-popup').length){
+					self.$el.find('.tag-popup').replaceWith(tagListTemplate({tags: self.tags.toJSON()}));
+				}else{
+					$('.tag-area').html(tagListTemplate({tags: self.tags.toJSON()}));	
+				}
 			},
 
 			createTag: function(e){
@@ -183,6 +202,9 @@ define(function(require){
 				}else{
 					$('.comments-badge').text('').hide();
 				}
+
+				// force refresh tag popup contents
+				this.onTagCollectionChange();
 			},
 
 			onCommentDeleted: function(commentId){

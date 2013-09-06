@@ -1,7 +1,14 @@
-<div class="add-tag">
+<div class="tag-popup">
 	<ul>
 		{{#each tags}}
-	  	<li><a href="#" data-tag-id="{{_id}}" data-tag-name="{{tag_name}}">{{tag_name}}</a></li> 
+	  	<li>
+	  		<span class="icon-holder">
+	  		{{#if is_tagged}}
+	  		<i class="icon-ok"></i>
+	  		{{/if}}
+	  		</span>
+	  		<a href="#" data-tag-id="{{_id}}" data-tag-name="{{tag_name}}">{{tag_name}}</a>
+	  	</li> 
 	  	{{/each}}
 	  <li><input id="new-tag" type="text" placeholder="Create New Tag" /></li> 
 	</ul> 
