@@ -638,7 +638,7 @@ exports.createTag = function(req, res){
 	});
 };
 
-exports.editTagGist = function(req, res){
+exports.setTagOnGist = function(req, res){
 	var tagId = req.params.tag_id;
 	var gistId = req.params.gist_id;
 	var userId = service.getUserId(req);
@@ -666,6 +666,38 @@ exports.editTagGist = function(req, res){
 					});					
 				}
 			);	
+		}
+	});
+};
+
+exports.deleteTagOnGist = function(req, res){
+	var tagId = req.params.tag_id;
+	var gistId = req.params.gist_id;
+	var userId = service.getUserId(req);
+
+	User.find({id:userId}).select('tags').lean().exec(function(err, docs){
+		var tags = docs[0].tags;
+
+		var tagCnt = _.find(tags, function(tag){
+			return tag._id.toString() === tagId;
+		});
+
+		var gistCnt = _.find(tagCnt.gists, function(gist){
+			return gist.gist_id === gistId;
+		});
+
+		if (gistCnt){
+			User.update(
+				{id:userId, 'tags._id':mongoose.Types.ObjectId(tagId)}, 
+				{$pull: {'tags.$.gists' : {'gist_id':gistId}}}, 
+				function(err, numberAffected, rawResponse){
+					User.find({id:userId}).select('tags').lean().exec(function(err, docs){
+						res.send(docs[0].tags);
+					});					
+				}
+			);	
+		}else{
+			res.send(tags);
 		}
 	});
 };

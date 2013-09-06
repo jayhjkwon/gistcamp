@@ -77,15 +77,15 @@ define(function(require){
 							tag.set('is_tagged', true);
 						else
 							tag.set('is_tagged', false);
-					});
-				}
 
-				// refresh only tag popup contents
-				if ($('.tag-popup').length){
-					self.$el.find('.tag-popup').replaceWith(tagListTemplate({tags: self.tags.toJSON()}));
-				}else{
-					$('.tag-area').html(tagListTemplate({tags: self.tags.toJSON()}));	
-				}
+						// refresh only tag popup contents
+						if ($('.tag-popup').length){
+							self.$el.find('.tag-popup').replaceWith(tagListTemplate({tags: self.tags.toJSON()}));
+						}else{
+							$('.tag-area').html(tagListTemplate({tags: self.tags.toJSON()}));	
+						}
+					});
+				}				
 			},
 
 			createTag: function(e){
@@ -118,14 +118,36 @@ define(function(require){
 				var tagId = $(e.target).data('tag-id');
 				var tagName = $(e.target).data('tag-name');
 				var gistId = this.model.get('id');
+				var isTagged = $(e.target).data('is-tagged');
 
-				service.editTagGist(tagId, gistId).done(function(data){
-					self.tags.reset(data);
-					postalWrapper.publish(constants.TAG_CHANGED, self.tags.toJSON());
-					$(e.target).find('span.tag-saved-msg').remove();
-					$(e.target).append('<span class="pull-right tag-saved-msg">Tagged</span>');
-					$('.tag-saved-msg').fadeOut(4000);
-				});
+				if (!isTagged){
+					service
+					.setTagOnGist(tagId, gistId)
+					.done(function(data){
+						var tags = self.model.get('tags');
+						tags.push(tagName);
+						self.model.set('tags', tags);
+						
+						self.tags.reset(data);
+						postalWrapper.publish(constants.TAG_CHANGED, self.tags.toJSON());
+						$(e.target).find('span.tag-saved-msg').remove();
+						$(e.target).append('<span class="pull-right tag-saved-msg">Tagged</span>');
+						$('.tag-saved-msg').fadeOut(4000);
+					});
+				}else{
+					service
+					.deleteTagOnGist(tagId, gistId)
+					.done(function(data){
+						var tags = self.model.get('tags');
+						self.model.set('tags', _.without(tags, tagName));
+
+						self.tags.reset(data);
+						postalWrapper.publish(constants.TAG_CHANGED, self.tags.toJSON());
+						$(e.target).find('span.tag-saved-msg').remove();
+						$(e.target).append('<span class="pull-right tag-saved-msg">Untagged</span>');
+						$('.tag-saved-msg').fadeOut(4000);
+					});
+				}
 			},
 
 			star: function(e){

@@ -26,10 +26,20 @@ define(function(require){
 			return xhr;
 		},
 
-		editTagGist= function(tagId, gistId){
+		setTagOnGist= function(tagId, gistId){
 			var xhr =
 				$.ajax({
 					type: 'PUT',
+					url: '/api/gist/tagged/' + tagId + '/' + gistId
+				});
+			
+			return xhr;	
+		},
+
+		deleteTagOnGist= function(tagId, gistId){
+			var xhr =
+				$.ajax({
+					type: 'DELETE',
 					url: '/api/gist/tagged/' + tagId + '/' + gistId
 				});
 			
@@ -69,7 +79,8 @@ define(function(require){
 
 	return {
 		getFileContent   : getFileContent,
-		editTagGist      : editTagGist,
+		setTagOnGist     : setTagOnGist,
+		deleteTagOnGist  : deleteTagOnGist,
 		getServerOptions : getServerOptions,
 		setStar          : setStar,
 		deleteStar       : deleteStar
