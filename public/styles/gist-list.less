@@ -49,7 +49,7 @@ body {
 	// border:solid 2px #eee;
 	margin-bottom:15px;
 	height: 100%;
-	
+	position:relative;
 	/*&.selected {
 		background-color: #008641 !important;
 		color:#fff;
@@ -104,11 +104,17 @@ body {
 			word-break: break-all;
 			line-height: 12px;
 			margin-bottom:5px;
-		}		
+		}	
+
 	}
 
 	.is-starred{
-		margin:5px 0 0 10px;
+		position:absolute;
+		top:3px;
+		right:3px;
+		color:#da4f49;
+		z-index: 10;
+		font-size:13px;
 	}
 
 	.follow-user{
@@ -145,7 +151,7 @@ body {
 }
 
 pre {
-	background-color: #fff !important;
+	// background-color: #fff !important;
 	font-size: 12px !important;
 	// change line number font besides codes
 	ol {

@@ -15,14 +15,14 @@ define(function(require){
 		Router          = require('router'),
 		Spinner         = require('spin'),
 		service         = require('service'),
+		GistItem        = require('models/gistItem'),
 
 		FooterView = Marionette.ItemView.extend({
 			className: 'command-buttons',
 			template : footerTemplate,
-			selectedGistItem : {},
 
 			initialize: function(){
-				_.bindAll(this, 'shareGg', 'shareFB', 'shareTW', 'shareFB', 'initializePopOverTag', 'onItemSelected', 'star', 'createTag', 'loading', 'onBtnCommentClick', 'onRoomCreated', 'tagOnGist', 'onCommentDeleted', 'onCommentAdded');
+				_.bindAll(this, 'shareGg', 'shareFB', 'shareTW', 'shareFB', 'initializePopOverTag', 'onItemSelected', 'star', 'createTag', 'loading', 'onBtnCommentClick', 'onRoomCreated', 'tagOnGist', 'onCommentDeleted', 'onCommentAdded', 'onTagCollectionChange');
 
 				this.tags = new TagItemList();
 
@@ -39,7 +39,7 @@ define(function(require){
 				'click .btn-reload'      : 'onReloadClick',
 				'click .btn-chats'       : 'onRoomCreated',
 				'keydown #new-tag'       : 'createTag',
-				'click .add-tag ul li a' : 'tagOnGist',
+				'click .tag-popup ul li a' : 'tagOnGist',
 				'click .btn-star'        : 'star',
 				'click .btn-fb'          : 'shareFB',
 				'click .btn-tw'          : 'shareTW',
@@ -65,8 +65,27 @@ define(function(require){
 				this.tags.fetch();	
 			},
 
-			onTagCollectionChange: function(tags){
-				$('.tag-area').html(tagListTemplate({tags: this.tags.toJSON()}));
+			onTagCollectionChange: function(event_name){
+				var self = this;
+
+				//get tags for the selected gist
+				if (self.model){
+					var tagNames = 	self.model.get('tags');
+					self.tags.each(function(tag){
+						var exist = _.contains(tagNames, tag.get('tag_name'));
+						if (exist) 
+							tag.set('is_tagged', true);
+						else
+							tag.set('is_tagged', false);
+
+						// refresh only tag popup contents
+						if ($('.tag-popup').length){
+							self.$el.find('.tag-popup').replaceWith(tagListTemplate({tags: self.tags.toJSON()}));
+						}else{
+							$('.tag-area').html(tagListTemplate({tags: self.tags.toJSON()}));	
+						}
+					});
+				}				
 			},
 
 			createTag: function(e){
@@ -77,7 +96,7 @@ define(function(require){
 		    		self.loading(true, e.target);
 		    		
 		    		var text = $(e.target).val();
-		    		var tag = new TagItem({gistId: self.selectedGistItem.id, tagName:text});
+		    		var tag = new TagItem({gistId: self.model.get('id'), tagName:text});
 		    		tag.save()
 		    		.done(function(data){
 		    			self.tags.reset(data);	    						    			
@@ -98,24 +117,68 @@ define(function(require){
 				
 				var tagId = $(e.target).data('tag-id');
 				var tagName = $(e.target).data('tag-name');
-				var gistId = this.selectedGistItem.id;
+				var gistId = this.model.get('id');
+				var isTagged = $(e.target).data('is-tagged');
 
-				service.editTagGist(tagId, gistId).done(function(data){
-					self.tags.reset(data);
-					postalWrapper.publish(constants.TAG_CHANGED, self.tags.toJSON());
-					$(e.target).find('span.tag-saved-msg').remove();
-					$(e.target).append('<span class="pull-right tag-saved-msg">Tagged</span>');
-					$('.tag-saved-msg').fadeOut(4000);
-				});
+				if (!isTagged){
+					service
+					.setTagOnGist(tagId, gistId)
+					.done(function(data){
+						var tags = self.model.get('tags');
+						tags.push(tagName);
+						self.model.set('tags', tags);
+						
+						self.tags.reset(data);
+						postalWrapper.publish(constants.TAG_CHANGED, self.tags.toJSON());
+						$(e.target).find('span.tag-saved-msg').remove();
+						$(e.target).append('<span class="pull-right tag-saved-msg">Tagged</span>');
+						$('.tag-saved-msg').fadeOut(4000);
+					});
+				}else{
+					service
+					.deleteTagOnGist(tagId, gistId)
+					.done(function(data){
+						var tags = self.model.get('tags');
+						self.model.set('tags', _.without(tags, tagName));
+
+						self.tags.reset(data);
+						postalWrapper.publish(constants.TAG_CHANGED, self.tags.toJSON());
+						$(e.target).find('span.tag-saved-msg').remove();
+						$(e.target).append('<span class="pull-right tag-saved-msg">Untagged</span>');
+						$('.tag-saved-msg').fadeOut(4000);
+					});
+				}
 			},
 
 			star: function(e){
-				service.setStar(this.selectedGistItem.id).done(function(data){
-					$('.starred-success').removeClass('starred-success-hide starred-success-show').addClass('starred-success-show');
+				var self = this;
+				if (self.model.get('is_starred')){
+					service.deleteStar(this.model.get('id')).done(function(data){
+						self.model.set('is_starred', false);
+						self.showStarActionMessage(false);
+						postalWrapper.publish(constants.GIST_STAR_CHANGED, self.model.toJSON());		
+					});	
+				}else{
+					service.setStar(this.model.get('id')).done(function(data){
+						self.model.set('is_starred', true);
+						self.showStarActionMessage(true);
+						postalWrapper.publish(constants.GIST_STAR_CHANGED, self.model.toJSON());		
+					});	
+				}						
+			},
+
+			showStarActionMessage: function(isStarred){
+				if (isStarred){
+					$('.starred-success').text('Starred Successfully').removeClass('starred-success-hide starred-success-show').addClass('starred-success-show');
 					setTimeout(function(){
 						$('.starred-success').removeClass('starred-success-hide starred-success-show').addClass('starred-success-hide');
 					}, 2000);
-				});
+				}else{
+					$('.starred-success').text('Unstarred Successfully').removeClass('starred-success-hide starred-success-show').addClass('starred-success-show');
+					setTimeout(function(){
+						$('.starred-success').removeClass('starred-success-hide starred-success-show').addClass('starred-success-hide');
+					}, 2000);
+				}				
 			},
 
 			onBtnCommentClick: function(e){
@@ -148,40 +211,43 @@ define(function(require){
 			
 			onRoomCreated : function(e){
 				var self = this;
-				global.socket.emit('addroom', self.selectedGistItem.id);
+				global.socket.emit('addroom', self.model.get('id'));
 				self.router.navigate('chat', {trigger: true});
 				
-				postalWrapper.publish(constants.CHAT_CREATE_ROOM, self.selectedGistItem);
+				postalWrapper.publish(constants.CHAT_CREATE_ROOM, self.model.toJSON());
 			},
 
 			onItemSelected : function(gistItem){
-				this.selectedGistItem = gistItem;
+				this.model = new GistItem(gistItem);
 				if (gistItem && gistItem.comments > 0){
 					$('.comments-badge').text(gistItem.comments).show();
 				}else{
 					$('.comments-badge').text('').hide();
 				}
+
+				// force refresh tag popup contents
+				this.onTagCollectionChange();
 			},
 
 			onCommentDeleted: function(commentId){
 				var self = this;
-				if (self.selectedGistItem && self.selectedGistItem.comments - 1 > 0){
-					self.selectedGistItem.comments = self.selectedGistItem.comments - 1;
-					$('.comments-badge').text(self.selectedGistItem.comments).show();
+				if (self.model && self.model.get('comments') - 1 > 0){
+					self.model.set('comments', self.model.get('comments') - 1);
+					$('.comments-badge').text(self.model.get('comments')).show();
 				}else{
-					self.selectedGistItem.comments = 0;
+					self.model.set('comments', 0);
 					$('.comments-badge').text('').hide();
 				}	
 			},
 
 			onCommentAdded:  function(comment){
 				var self = this;
-				if (self.selectedGistItem && self.selectedGistItem.comments > 0){
-					self.selectedGistItem.comments = self.selectedGistItem.comments + 1;
-					$('.comments-badge').text(self.selectedGistItem.comments).show();
+				if (self.model && self.model.get('comments') > 0){
+					self.model.set('comments', self.model.get('comments') + 1);
+					$('.comments-badge').text(self.model.get('comments')).show();
 				}else{
-					self.selectedGistItem.comments = 1;
-					$('.comments-badge').text(self.selectedGistItem.comments).show();
+					self.model.set('comments', 1);
+					$('.comments-badge').text(self.model.get('comments')).show();
 				}	
 			},
 
@@ -195,21 +261,21 @@ define(function(require){
 			},
 
 			shareFB : function(){
-				var gistUrl = this.selectedGistItem.html_url;
+				var gistUrl = this.model.get('html_url');
 				var url = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(gistUrl);
 				var title = 'GistCamp';
 				this.popupWindow(url, title, '626', '436');
 			},
 
 			shareTW : function(){
-				var gistUrl = this.selectedGistItem.html_url;
+				var gistUrl = this.model.get('html_url');
 				var url = 'https://twitter.com/intent/tweet?via=gistcamp&url=' + encodeURIComponent(gistUrl);
 				var title = 'GistCamp';
 				this.popupWindow(url, title, '473', '258');	
 			},
 
 			shareGg : function(){
-				var gistUrl = this.selectedGistItem.html_url;
+				var gistUrl = this.model.get('html_url');
 				var url = 'https://plus.google.com/share?url=' + encodeURIComponent(gistUrl);
 				var title = 'GistCamp';
 				this.popupWindow(url, title, '473', '216');	

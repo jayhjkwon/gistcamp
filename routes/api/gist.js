@@ -25,6 +25,10 @@ var sendData = function(data, req, res){
 
 				function(cb){
 					getTagsByGistId(req, data, cb);
+				},
+
+				function(cb){
+					setIsStarred(req, data, cb);
 				}],
 
 				function(err, results){
@@ -52,6 +56,46 @@ var getNextPage = function(linkHeader, req, res){
 			if (data) sendData(data, req, res);			
 		}
 	);		
+};
+
+var setIsStarred = function(req, gists, cb){
+	var userId = service.getUserId(req);
+	var starredGists = [];
+
+	async.series([
+		function(callback){
+			User.find({'id':userId}).select('starred_gists').lean().exec(function(error, docs){
+				starredGists = docs[0].starred_gists;
+				callback(null);
+			});
+		},
+
+		function(callback){
+			async.each(
+				gists, 
+				function(gist, cb){					
+					var exist = _.find(starredGists, function(starredGistId){
+						return starredGistId === gist.id;
+					});
+
+					if (exist){
+						gist.is_starred = true;
+					}else{
+						gist.is_starred = false;
+					}
+
+					cb(null);				
+				}, 
+				function(){
+					callback(null);
+				}
+			);	
+		},
+
+		function(callback){
+			cb(null);
+		}
+	]);
 };
 
 var setIsFollowing = function(req, gists, cb){
@@ -210,7 +254,7 @@ exports.getStarredGists = function(req, res){
 	console.log('getStarredGists');
 	var linkHeader = req.param('linkHeader');
 	if (!linkHeader){
-		github.gists.starred({per_page: config.options.perPage || 30}, 
+		github.gists.starred({}, 
 			function(err, data){		
 				if (data) sendData(data, req, res);
 			}
@@ -218,6 +262,58 @@ exports.getStarredGists = function(req, res){
 	}else{
 		getNextPage(linkHeader, req, res);
 	}
+};
+var addStarredGists = function(gists, containerArray){
+	var gistIds = _.pluck(gists, 'id');			
+	_.each(gistIds, function(gistId){
+		containerArray.push(gistId);
+	});
+};
+
+var getStarredGistsByPage = function(github, containerArray, isFirstPage, linkHeader, callback){
+	if (isFirstPage){
+		github.gists.starred({}, function(err, data){
+			if (data){
+				addStarredGists(data, containerArray);
+
+				if (github.hasNextPage(data)){
+					var linkHeader = data.meta ? data.meta.link ? data.meta.link : null : null
+					getStarredGistsByPage(github, containerArray, false, linkHeader, callback);
+				}else{
+					callback(containerArray);
+				}
+			}else{
+				callback(containerArray);
+			}
+		});
+	}else{
+		github.getNextPage(linkHeader,
+			function(err, data){		
+				if (data) {
+					addStarredGists(data, containerArray);
+					var linkHeader = data.meta ? data.meta.link ? data.meta.link : null : null
+					getStarredGistsByPage(github, containerArray, false, linkHeader, callback);
+				}else{
+					callback(containerArray);		
+				}
+			}
+		);		
+	}
+	
+};
+
+exports.getAllStarredGists = function(req, res, accessToken, callback){
+	var allGists = [];
+	var github;
+
+	if(accessToken)
+		github = service.getGitHubApiByAccessToken(accessToken);
+	else
+		github = service.getGitHubApi(req);
+
+	getStarredGistsByPage(github, allGists, true, null, function(result){
+		callback(result);
+	});
 };
 
 exports.getGistListByTag = function(req, res){
@@ -256,6 +352,10 @@ exports.getGistListByTag = function(req, res){
 
 							function(cb){
 								getTagsByGistId(req, gistList, cb);
+							},
+
+							function(cb){
+								setIsStarred(req, gistList, cb);
 							}],
 
 							function(err, results){
@@ -443,6 +543,10 @@ exports.getFriendsGist = function(req, res){
 
 					function(cb){
 						getTagsByGistId(req, sortedGists, cb);
+					},
+
+					function(cb){
+						setIsStarred(req, sortedGists, cb);
 					}],
 
 					function(err, results){
@@ -534,7 +638,7 @@ exports.createTag = function(req, res){
 	});
 };
 
-exports.editTagGist = function(req, res){
+exports.setTagOnGist = function(req, res){
 	var tagId = req.params.tag_id;
 	var gistId = req.params.gist_id;
 	var userId = service.getUserId(req);
@@ -566,6 +670,38 @@ exports.editTagGist = function(req, res){
 	});
 };
 
+exports.deleteTagOnGist = function(req, res){
+	var tagId = req.params.tag_id;
+	var gistId = req.params.gist_id;
+	var userId = service.getUserId(req);
+
+	User.find({id:userId}).select('tags').lean().exec(function(err, docs){
+		var tags = docs[0].tags;
+
+		var tagCnt = _.find(tags, function(tag){
+			return tag._id.toString() === tagId;
+		});
+
+		var gistCnt = _.find(tagCnt.gists, function(gist){
+			return gist.gist_id === gistId;
+		});
+
+		if (gistCnt){
+			User.update(
+				{id:userId, 'tags._id':mongoose.Types.ObjectId(tagId)}, 
+				{$pull: {'tags.$.gists' : {'gist_id':gistId}}}, 
+				function(err, numberAffected, rawResponse){
+					User.find({id:userId}).select('tags').lean().exec(function(err, docs){
+						res.send(docs[0].tags);
+					});					
+				}
+			);	
+		}else{
+			res.send(tags);
+		}
+	});
+};
+
 
 exports.getGistsByTag = function(req, res){
 
@@ -582,12 +718,26 @@ exports.removeTag = function(req, res){
 exports.setStar = function(req, res){
 	var github = service.getGitHubApi(req);
 	var gistId = req.params.gist_id;
+	var userId = service.getUserId(req);
 
-	github.gists.star({id:gistId}, function(err, data){		
-		res.send(data);
+	github.gists.star({id:gistId}, function(err, data){
+		User.update({id:userId}, {$addToSet:{starred_gists:gistId}}, {}, function(err, numberAffected, raw){
+			res.send(data);	
+		});			
 	});	
 };
 
+exports.deleteStar = function(req, res){
+	var github = service.getGitHubApi(req);
+	var gistId = req.params.gist_id;
+	var userId = service.getUserId(req);
+
+	github.gists.deleteStar({id:gistId}, function(err, data){		
+		User.update({id:userId}, {$pull:{starred_gists:gistId}}, {}, function(err, numberAffected, raw){
+			res.send(data);	
+		});
+	});	
+};
 
 exports.createNewgGist = function(req, res){
 	var msg = {};

@@ -8,7 +8,7 @@
 * If commenting on other gists is not enough, you can chat with other geeks.
 * You will get notification instantly once other geeks comment on your gist or send chat messages to you.
 * You can share the gists on Facebook, Twitter and Google+
-* As you see here, all the source code of the GistCamp web app is open-sourced. Please help us make the GistCamp more robust and richer by forking this repository.
+* As you see here, all the source code of the GistCamp is open-sourced. Please help us make the GistCamp more robust and richer by forking this repository.
 
 ## How to run GistCamp on your local machine
 Prerequistes
@@ -30,6 +30,8 @@ node server
 ```
 
 Then go to `http://localhost:3000` in your browser.
+
+##### **If you do not want to install the gistcamp on your machine, just come to [http://gistcamp.com](http://gistcamp.com)**
 
 ## License
 

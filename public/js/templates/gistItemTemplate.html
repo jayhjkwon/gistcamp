@@ -1,15 +1,16 @@
-<div class="gist-item">
+<div class="gist-item">    
   <div class="span3">
     <img src="{{user.avatar_url}}"/>{{{isFollowing user}}}
   </div>
-  <div class="span9">
-    <div class="detail">
+  <div class="span9">    
+    {{{isStarred is_starred}}}
+    <div class="detail">            
       <div class="title">{{user.login}} / {{mainFileName files}}</div>
       <div class="subtitle">
         <span>{{fromNow created_at}}</span>     
       </div>
       <p class="gist-item-description">{{description}}</p>      
       <div class="tags pull-left">{{{tagList tags}}}</div>
-    </div>
-  </div>  
+    </div>    
+  </div>        
 </div>

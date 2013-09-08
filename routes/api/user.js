@@ -35,7 +35,7 @@ exports.unfollow = function(req, res){
 	var userId = service.getUserId(req);
 	
 	github.user.unFollowUser({user:login}, function(err, data){
-		User.update({id:userId}, {$addToSet:{followings:login}}, {}, function(err, numberAffected, raw){
+		User.update({id:userId}, {$pull:{followings:login}}, {}, function(err, numberAffected, raw){
 			res.send(data);	
 		});		
 	});
@@ -71,7 +71,6 @@ exports.getAllFollowings = function(req, res, accessToken, callback){
 		github = service.getGitHubApi(req);
 
 	getAllFollowings(github, 1, 100, followings, function(result){
-		var a = result;
 		callback(result);
 	});
 };
