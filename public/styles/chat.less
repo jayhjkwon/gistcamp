@@ -8,7 +8,7 @@
 	cursor:pointer;
 	border:solid 2px #eee;
 	margin-bottom:15px;
-	height: 85px;
+	height: 100px;
 	&.selected {
 		background-color: #008641 !important;
 		color:#fff;
@@ -49,17 +49,26 @@
 			font-weight:400;
 		}		
 	}
+	.file-content{
+		font-size:11px;
+		line-height: 15px;
+		padding:2px 0px;
+		margin:0 0 5px 6px;
+		width:60px;
+		text-align: center;
+	}
 }
 
 .chat-wrapper {
-	border: solid 1px #eee;
+	
 	.conversation-content {
-		margin-left:10px;
 		position: absolute;
+		left:10px;
 		top:10px;
+		right:0px;
 		bottom:50px;
 		overflow-x: hidden;
-		width:90%;
+		width:98%;
 		white-space: pre-wrap;      /* CSS3 */   
         white-space: -moz-pre-wrap; /* Firefox */    
         white-space: -pre-wrap;     /* Opera <7 */   
@@ -67,11 +76,11 @@
         word-wrap: break-word;      /* IE */
 	}
 	.conversation-action {
-		margin-left:10px;
 		position:absolute;
+		left:10px;
 	    bottom:10px;
-	    height:30px;
 	    width:100%;
+	    overflow-x:hidden;
 	    //background-color:yellow;
 	}
 }

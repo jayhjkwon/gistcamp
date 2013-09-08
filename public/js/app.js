@@ -50,7 +50,7 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 
 			global.socket.on('updatechat', function (username, data) {
 				if (username == 'SERVER') {
-					$('#conversation').append('<b>'+username + ':</b> ' + data + '<br>');	
+					$('#conversation').append(data + '<br>');	
 				}
 				else {
 					
