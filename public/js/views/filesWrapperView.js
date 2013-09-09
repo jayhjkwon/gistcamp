@@ -30,9 +30,16 @@ define(function(require){
 			
 			onDomRefresh: function(){
 				$('.files-wrapper').niceScroll({cursorcolor: '#eee'});
-				$('.carousel').carousel({interval: false});
+				$('.carousel').carousel({interval: false}).on('slid', this.markActiveFileHeader);
 
 				prettyPrint();
+			},
+
+			markActiveFileHeader: function(){
+				var activeIndex = $('.carousel-inner .item').index($('.carousel-inner .item.active'));
+				$('.pivot-headers a').removeClass('active');
+				var pivotHeader = $('.pivot-headers a')[activeIndex];
+				$(pivotHeader).addClass('active');
 			},
 
 			bindFiles : function(gistItem){

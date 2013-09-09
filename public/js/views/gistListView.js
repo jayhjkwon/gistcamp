@@ -8,7 +8,8 @@ define(function(require){
 		constants 		= require('constants'),		
 		nicescroll 		= require('nicescroll'),
 		bootstrap 		= require('bootstrap'),
-		prettify 		= require('prettify'),		
+		prettify 		= require('prettify'),	
+		bootstrap 		= require('bootstrap'),	
 
 		GistListView = Marionette.Layout.extend({
 			currentSelectedMenu : '',
@@ -112,10 +113,12 @@ define(function(require){
 						case 37 : 	// arrow-left key
 							// if ( !$('#comment-input').val())
 							// 	$('.btn-comments').trigger('click');
+							$('.carousel').carousel('prev');
 							break;
 						case 39 : 	// arrow-right key
 							// if (!$('#comment-input').val())
 							// 	$('.btn-comments').trigger('click');
+							$('.carousel').carousel('next');
 							break;
 						default:
 							break;
