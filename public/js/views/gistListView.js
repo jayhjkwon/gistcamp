@@ -24,6 +24,8 @@ define(function(require){
 					console.log('currentSelectedMenu= ' + self.currentSelectedMenu);
 				if (this.options.tag)
 					console.log('tag= ' + this.options.tag);	
+
+				this.handleShortCuts();
 			},
 
 			className: 'main-content',
@@ -41,7 +43,7 @@ define(function(require){
 			},
 
 			onRender: function(){
-				this.handleShortCuts();
+				// this.handleShortCuts();
 			},
 
 			onDomRefresh: function(){
@@ -71,13 +73,13 @@ define(function(require){
 			},
 
 			handleShortCuts: function(){
-				$(document).keydown(function(e){
+				$(document).off('keydown').on('keydown', function(e){
 			    	var gistList, selectedGist, selectedGistIndex;
 			    	var keyCode = e.keyCode || e.which;
 
 			    	if (keyCode === 38 || keyCode === 40){
-			    		gistList = $('.gist-list .gist-item');
-			    		selectedGist = $('.gist-list .gist-item.selected');
+			    		gistList = $('.gist-item-container .row-fluid');
+			    		selectedGist = $('.row-fluid.selected');
 			    		selectedGistIndex = gistList.index(selectedGist);
 			    	}
 
@@ -90,7 +92,7 @@ define(function(require){
 				    		selectedGist.removeClass('selected');
 				    		var prevGist = gistList[selectedGistIndex - 1];
 				    		$(prevGist).addClass('selected');
-				    		$(prevGist).trigger('click');
+				    		$(prevGist).find('.gist-item').trigger('click');
 				    		// if (!isScrolledIntoView('.gist-list', '.gist-list .gist-item.selected'))
 				    		$('.gist-list').scrollTo($(prevGist), {offset:-20});		    		
 
@@ -102,7 +104,7 @@ define(function(require){
 				    		selectedGist.removeClass('selected');
 				    		var nextGist = gistList[selectedGistIndex + 1];
 				    		$(nextGist).addClass('selected');
-				    		$(nextGist).trigger('click');
+				    		$(nextGist).find('.gist-item').trigger('click');
 				    		// if (!isScrolledIntoView('.gist-list', '.gist-list .gist-item.selected'))
 				   			$('.gist-list').scrollTo($(nextGist), {offset:-20});	   				
 
