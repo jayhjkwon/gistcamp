@@ -22,7 +22,7 @@ define(function(require){
 			template : footerTemplate,
 
 			initialize: function(){
-				_.bindAll(this, 'shareGg', 'shareFB', 'shareTW', 'shareFB', 'initializePopOverTag', 'onItemSelected', 'star', 'createTag', 'loading', 'onBtnCommentClick', 'onRoomCreated', 'tagOnGist', 'onCommentDeleted', 'onCommentAdded', 'onTagCollectionChange');
+				_.bindAll(this, 'shareGg', 'shareFB', 'shareTW', 'shareFB', 'initializePopOverTag', 'onItemSelected', 'star', 'createTag', 'loading', 'onBtnCommentClick', 'onRoomCreated', 'tagOnGist', 'onCommentDeleted', 'onCommentAdded', 'onTagCollectionChange', 'initializePopOverShare');
 
 				this.tags = new TagItemList();
 
@@ -41,28 +41,40 @@ define(function(require){
 				'keydown #new-tag'       : 'createTag',
 				'click .tag-popup ul li a' : 'tagOnGist',
 				'click .btn-star'        : 'star',
-				'click .btn-fb'          : 'shareFB',
-				'click .btn-tw'          : 'shareTW',
-				'click .btn-gp'          : 'shareGg'
+				'click .share-google'    : 'shareGg',
+				'click .share-facebook'  : 'shareFB',
+				'click .share-twitter'   : 'shareTW',
+				'click .share-linkedin'  : 'shareLnk'
 			},
 
 			ui : {
-				btnTag : '.btn-command-wrapper.tag'
+				btnTag   : '.btn-command-wrapper.tag',
+				btnShare : '.btn-share'
 			},
 
 			onRender: function(){
-				this.initializePopOverTag();				
+				this.initializePopOverTag();	
+				this.initializePopOverShare();			
 			},
 
 			initializePopOverTag: function(){
 				this.ui.btnTag.popover({
 					html	: true,
 					placement: 'top',
-					title	: function(){ return '<div><i class="icon-tag"></i> Tag the gist</div>'; },
+					title	: function(){ return '<div><i class="icon-tag"></i> Tag gist</div>'; },
 					content : function(){ return $('.tag-area').html(); }					
 			    });
 
 				this.tags.fetch();	
+			},
+
+			initializePopOverShare: function(){
+				this.ui.btnShare.popover({
+					html	: true,
+					placement: 'top',
+					title	: function(){ return '<div><i class="icon-share"></i> Share gist</div>'; },
+					content : function(){ return $('.share-area').html(); }					
+			    });
 			},
 
 			onTagCollectionChange: function(event_name){
@@ -260,25 +272,40 @@ define(function(require){
 				}
 			},
 
-			shareFB : function(){
+			shareFB : function(e){
+				e.preventDefault();
 				var gistUrl = this.model.get('html_url');
 				var url = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(gistUrl);
 				var title = 'GistCamp';
 				this.popupWindow(url, title, '626', '436');
+				this.ui.btnShare.popover('hide');
 			},
 
-			shareTW : function(){
+			shareTW : function(e){
+				e.preventDefault();
 				var gistUrl = this.model.get('html_url');
 				var url = 'https://twitter.com/intent/tweet?via=gistcamp&url=' + encodeURIComponent(gistUrl);
 				var title = 'GistCamp';
 				this.popupWindow(url, title, '473', '258');	
+				this.ui.btnShare.popover('hide');
 			},
 
-			shareGg : function(){
+			shareGg : function(e){
+				e.preventDefault();
 				var gistUrl = this.model.get('html_url');
 				var url = 'https://plus.google.com/share?url=' + encodeURIComponent(gistUrl);
 				var title = 'GistCamp';
 				this.popupWindow(url, title, '473', '216');	
+				this.ui.btnShare.popover('hide');
+			},
+
+			shareLnk : function(e){
+				e.preventDefault();
+				var gistUrl = this.model.get('html_url');
+				var url = 'https://www.linkedin.com/shareArticle?mini=true&url=' + encodeURIComponent(gistUrl);
+				var title = 'GistCamp';
+				this.popupWindow(url, title, '626', '496');	
+				this.ui.btnShare.popover('hide');	
 			},
 
 			popupWindow: function(url, title, w, h){
