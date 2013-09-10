@@ -26,7 +26,8 @@ require.config({
         // socketi        : '../vendor/socket.io-client/lib/socket.io-client'
         //socketio       : 'http://localhost:3000/socket.io/socket.io'
         socketio       : '/socket.io/socket.io',
-        toastr         : '../vendor/toastr/toastr'
+        toastr         : '../vendor/toastr/toastr',
+        select2        : '../vendor/select2/select2'
 	},
 	shim: {
 		underscore: {
