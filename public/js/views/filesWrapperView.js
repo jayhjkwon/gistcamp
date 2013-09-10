@@ -32,7 +32,7 @@ define(function(require){
 				$('.files-wrapper').niceScroll({cursorcolor: '#eee'});
 				$('.carousel').carousel({interval: false}).on('slid', this.markActiveFileHeader);
 
-				prettyPrint();
+				// prettyPrint();	// cause performance issue especially when loading big file
 			},
 
 			markActiveFileHeader: function(){
