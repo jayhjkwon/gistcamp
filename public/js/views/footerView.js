@@ -22,7 +22,7 @@ define(function(require){
 			template : footerTemplate,
 
 			initialize: function(){
-				_.bindAll(this, 'shareGg', 'shareFB', 'shareTW', 'shareFB', 'initializePopOverTag', 'onItemSelected', 'star', 'createTag', 'loading', 'onBtnCommentClick', 'onRoomCreated', 'tagOnGist', 'onCommentDeleted', 'onCommentAdded', 'onTagCollectionChange', 'initializePopOverShare');
+				_.bindAll(this, 'deleteTag', 'onTagItemHover', 'shareGg', 'shareFB', 'shareTW', 'shareFB', 'initializePopOverTag', 'onItemSelected', 'star', 'createTag', 'loading', 'onBtnCommentClick', 'onRoomCreated', 'tagOnGist', 'onCommentDeleted', 'onCommentAdded', 'onTagCollectionChange', 'initializePopOverShare');
 
 				this.tags = new TagItemList();
 
@@ -44,7 +44,9 @@ define(function(require){
 				'click .share-google'    : 'shareGg',
 				'click .share-facebook'  : 'shareFB',
 				'click .share-twitter'   : 'shareTW',
-				'click .share-linkedin'  : 'shareLnk'
+				'click .share-linkedin'  : 'shareLnk',
+				'click .tag'             : 'onTagButtonClick',
+				'click .btn-del-tag'     : 'deleteTag'
 			},
 
 			ui : {
@@ -54,10 +56,27 @@ define(function(require){
 
 			onRender: function(){
 				this.initializePopOverTag();	
-				this.initializePopOverShare();			
+				this.initializePopOverShare();	
+			},
+
+			onTagButtonClick: function(){
+				var self = this;
+				
+				// unbind hover event first
+				$('.tag-popup ul li').off('mouseenter mouseleave');
+
+				// register hover event
+				$('.tag-popup ul li').hover(self.onTagItemHover, function(){
+					self.$el.find('.btn-del-tag').fadeOut(100);
+				});		
+			},
+
+			onTagItemHover: function(e){
+				$(e.target).find('.btn-del-tag').show();
 			},
 
 			initializePopOverTag: function(){
+				var self = this;
 				this.ui.btnTag.popover({
 					html	: true,
 					placement: 'top',
@@ -89,14 +108,17 @@ define(function(require){
 							tag.set('is_tagged', true);
 						else
 							tag.set('is_tagged', false);
-
-						// refresh only tag popup contents
-						if ($('.tag-popup').length){
-							self.$el.find('.tag-popup').replaceWith(tagListTemplate({tags: self.tags.toJSON()}));
-						}else{
-							$('.tag-area').html(tagListTemplate({tags: self.tags.toJSON()}));	
-						}
 					});
+
+					// refresh only tag popup contents
+					if ($('.tag-popup').length){
+						self.$el.find('.tag-popup').replaceWith(tagListTemplate({tags: self.tags.toJSON()}));
+					}else{
+						$('.tag-area').html(tagListTemplate({tags: self.tags.toJSON()}));	
+					}
+
+					// force registering hover event on tag item in tag popup
+					self.onTagButtonClick();			
 				}				
 			},
 
@@ -107,14 +129,21 @@ define(function(require){
 		    		self.saving = true;
 		    		self.loading(true, e.target);
 		    		
-		    		var text = $(e.target).val();
-		    		var tag = new TagItem({gistId: self.model.get('id'), tagName:text});
+		    		var tagName = $(e.target).val();
+		    		var tag = new TagItem({gistId: self.model.get('id'), tagName:tagName});
 		    		tag.save()
 		    		.done(function(data){
+		    			var tagNames = self.model.get('tags');
+						tagNames.push(tagName);
+						self.model.set('tags', tagNames);
+
 		    			self.tags.reset(data);	    						    			
 		    			self.ui.btnTag.popover('show');
 		    			$(e.target).val('');
 		    			postalWrapper.publish(constants.TAG_CHANGED, self.tags.toJSON());
+
+		    			// force registering hover event on tag item in tag popup
+						self.onTagButtonClick();	
 		    		})
 		    		.always(function(){
 		    			self.saving = false;
@@ -123,41 +152,72 @@ define(function(require){
 		    	}
 			},
 
+			deleteTag: function(e){
+				var self = this;
+				self.saving = true;
+	    		self.loading(true, e.target);
+	    		
+	    		var tagId = $(e.target).siblings('a').attr('data-tag-id');
+	    		var tagName = $(e.target).siblings('a').attr('data-tag-name');
+	    		var tag = new TagItem({id: tagId});
+	    		tag.destroy().done(function(data){
+	    			var tagNames = self.model.get('tags');
+					self.model.set('tags', _.without(tagNames, tagName));
+
+	    			self.tags.reset(data);	    						    			
+	    			self.ui.btnTag.popover('show');
+	    			postalWrapper.publish(constants.TAG_CHANGED, self.tags.toJSON());
+
+	    			// force registering hover event on tag item in tag popup
+					self.onTagButtonClick();	
+	    		})
+	    		.always(function(){
+	    			self.saving = false;
+	    			self.loading(false);
+	    		});
+			},
+
 			tagOnGist: function(e){
 				e.preventDefault();
 				var self = this;
 				
-				var tagId = $(e.target).data('tag-id');
-				var tagName = $(e.target).data('tag-name');
+				var tagId = $(e.target).attr('data-tag-id');
+				var tagName = $(e.target).attr('data-tag-name');
 				var gistId = this.model.get('id');
-				var isTagged = $(e.target).data('is-tagged');
+				var isTagged = $(e.target).attr('data-is-tagged');
 
 				if (!isTagged){
 					service
 					.setTagOnGist(tagId, gistId)
 					.done(function(data){
-						var tags = self.model.get('tags');
-						tags.push(tagName);
-						self.model.set('tags', tags);
+						var tagNames = self.model.get('tags');
+						tagNames.push(tagName);
+						self.model.set('tags', tagNames);
 						
 						self.tags.reset(data);
 						postalWrapper.publish(constants.TAG_CHANGED, self.tags.toJSON());
 						$(e.target).find('span.tag-saved-msg').remove();
 						$(e.target).append('<span class="pull-right tag-saved-msg">Tagged</span>');
 						$('.tag-saved-msg').fadeOut(4000);
+
+						// force registering hover event on tag item in tag popup
+						self.onTagButtonClick();	
 					});
 				}else{
 					service
 					.deleteTagOnGist(tagId, gistId)
 					.done(function(data){
-						var tags = self.model.get('tags');
-						self.model.set('tags', _.without(tags, tagName));
+						var tagNames = self.model.get('tags');
+						self.model.set('tags', _.without(tagNames, tagName));
 
 						self.tags.reset(data);
 						postalWrapper.publish(constants.TAG_CHANGED, self.tags.toJSON());
 						$(e.target).find('span.tag-saved-msg').remove();
 						$(e.target).append('<span class="pull-right tag-saved-msg">Untagged</span>');
 						$('.tag-saved-msg').fadeOut(4000);
+
+						// force registering hover event on tag item in tag popup
+						self.onTagButtonClick();	
 					});
 				}
 			},
@@ -237,7 +297,7 @@ define(function(require){
 					$('.comments-badge').text('').hide();
 				}
 
-				// force refresh tag popup contents
+				// force refreshing tag popup contents
 				this.onTagCollectionChange();
 			},
 
