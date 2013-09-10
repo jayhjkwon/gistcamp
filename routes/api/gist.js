@@ -712,7 +712,21 @@ exports.editTag = function(req, res){
 };
 
 exports.removeTag = function(req, res){
+	var tagId = req.param('id');
 
+	var conditions = {id: service.getUserId(req)};
+	var update = {
+		$pull: { tags: {'_id':mongoose.Types.ObjectId(tagId) } }
+	};
+	var options = {upsert:true};
+	User.update(conditions, update, options, function(err, numberAffected, raw){
+		User.find({id:service.getUserId(req)})
+		.select('tags')
+		.lean()
+		.exec(function(err, docs){
+			res.send(docs[0].tags);
+		});
+	});
 };
 
 exports.setStar = function(req, res){

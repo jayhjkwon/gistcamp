@@ -39,7 +39,7 @@ define(function(require){
 
 			events : {
 			},
-			
+
 			getChatList: function(){
 				var self = this;
 				self.rooms = global.rooms;
@@ -83,6 +83,8 @@ define(function(require){
 				//self.rendered();
 		    	self.loading(false);
 			},
+
+			
 
 			onDomRefresh: function(){
 				// if ( !$('#comment-input').val())

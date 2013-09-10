@@ -96,16 +96,15 @@ header {
 			overflow-y:auto;
 			// border-right:solid 1px #eee;
 			padding-top:10px;
-			border-right:0px solid #eee;
+			border-right:1px solid #eee;
 		}
 
 		.chat-wrapper {
-			position: fixed;	// if the position is absolute, it is scrollable in mobile browser.
-			top:@top-height;
-			bottom:@footer-height;
-			right:0;//-@comments-wrapper-width;
-			// padding-top:-40px;
-			width:@comments-wrapper-width;
+			position: absolute;
+			top:0px;
+			bottom:0px;
+			left:@gist-list-width+1px;
+			right:10px;
 			overflow-y:auto;
 			overflow-x:hidden;
 			transition: right 0.3s ease-out;	
