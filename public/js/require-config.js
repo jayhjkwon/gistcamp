@@ -24,7 +24,7 @@ require.config({
         ace            : '../vendor/ace/lib/ace',
         socketio       : '/socket.io/socket.io',
         toastr         : '../vendor/toastr/toastr',
-        select2        : '../vendor/select2/select2'
+        select2        : '../vendor/select2/select2',
         mousetrap      : '../vendor/mousetrap/mousetrap'
 	},
 	shim: {
