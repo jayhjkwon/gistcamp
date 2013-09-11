@@ -1,9 +1,9 @@
 require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 	'views/topView', 'views/footerView', 'constants', 'models/user', 'global', 'async',
-	'socketio', 'postalWrapper', 'toastr', 'service', 'mousetrap',
+	'socketio', 'postalWrapper', 'toastr', 'service', 'mousetrap', 'router',
 	'bootstrap', 'prettify', 'nicescroll', 'autoGrow', 'scrollTo'], 
 	function($, _, Application, Router, shellView, topView, footerView, constants, User, global, async, 
-		socketio, postalWrapper, toastr, service, mousetrap){
+		socketio, postalWrapper, toastr, service, mousetrap, Router){
 	$(function(){
 		var el = shellView.render().el;
 
@@ -100,7 +100,7 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 			callback(null, router);
 		};
 
-		var handleShortcuts = function(){
+		var handleShortcuts = function(callback){
 			var moveToGist = function(moveToUp){
 				var nextGist ;
 				var gistList = $('.gist-item-container .row-fluid');
@@ -140,6 +140,38 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 				$('.carousel').carousel('next');
 				return false;
 			});
+
+			mousetrap.bind('g n', function(){
+				var router = new Router;
+				router.navigate('newgist', {trigger: true});
+			});
+
+			mousetrap.bind('g f', function(){
+				var router = new Router;
+				router.navigate('friends', {trigger: true});
+			});
+
+			mousetrap.bind('g m', function(){
+				var router = new Router;
+				router.navigate('mygists', {trigger: true});
+			});
+
+			mousetrap.bind('g s', function(){
+				var router = new Router;
+				router.navigate('starred', {trigger: true});
+			});
+
+			mousetrap.bind('g a', function(){
+				var router = new Router;
+				router.navigate('all', {trigger: true});
+			});
+
+			mousetrap.bind('g c', function(){
+				var router = new Router;
+				router.navigate('chat', {trigger: true});
+			});
+
+			callback(null);
 		};
 
 		Application.addInitializer(function(options){
