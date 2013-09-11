@@ -22,12 +22,10 @@ require.config({
         store          : '../vendor/store.js/store',
         markdown       : '../vendor/markdown/lib/markdown',
         ace            : '../vendor/ace/lib/ace',
-        // TODO : Socket.Client는 왜 있는걸까? 나중에 다시 알아보기
-        // socketi        : '../vendor/socket.io-client/lib/socket.io-client'
-        //socketio       : 'http://localhost:3000/socket.io/socket.io'
         socketio       : '/socket.io/socket.io',
         toastr         : '../vendor/toastr/toastr',
         select2        : '../vendor/select2/select2'
+        mousetrap      : '../vendor/mousetrap/mousetrap'
 	},
 	shim: {
 		underscore: {

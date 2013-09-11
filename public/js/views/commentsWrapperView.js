@@ -25,7 +25,6 @@ define(function(require){
 			itemView : CommentItemView,
 			itemViewContainer: '.comment-list',
 			selectedGistItem : {},
-			// xhrs : [],
 			xhr: {},
 
 			initialize: function(options){
@@ -113,7 +112,6 @@ define(function(require){
 						})
 						.always(function(){
 							self.loading(false);
-							$('#comment-input').focus();
 						});
 				}
 			},
@@ -128,12 +126,6 @@ define(function(require){
 				var self = this;
 				self.subscription.unsubscribe();
 				self.subscriptionDeleteComment.unsubscribe();
-				/*_.each(self.xhrs, function(xhr){
-					var s = xhr.state();
-					if (s === 'pending') {
-						xhr.abort();	// abort ajax requests those are not completed
-					}
-				});*/
 			},
 
 			loading: function(showSpinner){
