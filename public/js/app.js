@@ -101,21 +101,21 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 		};
 
 		var handleShortcuts = function(callback){
-			var moveToGist = function(moveToUp){
+			var moveToGist = function(moveUp){
 				var nextGist ;
 				var gistList = $('.gist-item-container .row-fluid');
 	    		var selectedGist = $('.row-fluid.selected');
 	    		var selectedGistIndex = gistList.index(selectedGist);
 
-				if (gistList.length === (selectedGistIndex + 1)) return;
-
-	    		selectedGist.removeClass('selected');
-	    		
-	    		if (moveToUp)
+				if (moveUp){
+	    			if (selectedGistIndex === 0) return;
 	    			nextGist = gistList[selectedGistIndex - 1];
-	    		else
+	    		}else{
 	    			nextGist = gistList[selectedGistIndex + 1];
+	    			if (!nextGist) return;
+				}
 
+				selectedGist.removeClass('selected');
 	    		$(nextGist).addClass('selected');
 	    		$(nextGist).find('.gist-item').trigger('click');
 	   			$('.gist-list').scrollTo($(nextGist), {offset:-20});	
