@@ -31,6 +31,7 @@ define(function(require){
 				this.subscription = postalWrapper.subscribe(constants.GIST_ITEM_SELECTED, this.onItemSelected);
 				this.subscriptionDeleteComment = postalWrapper.subscribe(constants.COMMENT_DELETE, this.onCommentDeleted);
 				this.subscriptionAddComment = postalWrapper.subscribe(constants.COMMENT_ADD, this.onCommentAdded);
+				this.subscriptionStar = postalWrapper.subscribe(constants.STAR, this.star); 
 				this.router = new Router();
 			},
 
@@ -386,6 +387,7 @@ define(function(require){
 				this.subscription.unsubscribe();
 				this.subscriptionDeleteComment.unsubscribe();
 				this.subscriptionAddComment.unsubscribe();
+				this.subscriptionStar.unsubscribe();
 			}
 		})
 	;

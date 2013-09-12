@@ -171,6 +171,10 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 				router.navigate('chat', {trigger: true});
 			});
 
+			mousetrap.bind('g x', function(){
+				postalWrapper.publish(constants.STAR);
+			});
+
 			callback(null);
 		};
 

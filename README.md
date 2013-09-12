@@ -9,7 +9,8 @@
 * You can watch your followings and followers' gists. 
 * If commenting on other gists is not enough, you can chat with other geeks.
 * You will get notification instantly once other geeks comment on your gist or send chat messages to you.
-* You can share the gists on Facebook, Twitter and Google+
+* You can share the gists on Facebook, Twitter, Google+ and LinkedIn.
+* You can move to the specific menu using shortcut keys like Gmail does.
 * As you see here, all the source code of the GistCamp is open-sourced. Please help us make the GistCamp more robust and richer by forking this repository.
 
 ## How to run GistCamp on your local machine
