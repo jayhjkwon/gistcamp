@@ -1,4 +1,4 @@
 exports.constants = {
-	GITHUB_CLIENT_ID : '*********',
-	GITHUB_CLIENT_SECRET : '*********'
+	GITHUB_CLIENT_ID : 'd992e538e78bc563aae8',
+	GITHUB_CLIENT_SECRET : '64a09c87fea5e883c5d432b702876b81f8315e4c'
 };
