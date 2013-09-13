@@ -16,6 +16,7 @@ define(function(require){
 		Spinner         = require('spin'),
 		service         = require('service'),
 		GistItem        = require('models/gistItem'),
+		util            = require('util'),
 
 		FooterView = Marionette.ItemView.extend({
 			className: 'command-buttons',
@@ -47,7 +48,8 @@ define(function(require){
 				'click .share-twitter'   : 'shareTW',
 				'click .share-linkedin'  : 'shareLnk',
 				'click .tag'             : 'onTagButtonClick',
-				'click .btn-del-tag'     : 'deleteTag'
+				'click .btn-del-tag'     : 'deleteTag',
+				'click .btn-delete-gist' : 'onDeleteGist'
 			},
 
 			ui : {
@@ -291,6 +293,16 @@ define(function(require){
 			},
 
 			onItemSelected : function(gistItem){
+				console.log('onSelected');
+				console.log(gistItem);
+
+				if(gistItem.user.id === global.user.id){
+					$('.btn-delete-gist').show();
+				}else{
+					$('.btn-delete-gist').hide();
+				}
+
+
 				this.model = new GistItem(gistItem);
 				if (gistItem && gistItem.comments > 0){
 					$('.comments-badge').text(gistItem.comments).show();
@@ -388,6 +400,24 @@ define(function(require){
 				this.subscriptionDeleteComment.unsubscribe();
 				this.subscriptionAddComment.unsubscribe();
 				this.subscriptionStar.unsubscribe();
+			},
+
+			onDeleteGist : function(){
+				var conf = confirm("Do you want to delete this Gist?");
+
+				util.loadSpinner(true);
+
+			    if(conf == true){
+			    	this.model.destroy()
+			    	.done(function(data){
+			    		document.location.reload(true);
+			    	})
+			    	.always(function(){
+						util.loadSpinner(false);
+					});
+			    }else{
+			    	util.loadSpinner(false);
+			    }
 			}
 		})
 	;

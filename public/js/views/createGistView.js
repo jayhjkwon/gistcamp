@@ -103,8 +103,6 @@ define(function(require){
 			},
 			onCreatePublicGist : function(e){
 				var gistItem = this.setNewGist(true);
-
-				console.log(gistItem.toJSON());
 				return false;
 			},
 			setNewGist : function(param)

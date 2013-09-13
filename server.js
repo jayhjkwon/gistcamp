@@ -182,6 +182,8 @@ app.put('/api/gist/tags/:id', ensureAuthenticated, gist.editTag);
 app.delete('/api/gist/tags/:id', ensureAuthenticated, gist.removeTag);
 
 app.post('/api/gist/newgist', ensureAuthenticated, gist.createNewgGist);
+app.delete('/api/gist/newgist/:id', ensureAuthenticated, gist.deleteGist);
+
 app.get('/api/user/auth', ensureAuthenticated, user.getAuthUser);
 app.put('/api/user/following/:login_id', ensureAuthenticated, user.follow);
 app.delete('/api/user/following/:login_id', ensureAuthenticated, user.unfollow);

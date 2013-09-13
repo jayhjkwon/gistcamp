@@ -765,6 +765,19 @@ exports.createNewgGist = function(req, res){
 
 		res.send(data);
 	});
+};
+
+exports.deleteGist = function(req, res){
+
+	var gistId = req.param('id');
+	var msg = {};
+	msg.id = gistId;
+	
+	var github = service.getGitHubApi(req);
+	github.gists.delete(msg, function(err, data){
+		res.send(data);
+	});
+
 }
 
 
