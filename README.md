@@ -29,7 +29,6 @@ npm install
 bower install
 bower install jquery-nicescroll
 bower install autogrow-textarea
-bower install ace
 grunt
 node server
 ```
