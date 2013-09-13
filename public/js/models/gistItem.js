@@ -3,14 +3,14 @@ define(function(require){
 		Backbone		= require('backbone'),		
 		GistItem 		= Backbone.Model.extend({	
 
-			initialize: function(props){
-				// console.log('gistItem initialized');
-				// this.gistId = props ? props.gistId || '' : '';
-				// this.id = props ? props.id || '' : '';
+			initialize: function(options){
+				this.id = options ? options.id || null : null;
 			},
 
 			url : function(){
-				return '/api/gist/newgist';
+				if(this.id)
+					return '/api/gist/newgist/' + this.id;
+				return 'api/gist/newgist';
 			}	
 		})
 	;
