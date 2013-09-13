@@ -118,7 +118,7 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 				selectedGist.removeClass('selected');
 	    		$(nextGist).addClass('selected');
 	    		$(nextGist).find('.gist-item').trigger('click');
-	   			$('.gist-list').scrollTo($(nextGist), {offset:-20});	
+	   			$('.gist-list').scrollTo($(nextGist), {offset:0});	
 			};
 
 			mousetrap.bind('down', function(){
