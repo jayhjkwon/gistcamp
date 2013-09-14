@@ -12,12 +12,14 @@ header {
 	.brand {
 		font-weight: 700 !important;
 		font-size:14px !important;
+		color: darken(#777, 10%) !important;
 	}
 	
 	.nav {
 		> li > a {
 			height:20px !important;		
 			padding:10px 12px 10px !important;
+			color: darken(#777, 10%) !important;
 		}
 		.dropdown-menu {
 			border-width:1px !important;
@@ -55,7 +57,12 @@ header {
 	}
 
 	.navbar-inner {
-		background-color:lighten(#1b1b1b, 3%) !important;
+		// background-color:lighten(#1b1b1b, 3%) !important;
+
+		box-shadow:0 0 0 !important;
+		-webkit-box-shadow: 0 0 0  !important;
+		// background-color:#fafafa !important;
+		// background-image: linear-gradient(to bottom, #fff, darken(#f2f2f2, 2%));
 	}
 
 	&.navbar-inverse .divider-vertical {

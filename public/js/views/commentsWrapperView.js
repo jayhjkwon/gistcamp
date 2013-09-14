@@ -62,14 +62,15 @@ define(function(require){
 		    			if (self.collection){
 		    				self.collection.add(data);
 		    			}else{
-		    				self.collection = new CommentItemList({gistId: self.selectedGistItem.id});
-		    				self.collection.add(data);
+		    				data.gistId = self.selectedGistItem.id;
+		    				self.collection = new CommentItemList(data);
+		    				// self.collection.add(data);
 		    			}
 		    			self.render();
 
 		    			postalWrapper.publish(constants.COMMENT_ADD, data);
 
-		    			// send alarm
+		    			// send a notification
 		    			if (self.selectedGistItem.user.id !== global.user.id){
 			    			var msg = global.user.name + ' just commented on your gist(' + self.selectedGistItem.description + ') ';
 			    			msg = msg + '</br>';
