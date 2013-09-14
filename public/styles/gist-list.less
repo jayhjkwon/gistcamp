@@ -9,7 +9,7 @@
 		border-top: solid 1px #d8d8d8;//darken(#eee, 20%);
 		padding:5px 0;
 		background-color: darken(#f5f5f5, 1%);
-		background-image: linear-gradient(to bottom, darken(#fff, 4%), #f5f5f5);
+		background-image: linear-gradient(to bottom, darken(#fff, 2%), lighten(#f5f5f5, 2%));
 		&.selected {
 			// background-color: #008641 !important;
 			// background-color: #54abc3 !important;
@@ -184,8 +184,8 @@ pre {
 /* comments */
 .comments-wrapper {
 	border: solid 1px darken(#eee, 20%);
-	background-color: #f2f2f2;
-	background-image: linear-gradient(to bottom, darken(#fff, 4%), #f5f5f5);
+	background-color: darken(#f5f5f5, 1%);
+	background-image: linear-gradient(to bottom, darken(#fff, 2%), lighten(#f5f5f5, 2%));
 	// padding-top:5px;
 	.comments{
 		// margin-top:8px;
@@ -195,8 +195,8 @@ pre {
 			// border-bottom:solid 1px #eee;
 			border-bottom: solid 1px #fff;
 			border-top: solid 1px #d8d8d8;//darken(#eee, 20%);
-			background-color: #f2f2f2;
-			background-image: linear-gradient(to bottom, darken(#fff, 4%), #f5f5f5);
+			background-color: darken(#f5f5f5, 1%);
+			background-image: linear-gradient(to bottom, darken(#fff, 2%), lighten(#f5f5f5, 2%));
 			padding-top:6px;
 			// top:0;
 			&:hover{
@@ -227,12 +227,13 @@ pre {
 				display: none;
 			}
 			.comment-input-wrapper{
-				position:absolute;
-				top:0;
-				left:50px;
-				right:0;
-				padding-top:5px;
+				// position:absolute;
+				// top:0;
+				// left:50px;
+				// right:0;
+				// padding-top:5px;
 				padding-right:20px;
+				padding-left:50px;
 				textarea {
 					overflow: hidden;
 					border-width:1px !important;
