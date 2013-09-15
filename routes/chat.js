@@ -7,6 +7,9 @@ var
 exports.start = function(io){
 
   var removeById = function(target, val) {
+    if (target == undefined)
+      return false;
+
     for(var i=0; i<target.length; i++) {
         if(target[i].id == val) {
             //target.splice(i, 1);
@@ -31,6 +34,9 @@ exports.start = function(io){
   };
 
   var emptyRoomYn = function(target) {
+    if (target == undefined)
+      return false;
+    
     var count = 0;
     for(var i=0; i<target.length; i++) {
         if(target[i].opacity == 0.4) {
@@ -159,7 +165,7 @@ exports.start = function(io){
 
         var data = usernames[socket.userid].login + ' has left this room';
         socket.broadcast.to(socket.room).emit('updatechat', 'SERVER', data);
-        insertChatContent(socket.room, 0, 'SERVER', '', data);
+        //insertChatContent(socket.room, 0, 'SERVER', '', data);
 
         if (emptyRoomYn(rooms[socket.room].users) == true) {
           rooms[socket.room].lastLeaveDatetime = new Date().getTime();
@@ -192,7 +198,7 @@ exports.start = function(io){
       socket.room = newroom;
       var data = usernames[socket.userid].login + ' has joined this room';
       socket.broadcast.to(newroom).emit('updatechat', 'SERVER', data);
-      insertChatContent(newroom, 0, 'SERVER', '', data);
+      //insertChatContent(newroom, 0, 'SERVER', '', data);
 
       socket.emit('updaterooms', rooms);
       socket.broadcast.emit('updaterooms', rooms);
@@ -212,7 +218,7 @@ exports.start = function(io){
         if (usernames[socket.userid] != undefined) {
           var data = usernames[socket.userid].login + ' has left this room';
           socket.broadcast.to(leaveRoom).emit('updatechat', 'SERVER', data);
-          insertChatContent(leaveRoom, 0, 'SERVER', '', data);
+          //insertChatContent(leaveRoom, 0, 'SERVER', '', data);
         }
 
         socket.broadcast.emit('updaterooms', rooms);
