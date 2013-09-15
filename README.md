@@ -1,5 +1,5 @@
 # GistCamp #
-#### [The GistCamp](http://gistcamp.com) is an web app that helps organize and share your gists.
+#### [GistCamp](http://gistcamp.com) is an web app that helps organize and share your gists.
 
 ![GistCamp](https://dl.dropboxusercontent.com/u/51695292/gistcamp.png)
 
