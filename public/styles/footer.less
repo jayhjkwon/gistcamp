@@ -1,6 +1,6 @@
 /* footer */
 footer {	
-	background-color: lighten(#1b1b1b, 3%);
+	background-color: #233641;//lighten(#1b1b1b, 3%);
 	.command-buttons {
 		margin-top:10px;
 		text-align: center;
@@ -50,19 +50,6 @@ footer {
 		border: 2px solid gray !important;
 	}
 
-	/*.win-command.search {
-		margin-top:20px;
-	}
-	.win-commandicon{
-		width:30px;
-		height:30px;
-		line-height:30px;
-		font-size:18px;
-	}
-
-	button.win-command{
-		position:relative;
-	}*/
 	.comments-badge {
 		position:absolute;
 		left:37px;
@@ -81,18 +68,19 @@ footer {
 
 		}
 
-		.tag-popup{						
+		.tag-popup, .share-popup{						
 			ul {
 				list-style: none;
 				margin:0;
 			}
 
 			li {
+				position: relative;
 				height: 20px;
 				border-bottom: 1px solid #eee;
 				padding:10px 20px 5px 20px;
 				
-				&:last-child{
+				&.tag-input {
 					height: 30px;
 					padding: 5px 20px;
 					input[type=text] {
@@ -107,16 +95,40 @@ footer {
 				.icon-holder{
 					display:inline-block;
 					width:5px;
+					i{
+						&.icon-ok{
+							font-size: 10px;
+						}
+					}
 				}
-				.icon-ok{
-					font-size: 10px;
+
+				.share-icon-holder{
+					display:inline-block;
+					width:5px;
+					margin-right:5px;
+					i{
+						font-size: 13px;
+					}
 				}
+				
 				a {
 					margin-left:5px;
 					color: black;
 					font-size:12px !important;
 				}
+
+				.btn-del-tag {
+					position:absolute;
+					top:12px;
+					right:10px;
+					display:none;
+					cursor: pointer;
+				}	
 			}
+		}
+
+		.share-popup {
+			width:150px;
 		}
 	}
 }

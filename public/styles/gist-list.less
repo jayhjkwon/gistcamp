@@ -1,30 +1,15 @@
-* {
-	// box-shadow:none !important;
-}
-body {
-	// font-family: 'Roboto', sans-serif !important;
-	// font-family: 'Nanum Gothic', sans-serif !important;
-	// font-family: 'Nanum Gothic Coding', monospace !important;
-	.area {
-		// font-family: 'Roboto', 'Nanum Gothic', sans-serif !important;
-		pre span {
-			// font-family: 'Nanum Gothic Coding', monospace !important;
-		}
-	}
-}
-
-
-
-
 /* gist summary list */
 
 .gist-item-container {
-	margin-right: 10px;
+	// margin-right: 10px;
 
 	.row-fluid {
-		margin-bottom: 20px;
+		// margin-bottom: 20px;
+		border-bottom: solid 1px #eee;
+		padding:5px 0;
 		&.selected {
-			background-color: #008641 !important;
+			// background-color: #008641 !important;
+			background-color: #54abc3 !important;
 			color:#fff;
 			.social i, .social a {
 				color:#fff !important;
@@ -131,15 +116,26 @@ body {
 
 /* files-wrapper */
 
+.files {
+	margin-left: 5px;
+	margin-right: 5px;
+	// margin-top:5px;
+	.prettyprint{
+		// border:0;
+		// border-top:1px solid #eee;
+	}
+}
+
 .pivot-headers {
-	margin:10px 0 15px 0;
+	margin:10px 0 15px 10px;
 	a {
 		margin-right: 15px;
 		color:#555;
 		font-size:16px;
 		font-weight: 300;
 		&.active{
-			border-bottom: solid 3px #008641;
+			// border-bottom: solid 3px #008641;
+			border-bottom: solid 3px #54abc3;
 			font-weight: bold;		
 		}
 		&:hover{
@@ -177,16 +173,6 @@ pre {
 	}		
 }
 
-.files {
-	margin-left: 10px;
-	margin-right: 20px;
-	margin-top:5px;
-}
-
-.pivot .pivot-headers a{
-	font-size:16px;
-}
-
 
 
 /* comments */
@@ -194,10 +180,12 @@ pre {
 	border: solid 1px #eee;
 	// padding-top:5px;
 	.comments{
-		margin-top:8px;
+		// margin-top:8px;
 		.comment{
 			min-height:50px;
 			position:relative;
+			border-bottom:solid 1px #eee;
+			padding-top:6px;
 			// top:0;
 			&:hover{
 				background-color: lighten(#eee, 1%);
@@ -206,20 +194,13 @@ pre {
 				min-height:50px;
 				width:50px;
 				position:absolute;
-				top:0;
+				top:5px;
 				bottom:0;
 				left:0;
 				padding:5px 0 0 5px;
 			}
 			.comment-content{
-				// min-height:50px;
-				// position:absolute;
-				// top:0;
-				// bottom:0;
-				// left:50px;
-				// right:0;
 				margin-left:50px;
-				// overflow-y:auto;
 				overflow:hidden;
 				padding-right:5px;
 				font-size:12px;
@@ -256,6 +237,10 @@ pre {
 				display:none;
 				cursor: pointer;
 			}			
+		}
+
+		.comment-input{
+			border:0px;
 		}
 	}
 }

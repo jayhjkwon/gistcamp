@@ -1,9 +1,9 @@
 require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 	'views/topView', 'views/footerView', 'constants', 'models/user', 'global', 'async',
-	'socketio', 'postalWrapper', 'toastr', 'service',
+	'socketio', 'postalWrapper', 'toastr', 'service', 'mousetrap', 'router',
 	'bootstrap', 'prettify', 'nicescroll', 'autoGrow', 'scrollTo'], 
 	function($, _, Application, Router, shellView, topView, footerView, constants, User, global, async, 
-		socketio, postalWrapper, toastr, service){
+		socketio, postalWrapper, toastr, service, mousetrap, Router){
 	$(function(){
 		var el = shellView.render().el;
 
@@ -100,6 +100,84 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 			callback(null, router);
 		};
 
+		var handleShortcuts = function(callback){
+			var moveToGist = function(moveUp){
+				var nextGist ;
+				var gistList = $('.gist-item-container .row-fluid');
+	    		var selectedGist = $('.row-fluid.selected');
+	    		var selectedGistIndex = gistList.index(selectedGist);
+
+				if (moveUp){
+	    			if (selectedGistIndex === 0) return;
+	    			nextGist = gistList[selectedGistIndex - 1];
+	    		}else{
+	    			nextGist = gistList[selectedGistIndex + 1];
+	    			if (!nextGist) return;
+				}
+
+				selectedGist.removeClass('selected');
+	    		$(nextGist).addClass('selected');
+	    		$(nextGist).find('.gist-item').trigger('click');
+	   			$('.gist-list').scrollTo($(nextGist), {offset:0});	
+			};
+
+			mousetrap.bind('down', function(){
+				moveToGist(false);
+				return false;
+			});
+
+			mousetrap.bind('up', function(){
+				moveToGist(true);
+				return false;
+			});
+
+			mousetrap.bind('left', function(){
+				$('.carousel').carousel('prev');
+				return false;
+			});
+
+			mousetrap.bind('right', function(){
+				$('.carousel').carousel('next');
+				return false;
+			});
+
+			mousetrap.bind('g n', function(){
+				var router = new Router;
+				router.navigate('newgist', {trigger: true});
+			});
+
+			mousetrap.bind('g f', function(){
+				var router = new Router;
+				router.navigate('friends', {trigger: true});
+			});
+
+			mousetrap.bind('g m', function(){
+				var router = new Router;
+				router.navigate('mygists', {trigger: true});
+			});
+
+			mousetrap.bind('g s', function(){
+				var router = new Router;
+				router.navigate('starred', {trigger: true});
+			});
+
+			mousetrap.bind('g a', function(){
+				var router = new Router;
+				router.navigate('all', {trigger: true});
+			});
+
+			mousetrap.bind('g c', function(){
+				var router = new Router;
+				router.navigate('chat', {trigger: true});
+			});
+
+			mousetrap.bind('g x', function(){
+				postalWrapper.publish(constants.STAR);
+			});
+
+			callback(null);
+		};
+
 		Application.addInitializer(function(options){
 			async.series(
 				[
@@ -109,6 +187,7 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 					loadView,
 					showUserInfo,
 					startRouter,
+					handleShortcuts,
 					function(err, results){
 						console.log('Application initialization has completed');
 					}

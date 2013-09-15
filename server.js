@@ -22,8 +22,8 @@ var GITHUB_CLIENT_SECRET;
 var callbackURL;
 
 if (config.options.env === 'development'){
-	GITHUB_CLIENT_ID = "d992e538e78bc563aae8"; 
-	GITHUB_CLIENT_SECRET = "64a09c87fea5e883c5d432b702876b81f8315e4c";
+	GITHUB_CLIENT_ID = constants.GITHUB_CLIENT_ID; 
+	GITHUB_CLIENT_SECRET = constants.GITHUB_CLIENT_SECRET;
 }else{
 	var github = require('./githubInfo');
 	GITHUB_CLIENT_ID = github.info.GITHUB_CLIENT_ID; 
@@ -182,6 +182,8 @@ app.put('/api/gist/tags/:id', ensureAuthenticated, gist.editTag);
 app.delete('/api/gist/tags/:id', ensureAuthenticated, gist.removeTag);
 
 app.post('/api/gist/newgist', ensureAuthenticated, gist.createNewgGist);
+app.delete('/api/gist/newgist/:id', ensureAuthenticated, gist.deleteGist);
+
 app.get('/api/user/auth', ensureAuthenticated, user.getAuthUser);
 app.put('/api/user/following/:login_id', ensureAuthenticated, user.follow);
 app.delete('/api/user/following/:login_id', ensureAuthenticated, user.unfollow);

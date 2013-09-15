@@ -13,6 +13,7 @@ define(function(require){
 		util               = require('util'),
 		ace                = require('ace/ace'),
 		editorList         = [],
+		select2            = require('select2'),
 		CreateGistView     = Marionette.CompositeView.extend({
 			template : createGistTemplate,
 			itemView : CreateGistItemView,
@@ -28,9 +29,12 @@ define(function(require){
 				self.collection.add(item);
 
 				$('#main').niceScroll({cursorcolor: '#eee'});
+
 			},
 			onShow : function(){
 				this.addEditor();
+
+				
 			},
 
 			addEditor : function(){
@@ -41,17 +45,17 @@ define(function(require){
 				editor.getSession().setValue("");
 				editorList.push(editor);
 
-				$('#editor').attr('id', 'editor' + this.editorSeq);
+				var newEdit = $('#editor').attr('id', 'editor' + this.editorSeq);
+
+				this.addSelect2(newEdit.parents('.file').find('.file-extension-name'));
+				// newEdit.parents('.file').find('.file-extension-name').select2();
+
 				this.editorSeq++;
-
 				this.setDeleteIcon();
-
 				$("#main").getNiceScroll().resize();
-
-				
 			},
 			onRender : function(){
-
+				
 			},
 			events : {
 				'click #add-file' : 'onAddFile',
@@ -59,27 +63,19 @@ define(function(require){
 				'click .create-secrete-gist' : 'onCreateSecreteGist',
 				'click .create-public-gist' : 'onCreatePublicGist'
 			},
+			addSelect2 : function($s){
+				$s.select2();
+
+			},
 
 
-			// onFileExtensionClick : function(e){
-			// 	var $target = $(e.target);
-			// 	var targetTxt = $target.text();
-				
-			// 	console.log($target.closest('.file-extension-list').prev('.file-extension-name'));
-
-
-			// 	$target.closest('.file-extension-list').prev('.file-extension-name').first().text(targetTxt);
-
-			// 	e.stopPropagation();
-
-			// 	// $target.closest('.file-extension-name').text(targetTxt);
-				
-			// 	return false;
-			// },
 			onAddFile : function(e){
 				var self = this;
 				var item = new NewGistItem();
 				self.collection.add(item);
+				console.log($(item));
+				this.addSelect2($(item).find('.file-extension-name'));
+				// $(item).find('.file-extension-name').select2();
 				self.addEditor();
 				return false;
 			},
@@ -102,14 +98,11 @@ define(function(require){
 			},
 			onCreateSecreteGist : function(e){
 				var gistItem = this.setNewGist(false);
-				console.log(gistItem.toJSON());
 				return false;
 
 			},
 			onCreatePublicGist : function(e){
 				var gistItem = this.setNewGist(true);
-
-				console.log(gistItem.toJSON());
 				return false;
 			},
 			setNewGist : function(param)
@@ -127,8 +120,7 @@ define(function(require){
 				_.each(items, function(item, idx){
 					var content = editorList[idx].getValue();
 					var fileName = $(item).find('.file-name').val();
-					var fileExtension = $(item).find('.file-extension-name').val()
-					var extension = _.where(util.extensionList, { 'filename' : fileExtension })[0].extension;
+					var extension = $(item).find('.file-extension-name').select2('val');
 					files[fileName + '.' + extension]= {'content' : content};
 				});
 
@@ -142,27 +134,7 @@ define(function(require){
 				});
 
 				return gistItem;
-			},
-
-			// loading: function(showSpinner){
-			// 	// if (showSpinner){
-			// 	// 	var target = $('.create-gist-container')[0];
-			// 	// 	this.spinner.spin(target);
-			// 	// }else{					
-			// 	// 	this.spinner.stop();					
-			// 	// }
-
-			// 	if (showSpinner){
-			// 		$('#main').append('<div style="height:100px;" class="loadSpinner"></div>');
-			// 		var target = $('#main .loadSpinner')[0];
-			// 		this.spinner.spin(target);
-			// 	}else{					
-			// 		this.spinner.stop();					
-			// 		$('.loading').remove();	
-			// 	}
-			// }
-
-
+			}
 		});
 
 

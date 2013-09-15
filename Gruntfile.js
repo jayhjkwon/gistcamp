@@ -77,7 +77,26 @@ module.exports = function (grunt) {
                     ]
                 }
             }
-        }
+        },
+
+        cssmin: {
+          combine: {
+            files: {
+              './public/styles/app-thirdparty.min.css': 
+              [
+                './public/vendor/bootstrap/docs/assets/css/bootstrap.css',
+                './public/vendor/font-awesome/css/font-awesome.css', 
+                './public/vendor/toastr/toastr.css',
+                './public/vendor/select2/select2.css'
+              ],
+              './public/styles/welcome-thirdparty.min.css': 
+              [
+                './public/vendor/bootstrap/docs/assets/css/bootstrap.css',
+                './public/vendor/font-awesome/css/font-awesome.css'
+              ]
+            }
+          }
+        },
     });
 
     // Load tasks from NPM
@@ -86,7 +105,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
 
     // register task.
-    grunt.registerTask('default', ['requirejs', 'less:production', 'uglify']);
+    grunt.registerTask('default', ['requirejs', 'less:production', 'cssmin', 'uglify']);
 };

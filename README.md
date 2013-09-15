@@ -1,5 +1,7 @@
 # GistCamp #
-[The GistCamp](http://gistcamp.com) is an web app that helps organize and share your gists.
+#### [The GistCamp](http://gistcamp.com) is an web app that helps organize and share your gists.
+
+![GistCamp](https://dl.dropboxusercontent.com/u/51695292/gistcamp.png)
 
 ## Features
 * The GistCamp is an web interface of GitHub's GIST service, more focuses on sharing your gists with your followings and followers of your GitHub account.
@@ -7,7 +9,8 @@
 * You can watch your followings and followers' gists. 
 * If commenting on other gists is not enough, you can chat with other geeks.
 * You will get notification instantly once other geeks comment on your gist or send chat messages to you.
-* You can share the gists on Facebook, Twitter and Google+
+* You can share the gists on Facebook, Twitter, Google+ and LinkedIn.
+* You can move to the specific menu using shortcut keys like Gmail does.
 * As you see here, all the source code of the GistCamp is open-sourced. Please help us make the GistCamp more robust and richer by forking this repository.
 
 ## How to run GistCamp on your local machine
@@ -16,15 +19,16 @@ Prerequistes
 * [Bower](http://bower.io)
 * [Grunt](http://gruntjs.com)
 * [MongoDB](http://www.mongodb.org)
+* [Application ID and Secret](http://developer.github.com/guides/basics-of-authentication/#registering-your-app)
+ - Get your application ID and Secret from GitHub Account Settings page, then replace ID/Secret values in infra/constants.js with yours.
 
 In CLI:
 ```bash
-mongod 
+mongod    /* Specify the path for your db path if you need */
 npm install
 bower install
 bower install jquery-nicescroll
 bower install autogrow-textarea
-bower install ace
 grunt
 node server
 ```

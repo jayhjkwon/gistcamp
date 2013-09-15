@@ -16,13 +16,14 @@ define(function(require){
 		Spinner         = require('spin'),
 		service         = require('service'),
 		GistItem        = require('models/gistItem'),
+		util            = require('util'),
 
 		FooterView = Marionette.ItemView.extend({
 			className: 'command-buttons',
 			template : footerTemplate,
 
 			initialize: function(){
-				_.bindAll(this, 'shareGg', 'shareFB', 'shareTW', 'shareFB', 'initializePopOverTag', 'onItemSelected', 'star', 'createTag', 'loading', 'onBtnCommentClick', 'onRoomCreated', 'tagOnGist', 'onCommentDeleted', 'onCommentAdded', 'onTagCollectionChange');
+				_.bindAll(this, 'deleteTag', 'onTagItemHover', 'shareGg', 'shareFB', 'shareTW', 'shareFB', 'initializePopOverTag', 'onItemSelected', 'star', 'createTag', 'loading', 'onBtnCommentClick', 'onRoomCreated', 'tagOnGist', 'onCommentDeleted', 'onCommentAdded', 'onTagCollectionChange', 'initializePopOverShare');
 
 				this.tags = new TagItemList();
 
@@ -31,6 +32,7 @@ define(function(require){
 				this.subscription = postalWrapper.subscribe(constants.GIST_ITEM_SELECTED, this.onItemSelected);
 				this.subscriptionDeleteComment = postalWrapper.subscribe(constants.COMMENT_DELETE, this.onCommentDeleted);
 				this.subscriptionAddComment = postalWrapper.subscribe(constants.COMMENT_ADD, this.onCommentAdded);
+				this.subscriptionStar = postalWrapper.subscribe(constants.STAR, this.star); 
 				this.router = new Router();
 			},
 
@@ -41,28 +43,60 @@ define(function(require){
 				'keydown #new-tag'       : 'createTag',
 				'click .tag-popup ul li a' : 'tagOnGist',
 				'click .btn-star'        : 'star',
-				'click .btn-fb'          : 'shareFB',
-				'click .btn-tw'          : 'shareTW',
-				'click .btn-gp'          : 'shareGg'
+				'click .share-google'    : 'shareGg',
+				'click .share-facebook'  : 'shareFB',
+				'click .share-twitter'   : 'shareTW',
+				'click .share-linkedin'  : 'shareLnk',
+				'click .tag'             : 'onTagButtonClick',
+				'click .btn-del-tag'     : 'deleteTag',
+				'click .btn-delete-gist' : 'onDeleteGist'
 			},
 
 			ui : {
-				btnTag : '.btn-command-wrapper.tag'
+				btnTag   : '.btn-command-wrapper.tag',
+				btnShare : '.btn-share'
 			},
 
 			onRender: function(){
-				this.initializePopOverTag();				
+				this.initializePopOverTag();	
+				this.initializePopOverShare();	
+			},
+
+			onTagButtonClick: function(){
+				var self = this;
+				
+				// unbind hover event first
+				$('.tag-popup ul li').off('mouseenter mouseleave');
+
+				// register hover event
+				$('.tag-popup ul li').hover(self.onTagItemHover, function(){
+					self.$el.find('.btn-del-tag').fadeOut(100);
+				});		
+			},
+
+			onTagItemHover: function(e){
+				$(e.target).find('.btn-del-tag').show();
 			},
 
 			initializePopOverTag: function(){
+				var self = this;
 				this.ui.btnTag.popover({
 					html	: true,
 					placement: 'top',
-					title	: function(){ return '<div><i class="icon-tag"></i> Tag the gist</div>'; },
+					title	: function(){ return '<div><i class="icon-tag"></i> Tag gist</div>'; },
 					content : function(){ return $('.tag-area').html(); }					
 			    });
 
 				this.tags.fetch();	
+			},
+
+			initializePopOverShare: function(){
+				this.ui.btnShare.popover({
+					html	: true,
+					placement: 'top',
+					title	: function(){ return '<div><i class="icon-share"></i> Share gist</div>'; },
+					content : function(){ return $('.share-area').html(); }					
+			    });
 			},
 
 			onTagCollectionChange: function(event_name){
@@ -77,14 +111,17 @@ define(function(require){
 							tag.set('is_tagged', true);
 						else
 							tag.set('is_tagged', false);
-
-						// refresh only tag popup contents
-						if ($('.tag-popup').length){
-							self.$el.find('.tag-popup').replaceWith(tagListTemplate({tags: self.tags.toJSON()}));
-						}else{
-							$('.tag-area').html(tagListTemplate({tags: self.tags.toJSON()}));	
-						}
 					});
+
+					// refresh only tag popup contents
+					if ($('.tag-popup').length){
+						self.$el.find('.tag-popup').replaceWith(tagListTemplate({tags: self.tags.toJSON()}));
+					}else{
+						$('.tag-area').html(tagListTemplate({tags: self.tags.toJSON()}));	
+					}
+
+					// force registering hover event on tag item in tag popup
+					self.onTagButtonClick();			
 				}				
 			},
 
@@ -95,14 +132,21 @@ define(function(require){
 		    		self.saving = true;
 		    		self.loading(true, e.target);
 		    		
-		    		var text = $(e.target).val();
-		    		var tag = new TagItem({gistId: self.model.get('id'), tagName:text});
+		    		var tagName = $(e.target).val();
+		    		var tag = new TagItem({gistId: self.model.get('id'), tagName:tagName});
 		    		tag.save()
 		    		.done(function(data){
+		    			var tagNames = self.model.get('tags');
+						tagNames.push(tagName);
+						self.model.set('tags', tagNames);
+
 		    			self.tags.reset(data);	    						    			
 		    			self.ui.btnTag.popover('show');
 		    			$(e.target).val('');
 		    			postalWrapper.publish(constants.TAG_CHANGED, self.tags.toJSON());
+
+		    			// force registering hover event on tag item in tag popup
+						self.onTagButtonClick();	
 		    		})
 		    		.always(function(){
 		    			self.saving = false;
@@ -111,41 +155,72 @@ define(function(require){
 		    	}
 			},
 
+			deleteTag: function(e){
+				var self = this;
+				self.saving = true;
+	    		self.loading(true, e.target);
+	    		
+	    		var tagId = $(e.target).siblings('a').attr('data-tag-id');
+	    		var tagName = $(e.target).siblings('a').attr('data-tag-name');
+	    		var tag = new TagItem({id: tagId});
+	    		tag.destroy().done(function(data){
+	    			var tagNames = self.model.get('tags');
+					self.model.set('tags', _.without(tagNames, tagName));
+
+	    			self.tags.reset(data);	    						    			
+	    			self.ui.btnTag.popover('show');
+	    			postalWrapper.publish(constants.TAG_CHANGED, self.tags.toJSON());
+
+	    			// force registering hover event on tag item in tag popup
+					self.onTagButtonClick();	
+	    		})
+	    		.always(function(){
+	    			self.saving = false;
+	    			self.loading(false);
+	    		});
+			},
+
 			tagOnGist: function(e){
 				e.preventDefault();
 				var self = this;
 				
-				var tagId = $(e.target).data('tag-id');
-				var tagName = $(e.target).data('tag-name');
+				var tagId = $(e.target).attr('data-tag-id');
+				var tagName = $(e.target).attr('data-tag-name');
 				var gistId = this.model.get('id');
-				var isTagged = $(e.target).data('is-tagged');
+				var isTagged = $(e.target).attr('data-is-tagged');
 
 				if (!isTagged){
 					service
 					.setTagOnGist(tagId, gistId)
 					.done(function(data){
-						var tags = self.model.get('tags');
-						tags.push(tagName);
-						self.model.set('tags', tags);
+						var tagNames = self.model.get('tags');
+						tagNames.push(tagName);
+						self.model.set('tags', tagNames);
 						
 						self.tags.reset(data);
 						postalWrapper.publish(constants.TAG_CHANGED, self.tags.toJSON());
 						$(e.target).find('span.tag-saved-msg').remove();
 						$(e.target).append('<span class="pull-right tag-saved-msg">Tagged</span>');
 						$('.tag-saved-msg').fadeOut(4000);
+
+						// force registering hover event on tag item in tag popup
+						self.onTagButtonClick();	
 					});
 				}else{
 					service
 					.deleteTagOnGist(tagId, gistId)
 					.done(function(data){
-						var tags = self.model.get('tags');
-						self.model.set('tags', _.without(tags, tagName));
+						var tagNames = self.model.get('tags');
+						self.model.set('tags', _.without(tagNames, tagName));
 
 						self.tags.reset(data);
 						postalWrapper.publish(constants.TAG_CHANGED, self.tags.toJSON());
 						$(e.target).find('span.tag-saved-msg').remove();
 						$(e.target).append('<span class="pull-right tag-saved-msg">Untagged</span>');
 						$('.tag-saved-msg').fadeOut(4000);
+
+						// force registering hover event on tag item in tag popup
+						self.onTagButtonClick();	
 					});
 				}
 			},
@@ -218,6 +293,16 @@ define(function(require){
 			},
 
 			onItemSelected : function(gistItem){
+				console.log('onSelected');
+				console.log(gistItem);
+
+				if(gistItem.user.id === global.user.id){
+					$('.btn-delete-gist').show();
+				}else{
+					$('.btn-delete-gist').hide();
+				}
+
+
 				this.model = new GistItem(gistItem);
 				if (gistItem && gistItem.comments > 0){
 					$('.comments-badge').text(gistItem.comments).show();
@@ -225,7 +310,7 @@ define(function(require){
 					$('.comments-badge').text('').hide();
 				}
 
-				// force refresh tag popup contents
+				// force refreshing tag popup contents
 				this.onTagCollectionChange();
 			},
 
@@ -260,25 +345,40 @@ define(function(require){
 				}
 			},
 
-			shareFB : function(){
+			shareFB : function(e){
+				e.preventDefault();
 				var gistUrl = this.model.get('html_url');
 				var url = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(gistUrl);
 				var title = 'GistCamp';
 				this.popupWindow(url, title, '626', '436');
+				this.ui.btnShare.popover('hide');
 			},
 
-			shareTW : function(){
+			shareTW : function(e){
+				e.preventDefault();
 				var gistUrl = this.model.get('html_url');
 				var url = 'https://twitter.com/intent/tweet?via=gistcamp&url=' + encodeURIComponent(gistUrl);
 				var title = 'GistCamp';
 				this.popupWindow(url, title, '473', '258');	
+				this.ui.btnShare.popover('hide');
 			},
 
-			shareGg : function(){
+			shareGg : function(e){
+				e.preventDefault();
 				var gistUrl = this.model.get('html_url');
 				var url = 'https://plus.google.com/share?url=' + encodeURIComponent(gistUrl);
 				var title = 'GistCamp';
 				this.popupWindow(url, title, '473', '216');	
+				this.ui.btnShare.popover('hide');
+			},
+
+			shareLnk : function(e){
+				e.preventDefault();
+				var gistUrl = this.model.get('html_url');
+				var url = 'https://www.linkedin.com/shareArticle?mini=true&url=' + encodeURIComponent(gistUrl);
+				var title = 'GistCamp';
+				this.popupWindow(url, title, '626', '496');	
+				this.ui.btnShare.popover('hide');	
 			},
 
 			popupWindow: function(url, title, w, h){
@@ -299,6 +399,25 @@ define(function(require){
 				this.subscription.unsubscribe();
 				this.subscriptionDeleteComment.unsubscribe();
 				this.subscriptionAddComment.unsubscribe();
+				this.subscriptionStar.unsubscribe();
+			},
+
+			onDeleteGist : function(){
+				var conf = confirm("Do you want to delete this Gist?");
+
+				util.loadSpinner(true);
+
+			    if(conf == true){
+			    	this.model.destroy()
+			    	.done(function(data){
+			    		document.location.reload(true);
+			    	})
+			    	.always(function(){
+						util.loadSpinner(false);
+					});
+			    }else{
+			    	util.loadSpinner(false);
+			    }
 			}
 		})
 	;

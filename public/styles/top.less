@@ -1,21 +1,23 @@
 /* header */
 header {
-	font-size:15px;
+	font-size:13px;
 
-	.logo{
-		width:20px;
+	.logo {
+		width:18px;
 		height:15px;
 		color:gray;
-		margin-right:5px;
+		margin-right:3px;
 	}
 
 	.brand {
 		font-weight: 700 !important;
+		font-size:14px !important;
 	}
 	
 	.nav {
-		> li > a{
+		> li > a {
 			height:20px !important;		
+			padding:10px 12px 10px !important;
 		}
 		.dropdown-menu {
 			border-width:1px !important;
@@ -29,16 +31,21 @@ header {
 			.badge {
 				margin-left:20px;
 			}
+			&.shortcuts li a{
+				min-width: 250px;
+			}
+			&.shortcuts .pull-left {
+				font-weight: bold;
+			}
 		}
+		&.pull-right > li > a.gravatar-img{
+			padding:0px 0px 20px 0px !important;
+			img {
+				height:40px !important;
+			}
+		}		
 	}	
 	
-	.gravatar-img {
-		padding: 0 0 20px 0 !important;
-		img {
-			height:40px !important;
-		}
-	}
-
 	.divider-vertical{
 		margin:0 !important;
 	}	

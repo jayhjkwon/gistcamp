@@ -30,9 +30,23 @@ define(function(require){
 			
 			onDomRefresh: function(){
 				$('.files-wrapper').niceScroll({cursorcolor: '#eee'});
-				$('.carousel').carousel({interval: false});
+				$('.carousel').carousel({interval: false}).on('slid', this.markActiveFileHeader);
 
-				prettyPrint();
+				if (this.selectedGistItem){
+					var filesArray = _.toArray(this.selectedGistItem.files);
+					var exist = _.find(filesArray, function(file){
+						return file.size > 10240; //over 10kb
+					});
+					if (!exist)	
+						prettyPrint();	// prettyprint function cause performance issue especially when loading big file
+				}
+			},
+
+			markActiveFileHeader: function(){
+				var activeIndex = $('.carousel-inner .item').index($('.carousel-inner .item.active'));
+				$('.pivot-headers a').removeClass('active');
+				var pivotHeader = $('.pivot-headers a')[activeIndex];
+				$(pivotHeader).addClass('active');
 			},
 
 			bindFiles : function(gistItem){
