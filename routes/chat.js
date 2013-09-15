@@ -8,11 +8,53 @@ exports.start = function(io){
 
   var removeById = function(target, val) {
     for(var i=0; i<target.length; i++) {
-          if(target[i].id == val) {
-              target.splice(i, 1);
-              break;
-          }
-      }
+        if(target[i].id == val) {
+            //target.splice(i, 1);
+            target[i].opacity = 0.4;
+            return true;
+        }
+    }
+
+    return false;
+  };
+
+  var addById = function(target, val) {
+    for(var i=0; i<target.length; i++) {
+        if(target[i].id == val) {
+            //target.splice(i, 1);
+            target[i].opacity = 1.0;
+            return true;
+        }
+    }
+
+    return false;
+  };
+
+  var emptyRoomYn = function(target) {
+    var count = 0;
+    for(var i=0; i<target.length; i++) {
+        if(target[i].opacity == 0.4) {
+            count += 1;
+        }
+    }
+
+    return count == target.length ? true : false;
+  };
+
+  var insertChatContent = function(room, userid, login, avatar, data) {
+      // insert to mongodb
+      chatContent = new ChatContent();
+      chatContent.room_key = room;
+      chatContent.user_id = userid;
+      chatContent.user_login = login;
+      chatContent.avatar_url = avatar;
+      chatContent.content = data;
+      chatContent.created_at = datetimeNow();
+
+      chatContent.save(function(err) {
+        if (err)
+          console.log('chatContent save error : ' + err);
+      });
   };
 
   var datetimeNow = function() {
@@ -30,6 +72,9 @@ exports.start = function(io){
 
   // rooms which are currently available in chat
   var rooms = {};
+
+  // delete room interval
+  var interval = 1000 * 60 * 60 * 24;
 
   io.sockets.on('connection', function (socket) {
 
@@ -53,6 +98,15 @@ exports.start = function(io){
     });
 
     socket.on('getrooms', function() {
+
+      for(var key in rooms) {
+          if (rooms[key].lastLeaveDatetime != undefined) {
+            if (rooms[key].lastLeaveDatetime + interval < new Date().getTime()) {
+              delete rooms[key];
+            }
+          }
+      }
+
       socket.emit('updaterooms', rooms);
     });
     
@@ -60,16 +114,23 @@ exports.start = function(io){
       socket.room = roomname;
 
       if (rooms[roomname] == undefined) {
-          rooms[roomname] = new Array();
+          rooms[roomname] = {};
+          rooms[roomname].users = new Array();
       }
 
-      rooms[roomname].push(usernames[socket.userid]);
-      
-      console.log('addroom length ' + rooms[roomname].length);
+      var added = addById(rooms[roomname].users, socket.userid);
+      if (added == false) {
+        usernames[socket.userid].opacity = 1;
+        rooms[roomname].users.push(usernames[socket.userid]);  
+      }
+
+      rooms[roomname].lastLeaveDatetime = undefined;
 
       socket.join(roomname);
 
-      socket.emit('updatechat', 'SERVER', 'connected to ' + roomname + ' gist room');
+      var data = 'connected to ' + roomname + ' gist room';
+      socket.emit('updatechat', 'SERVER', data);
+      // insertChatContent(roomname, 0, 'SERVER', '', data);
       // socket.broadcast.to(roomname).emit('updatechat', 'SERVER', socket.username + ' has joined this room');
       socket.broadcast.emit('updaterooms', rooms);
     });
@@ -78,22 +139,7 @@ exports.start = function(io){
     socket.on('sendchat', function (data) {
       // we tell the client to execute 'updatechat' with 2 parameters
       io.sockets.in(socket.room).emit('updatechat', usernames[socket.userid], data);
-
-      // insert to mongodb
-      chatContent = new ChatContent();
-      chatContent.room_key = socket.room;
-      chatContent.user_id = socket.userid;
-      chatContent.user_login = usernames[socket.userid].login;
-      chatContent.avatar_url = usernames[socket.userid].avatar;
-      chatContent.content = data;
-      chatContent.created_at = datetimeNow();
-
-      chatContent.save(function(err) {
-        if (err)
-          console.log('chatContent save error : ' + err);
-        else
-          console.log('success');
-      })
+      insertChatContent(socket.room, socket.userid, usernames[socket.userid].login, usernames[socket.userid].avatar, data);
 
       //io.sockets.socket(socket.id).emit('updatealarm', usernames[socket.userid], data);
     });
@@ -108,30 +154,46 @@ exports.start = function(io){
     socket.on('switchRoom', function(newroom) {
       if (rooms[socket.room] != undefined) {  
         socket.leave(socket.room);
-        removeById(rooms[socket.room], socket.userid);
+        removeById(rooms[socket.room].users, socket.userid);
         //rooms[socket.room].removeById(socket.userid); 
 
-        socket.broadcast.to(socket.room).emit('updatechat', 'SERVER', usernames[socket.userid].login + ' has left this room');
+        var data = usernames[socket.userid].login + ' has left this room';
+        socket.broadcast.to(socket.room).emit('updatechat', 'SERVER', data);
+        insertChatContent(socket.room, 0, 'SERVER', '', data);
 
-        if (rooms[socket.room].length == 0) {
-          delete rooms[socket.room];
-          socket.broadcast.emit('deleteroom', socket.room)
+        if (emptyRoomYn(rooms[socket.room].users) == true) {
+          rooms[socket.room].lastLeaveDatetime = new Date().getTime();
         }
+
+        // if (rooms[socket.room].users.length == 0) {
+        //   delete rooms[socket.room];
+        //   socket.broadcast.emit('deleteroom', socket.room)
+        // }
       }
 
       if (rooms[newroom] == undefined) {
-          rooms[newroom] = new Array();
+          rooms[newroom] = {};
+          rooms[newroom].users = new Array();
+      }
+      
+      var added = addById(rooms[newroom].users, socket.userid);
+      if (added == false) {
+        usernames[socket.userid].opacity = 1;
+        rooms[newroom].users.push(usernames[socket.userid]);  
       }
 
-      rooms[newroom].push(usernames[socket.userid]);
-      
+      rooms[newroom].lastLeaveDatetime = undefined;
+
       socket.join(newroom);
       //socket.emit('updatechat', 'SERVER', 'you have connected to '+ newroom);
       // sent message to OLD room
       
       // update socket session room title
       socket.room = newroom;
-      socket.broadcast.to(newroom).emit('updatechat', 'SERVER', usernames[socket.userid].login + ' has joined this room');
+      var data = usernames[socket.userid].login + ' has joined this room';
+      socket.broadcast.to(newroom).emit('updatechat', 'SERVER', data);
+      insertChatContent(newroom, 0, 'SERVER', '', data);
+
       socket.emit('updaterooms', rooms);
       socket.broadcast.emit('updaterooms', rooms);
       
@@ -140,16 +202,17 @@ exports.start = function(io){
     socket.on('leaveRoom', function(leaveRoom) {
       if (rooms[leaveRoom] != undefined) {
         socket.leave(leaveRoom);
-        removeById(rooms[leaveRoom], socket.userid);
+        removeById(rooms[leaveRoom].users, socket.userid);
         //rooms[leaveRoom].removeById(socket.userid);
 
-        if (rooms[leaveRoom].length == 0) {
-          delete rooms[leaveRoom];
-          socket.broadcast.emit('deleteroom', leaveRoom);
-        } 
+        if (emptyRoomYn(rooms[leaveRoom].users) == true) {
+          rooms[leaveRoom].lastLeaveDatetime = new Date().getTime();
+        }
 
         if (usernames[socket.userid] != undefined) {
-          socket.broadcast.to(leaveRoom).emit('updatechat', 'SERVER', usernames[socket.userid].login + ' has left this room');  
+          var data = usernames[socket.userid].login + ' has left this room';
+          socket.broadcast.to(leaveRoom).emit('updatechat', 'SERVER', data);
+          insertChatContent(leaveRoom, 0, 'SERVER', '', data);
         }
 
         socket.broadcast.emit('updaterooms', rooms);
@@ -168,11 +231,10 @@ exports.start = function(io){
       
       if (socket.room != undefined && rooms[socket.room] != undefined) {
         socket.leave(socket.room);
-        removeById(rooms[socket.room], socket.userid);
-        //rooms[socket.room].removeById(socket.userid); 
-        if (rooms[socket.room].length == 0) {       
-          delete rooms[socket.room];
-          socket.broadcast.emit('deleteroom', socket.room);
+        removeById(rooms[socket.room.users], socket.userid);
+        //rooms[socket.room].removeById(socket.userid);
+        if (emptyRoomYn(rooms[socket.room].users) == true) {
+          rooms[socket.room].lastLeaveDatetime = new Date().getTime();
         }
 
         socket.broadcast.emit('updaterooms', rooms);

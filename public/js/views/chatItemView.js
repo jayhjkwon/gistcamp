@@ -21,6 +21,7 @@ define(function(require) {
 
 			initialize: function(options){
 				_.bindAll(this, 'onGistItemSelected', 'onAddClassSelected', 'onViewFileContent');
+				//this.subscriptionRemoveIsSelected = postalWrapper.subscribe(constants.REMOVE_IS_SELECTED, this.setIsSelectedGistFalse);
 			},
 
 			events : {
@@ -29,7 +30,8 @@ define(function(require) {
 			},
 
 			ui : {
-				divChatItem : '.chat-item'
+				divChatItem : '.chat-item',
+				btnView : '.file-content'
 			},
 
 			onViewFileContent: function(e){
@@ -79,20 +81,34 @@ define(function(require) {
 			    }
 			}, 
 
+			// setIsSelectedGistFalse: function(context){ 
+			// 	if (context !== this) {
+			// 		this.isSelectedGist = false; 
+			// 		this.ui.btnView.hide();
+			// 	}
+			// },
+
 			onGistItemSelected : function(e){
+				this.isSelectedGist = true;
+				
+				global.socket.emit('switchRoom', this.model.id);
 
 				$('.chat-item').removeClass('selected');
 				$(e.currentTarget).addClass('selected');
+
+				//$('.btn btn-danger file-content').hide();
 				
 				// Application.execute(constants.GIST_ITEM_SELECTED, this.model.toJSON());
 				postalWrapper.publish(constants.GIST_ITEM_SELECTED, this.model.toJSON());
-				global.socket.emit('switchRoom', this.model.id);
+				//postalWrapper.publish(constants.REMOVE_IS_SELECTED, this);
 			},
 
 			onAddClassSelected : function() {
 
 				$('.chat-item').removeClass('selected');
 				this.ui.divChatItem.addClass('selected');
+
+				this.ui.btnView.show();
 			}
 		})
 	;

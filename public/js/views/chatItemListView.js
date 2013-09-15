@@ -28,7 +28,7 @@ define(function(require){
 			selectedRoomName: '',
 
 			initialize: function(){				
-				_.bindAll(this, 'getChatList', 'addChatList', 'onRender', 'onClose', 'removeChatList', 'onItemSelected');
+				_.bindAll(this, 'getChatList', 'addChatList', 'onRender', 'onClose', 'removeChatList', 'onItemSelected', 'getChatHistory');
 				
 				this.spinner = new Spinner();
 				this.subscriptionUpdateRoom = postalWrapper.subscribe(constants.CHAT_UPDATE_ROOM, this.getChatList);
@@ -42,49 +42,51 @@ define(function(require){
 
 			getChatList: function(){
 				var self = this;
-				self.rooms = global.rooms;
+				setTimeout(function() {
+					self.rooms = global.rooms;
 
-				if (_.size(self.rooms) == 0){
-					self.collection.reset();	
-				}
-				// res.data['room'] = self.rooms[key];
-				// self.collection.reset(res.data);	
+					if (_.size(self.rooms) == 0){
+						self.collection.reset();	
+					}
+					// res.data['room'] = self.rooms[key];
+					// self.collection.reset(res.data);	
 
-				$.each(self.rooms, function(key, value) {
-		    		var chatItem = new ChatItem({'gistId': key});
-		    		chatItem.fetch()
-		    		.done(function(res) {
-		    						
-		    			var isUpdated = false;
+					$.each(self.rooms, function(key, value) {
+			    		var chatItem = new ChatItem({'gistId': key});
+			    		chatItem.fetch()
+			    		.done(function(res) {
+			    						
+			    			var isUpdated = false;
 
-			    		for (var index = self.collection.models.length - 1; index >= 0; index--) {
-		    				if (self.collection.models[index].id === key) {
-	    							// if (_.size(res.data['room']) != _.size(self.rooms[key])) {
-	    						res.data['room'] = self.rooms[key];
-								self.collection.reset(res.data);
-								
+				    		for (var index = self.collection.models.length - 1; index >= 0; index--) {
+			    				if (self.collection.models[index].id === key) {
+		    							// if (_.size(res.data['room']) != _.size(self.rooms[key])) {
+		    						res.data['room'] = self.rooms[key];
+									self.collection.reset(res.data);
+									
 									isUpdated = true;	
-	    						// }
-		    				}
+		    						// }
+			    				}		    				
+				    		}
 
-		    				if (self.collection.models[index].id === self.selectedRoomName) {
-		    					var childView = self.children.findByModel(self.collection.models[index]);
-								childView.onAddClassSelected();
-		    				}
-			    		}
-
-		    			if (isUpdated == false) {
-							res.data['room'] = self.rooms[key];
-							self.collection.add(res.data);	
-		    			}
-		    		});
-		    	});
-				
-				//self.rendered();
-		    	self.loading(false);
+			    			if (isUpdated == false) {
+								res.data['room'] = self.rooms[key];
+								self.collection.add(res.data);	
+			    			}
+			    		})
+			    		.always(function() {
+							self.loading(false);
+							for (var index = self.collection.models.length - 1; index >= 0; index--) {
+								if (self.collection.models[index].id === self.selectedRoomName) {
+				    					var childView = self.children.findByModel(self.collection.models[index]);
+										childView.onAddClassSelected();
+										break;
+			    				}
+			    			}
+						})
+			    	});
+				}, 600);
 			},
-
-			
 
 			onDomRefresh: function(){
 				// if ( !$('#comment-input').val())
@@ -93,32 +95,59 @@ define(function(require){
 
 			addChatList: function(gist, callback){
 				var self = this;
-				self.rooms = global.rooms;
-
+				self.selectedRoomName = gist.id;
 				self.loading(true);
 
 	    		var chatItem = new ChatItem({'gistId': gist.id});
 	    		chatItem.fetch()
 	    		.done(function(res){
-	    			self.selectedRoomName = gist.id;
-
 	    			res.data['room'] = self.rooms[gist.id];
-
-					console.log(res.data['room'][0].login);
-
     				self.collection.add(res.data);
-    				self.setLastItemSelected();
-	    				//$('.chat-item').last().trigger('click');
+    				
+    				self.getChatHistory(res.data.content);
 	    		})
 	    		.always(function(){
 	    			// self.render();
 			    	// $('.chat-item').last().addClass('selected');
 			    	self.loading(false);
+			    	$('#conversation').scrollTop($("#conversation")[0].scrollHeight);
 	    		});
 			},
 
 			onItemSelected: function(gistItem){
+				var self = this;
+				self.loading(true);
+
 				this.selectedRoomName = gistItem.id;
+
+				var chatItem = new ChatItem({'gistId': gistItem.id});
+	    		chatItem.fetch()
+	    		.done(function(res){
+	    			self.getChatHistory(res.data.content);
+	    		})
+	    		.always(function(){
+	    			// self.render();
+			    	// $('.chat-item').last().addClass('selected');
+			    	self.loading(false);
+			    	$('#conversation').scrollTop($("#conversation")[0].scrollHeight);
+	    		});
+			},
+
+			getChatHistory: function(cotents) {
+				$('#conversation').html('');
+				for (var i = 0; i < cotents.length; i++) {
+					if (cotents[i].user_login === 'SERVER') {
+						$('#conversation').append(cotents[i].content + '<br>');	
+					}
+					else {
+						
+						$('#conversation').append('<img src=' 
+							+ cotents[i].avatar_url
+							+ ' style="margin-top:5px;width:20px;height:20px;"/>' +  ' <b>'
+							+ cotents[i].user_login + ':</b> ' 
+							+ cotents[i].content + '<br>');
+					}
+				};
 			},
 
 			removeChatList: function(roomname) {

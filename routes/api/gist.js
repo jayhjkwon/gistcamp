@@ -238,9 +238,8 @@ exports.getGistById = function(req, res){
 						if (docs) {
 							data.content = docs;
 						}
+						sendData(data, req, res);
 					});
-
-					sendData(data, req, res);
 				}
 			}
 		);

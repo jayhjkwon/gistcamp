@@ -1,7 +1,7 @@
 <div class="chat-item">
   <div class="span3">
-    {{#each room}}
-        <img src={{avatar}} style="width:19px;height:19px;margin-top:2px" />
+    {{#each room.users}}
+        <img src={{avatar}} style="width:19px;height:19px;margin-top:2px;opacity:{{opacity}};" />
     {{/each}}
   </div>
   <div class="span9">
@@ -12,6 +12,6 @@
       </div> -->
       <p class="chat-item-description">{{description}}</p>
     </div>
-    <button class="btn btn-danger file-content">View</button> 
+    {{{isViewing user}}}
   </div>
 </div>
