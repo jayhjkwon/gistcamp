@@ -38,7 +38,7 @@
             <p class="main-font4">
                or learn more about GISTCAMP.
             </p>
-            <div class="main-alert"><h1>Warning</h1>The GistCamp is in the testing stages at the moment. <br/>You could run into errors and downtime. <br/>We are going to release official version at the end of Septemper 2013.</div> -->
+            <div class="main-alert"><h1>Warning</h1>The GistCamp is in the testing stages at the moment. <br/>You could run into errors and downtime. <br/>We are going to release official version at the end of Septemper 2013.</div> 
 
 
 
@@ -58,7 +58,7 @@
                     Features
                     </p>
                 </div>  
-                <div class="span6">
+                <div class="span5">
                    <hr class="hr-features">
                 </div> 
               </div> 
@@ -163,13 +163,14 @@
          </div>
 
       </section>
+
       <section class="sec-sec3">
         <div class="container">  
           <div class="row"  >
             <div class="span2">
             <img class="img-point" src="images/logo.png" />
             </div>
-            <div class="span8 span-point">
+            <div class="span8 font-point">
               GISTCAMP
             <div>
 
@@ -186,7 +187,7 @@
                 Demo
                 </p>
             </div>  
-            <div class="span9">
+            <div class="span8">
                <hr class="hr-demo">
             </div> 
           </div> 
@@ -208,15 +209,55 @@
         <div class="row text-left">  
 
           <div class="span3">
-             <p class="font-title font-contact">
+             <p class="font-title font-connect-title">
               Connect
               </p>
           </div>  
-          <div class="span9">
+          <div class="span8">
              <hr class="hr-contact">
           </div> 
         </div> 
+ 
+
+
+        <div class="row">
+          <a class="span4" href="http://twitter.com/" target="_blank">
+            
+             <span class="icon-stack font-icon-connect text-center">
+              <i class="icon-circle icon-stack-base  font-twitter-circle "></i>
+              <i class="icon-twitter font-connect"></i>
+              <br>
+              <h2>Twitter</h2>  
+             </span>
+              
+          </a>
+
+         <a class="span4" href="http://facebook.com/" target="_blank">
+            
+             <span class="icon-stack  span-facebook font-icon-connect text-center">
+              <i class="icon-circle icon-stack-base  font-facebook-circle"></i>
+              <i class="icon-facebook font-connect"></i>
+              <br>
+              <h2 class="font-facebook">Facebook</h2>  
+             </span>
+              
+          </a>
+
+           <a class="span4" href="http://facebook.com/" target="_blank">
+            
+             <span class="icon-stack  span-facebook font-icon-connect text-center">
+              <i class="icon-circle icon-stack-base  font-facebook-circle"></i>
+              <i class="icon-envelope-alt font-connect"></i>
+              <br>
+              <h2 class="font-facebook">Email</h2>  
+             </span>
+              
+          </a>
+
+
+        </div>
       </div>
+
       </section>
 
 
@@ -230,10 +271,11 @@
       <script src="vendor/jquery/jquery.min.js"></script> 
       <script src="vendor/jquery.scrollTo/jquery.scrollTo.min.js"></script>
       <script src="vendor/jquery-nicescroll/jquery.nicescroll.min.js"></script>
+        
       <script src="js/welcome.js?modified_time=<%= (new Date()).getTime() %>"></script>
       <script src="http://localhost:35729/livereload.js"></script>
     <% }else{ %> 
       <script src="js/welcome_new.min.js?v=<%= appVersion %>"></script>
     <% } %>
   </body>
-</html>
+</html> 
