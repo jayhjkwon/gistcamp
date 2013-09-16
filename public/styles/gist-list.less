@@ -5,11 +5,12 @@
 
 	.row-fluid {
 		// margin-bottom: 20px;
-		border-bottom: solid 1px #fff;
+		// border-bottom: solid 1px #fff;
 		border-top: solid 1px #d8d8d8;//darken(#eee, 20%);
 		padding:5px 0;
 		background-color: darken(#f5f5f5, 1%);
 		background-image: linear-gradient(to bottom, darken(#fff, 2%), lighten(#f5f5f5, 2%));
+		background-repeat: repeat-x;
 		&.selected {
 			// background-color: #008641 !important;
 			// background-color: #54abc3 !important;
@@ -19,6 +20,12 @@
 			.social i, .social a {
 				color:#fff !important;
 			}		
+
+			// border inside the element
+			-moz-box-sizing:    border-box;
+		    -webkit-box-sizing: border-box;
+		    box-sizing:        border-box;
+		    border-right: solid 3px red;
 		}
 		&:hover{
 			background-color: darken(#f5f5f5, 10%);
