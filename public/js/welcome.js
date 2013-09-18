@@ -1,152 +1,71 @@
 $(function(){
-  $("body").niceScroll({
-    cursorcolor : "#fff",
-    cursorwidth : "0px",
-    bouncescroll: true,
-    horizrailenabled:false
-  });
+  // $("body").niceScroll({
+  //   cursorcolor : "#fff",
+  //   cursorwidth : "0px",
+  //   bouncescroll: true,
+  //   horizrailenabled:false
+  // });
 
-  $(".img-power").on("click", function() {
-    
-    $('body').scrollTo('#div-power'
-      ,{duration:'slow', offsetTop : '50'});
+
+var gistUrl = "gistcamp.com";
+
+
+var popupWindow = function(url, title, w, h){
+  var left, top, newWindow, dualScreenLeft, dualScreenTop;
+
+    dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : screen.left;
+    dualScreenTop = window.screenTop != undefined ? window.screenTop : screen.top;
+    left = ((screen.width / 2) - (w / 2)) + dualScreenLeft;
+    top = ((screen.height / 2) - (h / 2)) + dualScreenTop;
+    newWindow = window.open(url, title, 'scrollbars=yes, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
+
+    if (window.focus) {
+        newWindow.focus();
+    }
+}; 
+
+ 
+
+$(".span-linkedin").on("click", function(e){
+    e.preventDefault();
+    var url = 'https://www.linkedin.com/shareArticle?mini=true&url=' + encodeURIComponent(gistUrl);
+    var title = 'GistCamp';
+    popupWindow(url, title, '626', '496'); 
    
-  });
+});
 
-  $(".menu-features").on("click", function() {
-    
-    $('body').scrollTo('#div-features'
-      ,{duration:'slow', offsetTop : '50'});
+
+
+
+$(".span-google").on("click", function(e){
+    e.preventDefault(); 
+    var url = 'https://plus.google.com/share?url=' + encodeURIComponent(gistUrl);
+    var title = 'GistCamp';
+    popupWindow(url, title, '473', '216');  
    
-  });
+});
+ 
+
+$(".span-facebook").on("click", function(e){
+    e.preventDefault();
+    var url = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(gistUrl);
+    var title = 'GistCamp';
+    popupWindow(url, title, '626', '436');   
+});
 
 
-  $(".img-video").on("click", function() {
-    
-    $('body').scrollTo('#div-video'
-      ,{duration:'slow', offsetTop : '50'});
-   
-  });
-
-  $(".img-person").on("click", function() {
-    
-    $('body').scrollTo('#div-person'
-      ,{duration:'slow', offsetTop : '50'});
-   
-  });
-
-
-  $(".power-font4").on("click", function() {
-    
-    $('body').scrollTo('#div-features'
-      ,{duration:'slow', offsetTop : '50'});
-   
-  });
-
-
-  $("#features-friends").on("mouseover", function(){
-   
-    // $(".features-friends-contents-hidden").addClass("features-friends-contents-show").removeClass("features-friends-contents-hidden")
-    $("#features-friends-contents").removeClass("features-contents-hidden features-contents-show")
-    .addClass("features-contents-show");
-
-  });
-
-  $("#features-friends").on("mouseleave", function(){
-   
-    // $(".features-friends-contents-show").addClass("features-friends-contents-hidden").removeClass("features-friends-contents-show")
-    $("#features-friends-contents").removeClass("features-contents-hidden features-contents-show")
-    .addClass("features-contents-hidden");
-  });
-   
+$(".span-twitter").on("click", function(e){
+    e.preventDefault();
+    var url = 'https://twitter.com/intent/tweet?via=gistcamp&url=' + encodeURIComponent(gistUrl);
+    var title = 'GistCamp';
+    popupWindow(url, title, '473', '258'); 
+});
 
 
 
-  $("#features-tagging").on("mouseover", function(){
-   
-    $("#features-tagging-contents").removeClass("features-contents-hidden features-contents-show")
-    .addClass("features-contents-show");
+ 
 
-  });
-
-  $("#features-tagging").on("mouseleave", function(){
-   
-   
-    $("#features-tagging-contents").removeClass("features-contents-hidden features-contents-show")
-    .addClass("features-contents-hidden");
-  });
-
-
-
-
-  $("#features-alert").on("mouseover", function(){
-   
-    $("#features-alert-contents").removeClass("features-contents-hidden features-contents-show")
-    .addClass("features-contents-show");
-
-  });
-
-  $("#features-alert").on("mouseleave", function(){
-   
-   
-    $("#features-alert-contents").removeClass("features-contents-hidden features-contents-show")
-    .addClass("features-contents-hidden");
-  });
-
-
-
-
-
-  $("#features-chatting").on("mouseover", function(){
-   
-    $("#features-chatting-contents").removeClass("features-contents-hidden features-contents-show2")
-    .addClass("features-contents-show2");
-
-  });
-
-  $("#features-chatting").on("mouseleave", function(){
-   
-   
-    $("#features-chatting-contents").removeClass("features-contents-hidden features-contents-show2")
-    .addClass("features-contents-hidden");
-  });
-
-
-
-
-
-
-  $("#features-share").on("mouseover", function(){
-   
-    $("#features-share-contents").removeClass("features-contents-hidden features-contents-show2")
-    .addClass("features-contents-show2");
-
-  });
-
-  $("#features-share").on("mouseleave", function(){
-   
-   
-    $("#features-share-contents").removeClass("features-contents-hidden features-contents-show2")
-    .addClass("features-contents-hidden");
-  });
-
-
-
-
-
-  $("#features-opensource").on("mouseover", function(){
-   
-    $("#features-opensource-contents").removeClass("features-contents-hidden features-contents-show2")
-    .addClass("features-contents-show2");
-
-  });
-
-  $("#features-opensource").on("mouseleave", function(){
-   
-   
-    $("#features-opensource-contents").removeClass("features-contents-hidden features-contents-show2")
-    .addClass("features-contents-hidden");
-  });
+      
 
 });
 

@@ -12,8 +12,8 @@
 //Common -------------------------------------
 
 html{
-     height: 100%;
-     // overflow-x:hidden;
+     // height: 100%;
+     overflow-x:hidden;
 }
 
 body{
@@ -51,7 +51,7 @@ body{
      height: 200px;
  }
 
- .sec-demo{
+ #sec-demo{
  	//width: 100%;
  	background-color: @demo-bg-color;
  	height: 900px;	
@@ -67,9 +67,14 @@ body{
 
 .sec-bottom{
 
-	width: 100%;
+	//width: 100%;
  	background-color:  black;
  	height: 200px;		
+}
+
+.sec-copyright{
+     background-color:  black;
+     height: 50px;      
 }
 
 
@@ -195,14 +200,7 @@ body{
 	font-weight:bold;
 }
 
-span:hover{
  
- 	.font-twitter-circle{
- 	  color:#55c0fb
- 	}
- 
- }
-
 
 
 
@@ -219,6 +217,16 @@ color:white;
  color:#0586cd;
  }
 
+.span-twitter{
+
+     cursor: pointer;
+
+     &:hover .font-twitter-circle{
+          color:lighten(#0586cd, 10%); 
+     }
+     
+}
+
 
 
 .font-facebook{ 
@@ -231,12 +239,51 @@ color:white;
  color:#375085;
  }
 
-.span-facebook:hover{
-	.font-facebook-circle{
-		color:#5c7bbc; 
-	}
-	
+.span-facebook {
+     cursor: pointer;
+
+     &:hover .font-facebook-circle{
+          color:lighten(#375085, 10%); 
+     }
 }
+
+
+ 
+
+.font-google{
+     margin-left: -10px;
+}
+.font-google-circle{
+     color:#dd4b39;
+}
+
+
+.span-google{
+     cursor: :pointer;
+     &:hover .font-google-circle{
+               color:lighten(#dd4b39, 10%);
+     }
+}
+ 
+.font-linkedin-circle{
+     color:#127eb4;
+}
+
+
+.span-linkedin{
+     cursor: pointer;
+
+     &:hover .font-linkedin-circle{
+          color: lighten(#127eb4, 10%); 
+     }
+}
+
+
+.copyright{  
+     color:white;
+}
+ 
+ 
 
 //main -----------------------------------------
 
@@ -276,6 +323,10 @@ color:white;
      left:180px;
      color: white ;
      font-size:20px; 
+}
+
+.font4{
+     color:white;
 }
 .sign-in{
      position: relative ;
