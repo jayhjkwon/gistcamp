@@ -17,7 +17,6 @@ define(function(require){
 		ChatItemList    = require('models/chatItemList'),
 		ChatItem        = require('models/chatItem'),
 		postalWrapper   = require('postalWrapper'),
-		global          = require('global'),
 		
 		ChatItemListView = Marionette.CollectionView.extend({
 			className: 'chat-item-container',
@@ -45,7 +44,7 @@ define(function(require){
 				setTimeout(function() {
 					self.rooms = global.rooms;
 
-					if (_.size(self.rooms) == 0){
+					if (_.size(self.rooms) === 0){
 						self.collection.reset();	
 					}
 					// res.data['room'] = self.rooms[key];

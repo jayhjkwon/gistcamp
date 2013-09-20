@@ -25,5 +25,5 @@ define(function(){
 		COMMENT_ADD         : 'COMMENT_ADD',
 		GIST_STAR_CHANGED   : 'GIST_STAR_CHANGED',
 		STAR                : 'STAR'
-	}
+	};
 });

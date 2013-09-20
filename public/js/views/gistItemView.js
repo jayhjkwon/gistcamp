@@ -36,22 +36,23 @@ define(function(require){
 
 			onFollowUserClicked: function(e){
 				var self = this;
-				var u = this.model.toJSON().user;
+				var userModel;
+				var user = this.model.toJSON().user;
 				this.ui.btnFollow.prop('disabled', true);
 				if(this.ui.btnFollow.text() === 'Follow'){
-					var user = new User({mode: constants.USER_FOLLOW, id:u.id, loginId: u.login});
-					user.save().done(function(){
+					userModel = new User({mode: constants.USER_FOLLOW, id:u.id, loginId: u.login});
+					userModel.save().done(function(){
 						self.ui.btnFollow.prop('disabled', false);
 						self.ui.btnFollow.text('Unfollow'); 
-						u.is_following_this_user = true;
+						user.is_following_this_user = true;
 					});					
 				}else{
-					var user = new User({mode: constants.USER_UNFOLLOW, id:u.id, loginId: u.login});
-					user.destroy({
+					userModel = new User({mode: constants.USER_UNFOLLOW, id:u.id, loginId: u.login});
+					userModel.destroy({
 						success: function(){ 
 							self.ui.btnFollow.prop('disabled', false);
 							self.ui.btnFollow.text('Follow'); 
-							u.is_following_this_user = false;
+							user.is_following_this_user = false;
 						}
 					});
 				}

@@ -1,9 +1,9 @@
 require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 	'views/topView', 'views/footerView', 'constants', 'models/user', 'global', 'async',
-	'socketio', 'postalWrapper', 'toastr', 'service', 'mousetrap', 'router',
+	'socketio', 'postalWrapper', 'toastr', 'service', 'mousetrap', 
 	'bootstrap', 'prettify', 'nicescroll', 'autoGrow', 'scrollTo'], 
 	function($, _, Application, Router, shellView, topView, footerView, constants, User, global, async, 
-		socketio, postalWrapper, toastr, service, mousetrap, Router){
+		socketio, postalWrapper, toastr, service, mousetrap){
 	$(function(){
 		var el = shellView.render().el;
 
@@ -49,7 +49,7 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 			});
 
 			global.socket.on('updatechat', function (username, data) {
-				if (username == 'SERVER') {
+				if (username === 'SERVER') {
 					$('#conversation').append(data + '<br>');	
 				}
 				else {

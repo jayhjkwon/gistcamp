@@ -10,4 +10,4 @@ define(function(require){
 		});
 
 	return NewGistItemList;
-})
+});

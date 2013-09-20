@@ -20,7 +20,7 @@ define(function(require){
 					case constants.GIST_LIST_BY_USER :
 						return '/api/gist/user/' + global.user.login;
 					case constants.GIST_STARRED :
-						return '/api/gist/starred'
+						return '/api/gist/starred';
 					case constants.GIST_FRIENDS_GISTS :
 						return '/api/gist/friends';
 					case constants.GIST_TAGGED_GISTS :

@@ -9,7 +9,7 @@ define(function(require){
 		constants 			= require('constants'),
 		FilesWrapperView    = require('views/filesWrapperView'),
 		CommentsWrapperView = require('views/CommentsWrapperView'),
-		CreateGistView = require('views/createGistView')
+		CreateGistView = require('views/createGistView'),
 		ChatView            = require('views/chatView'),
 		ChatItemListView    = require('views/chatItemListView'),
 		ConversationWrapperView = require('views/conversationWrapperView'),
@@ -164,7 +164,7 @@ define(function(require){
 
 			chat : function(){
 
-				var chatView = new ChatView()
+				var chatView = new ChatView();
 				shellView.main.show(chatView);
 
 				// Chat List on the left region
