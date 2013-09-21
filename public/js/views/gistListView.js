@@ -9,7 +9,6 @@ define(function(require){
 		nicescroll 		= require('nicescroll'),
 		bootstrap 		= require('bootstrap'),
 		prettify 		= require('prettify'),	
-		bootstrap 		= require('bootstrap'),	
 
 		GistListView = Marionette.Layout.extend({
 			currentSelectedMenu : '',

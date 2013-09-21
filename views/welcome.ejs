@@ -27,7 +27,7 @@
             <img class="img-logo" src="images/logo.png" />
          
             <p class="main-font">
-              Gistcamp is the Campground for the Geeks
+              Gistcamp is a campground for GEEKS
             </p>
             <p class="main-font2">
               Create,  Share and Enjoy GIST!
@@ -36,9 +36,11 @@
                 Sign in with GitHub
             </a>
             <p class="main-font4">
+              <a class="font4" href="#sec-demo">
                or learn more about GISTCAMP.
+             </a>
             </p>
-            <div class="main-alert"><h1>Warning</h1>The GistCamp is in the testing stages at the moment. <br/>You could run into errors and downtime. <br/>We are going to release official version at the end of Septemper 2013.</div> -->
+            <div class="main-alert"><h1>Warning</h1>The GistCamp is in the testing stages at the moment. <br/>You could run into errors and downtime. <br/>We are going to release official version at the end of Septemper 2013.</div> 
 
 
 
@@ -58,7 +60,7 @@
                     Features
                     </p>
                 </div>  
-                <div class="span6">
+                <div class="span5">
                    <hr class="hr-features">
                 </div> 
               </div> 
@@ -77,7 +79,7 @@
                 </div> 
 
                 <div class="span4 common-icon-box-comments">
-                   <div>Find your Friend's Gists</div>
+                   <div>Find your friend's gists</div>
                 </div>
 
 
@@ -91,7 +93,7 @@
                   </div>
                 </div> 
                 <div class="span4 common-icon-box-comments">
-                   <div>Make your tags and organize the gists</div>
+                   <div>Create your own tags and organize the gists</div>
                 </div>
               </div>
 
@@ -110,7 +112,7 @@
                 </div> 
 
                 <div class="span4 common-icon-box-comments">
-                   <div>The GistCamp lets you know instantly once you receive comments or chatting messages</div>
+                   <div>GistCamp lets you know instantly once you receive comments or chatting messages</div>
                 </div>
 
 
@@ -142,7 +144,7 @@
                 </div> 
 
                 <div class="span4 common-icon-box-comments">
-                   <div>Share the gists via Facebook, Twitter and Google+</div>
+                   <div>Share the gists via Facebook, Twitter, Google+ and LinkedIn</div>
                 </div>
 
 
@@ -156,20 +158,21 @@
                   </div>
                 </div> 
                 <div class="span4 common-icon-box-comments">
-                   <div>The GistCamp is open-sourced. Fork us, please.</div>
+                   <div>GistCamp is open-sourced. Fork us, please.</div>
                 </div>
               </div>
 
          </div>
 
       </section>
+
       <section class="sec-sec3">
         <div class="container">  
           <div class="row"  >
             <div class="span2">
             <img class="img-point" src="images/logo.png" />
             </div>
-            <div class="span8 span-point">
+            <div class="span8 font-point">
               GISTCAMP
             <div>
 
@@ -177,7 +180,7 @@
         </div>
       </section>
 
-      <section class="sec-demo">
+      <section id="sec-demo">
          <div class="container"> 
           <div class="row text-left">  
 
@@ -186,7 +189,7 @@
                 Demo
                 </p>
             </div>  
-            <div class="span9">
+            <div class="span8">
                <hr class="hr-demo">
             </div> 
           </div> 
@@ -208,19 +211,77 @@
         <div class="row text-left">  
 
           <div class="span3">
-             <p class="font-title font-contact">
+             <p class="font-title font-connect-title">
               Connect
               </p>
           </div>  
-          <div class="span9">
+          <div class="span8">
              <hr class="hr-contact">
           </div> 
         </div> 
+ 
+
+
+        <div class="row">
+          <div class="span3" >
+            
+             <span class="icon-stack span-twitter font-icon-connect text-center">
+              <i class="icon-circle icon-stack-base  font-twitter-circle "></i>
+              <i class="icon-twitter font-connect"></i>
+              <br>
+              <h2>Twitter</h2>  
+             </span>
+              
+          </div>
+
+         <div class="span3" >
+            
+             <span class="icon-stack  span-facebook font-icon-connect text-center">
+              <i class="icon-circle icon-stack-base  font-facebook-circle"></i>
+              <i class="icon-facebook font-connect"></i>
+              <br>
+              <h2 class="font-facebook">Facebook</h2>  
+             </span>
+              
+          </div>
+
+           <div class="span3" >
+            
+             <span class="icon-stack  span-google font-icon-connect text-center">
+              <i class="icon-circle icon-stack-base  font-google-circle"></i>
+              <i class="icon-google-plus font-connect"></i>
+              <br>
+              <h2 class="font-google">Google+</h2>  
+             </span>
+              
+          </div>
+
+     <div class="span3" >
+            
+             <span class="icon-stack  span-linkedin font-icon-connect text-center">
+              <i class="icon-circle icon-stack-base  font-linkedin-circle"></i>
+              <i class="icon-linkedin font-connect"></i>
+              <br>
+              <h2 class="font-google">LinkedIn</h2>  
+             </span>
+              
+          </div>
+
+
+        </div>
       </div>
+
       </section>
 
 
     <section class="sec-bottom">
+     </section>
+
+
+   <section class="sec-copyright">
+      <div class="text-center copyright">
+
+      </div>
     </section>
 
 
@@ -230,10 +291,11 @@
       <script src="vendor/jquery/jquery.min.js"></script> 
       <script src="vendor/jquery.scrollTo/jquery.scrollTo.min.js"></script>
       <script src="vendor/jquery-nicescroll/jquery.nicescroll.min.js"></script>
+        
       <script src="js/welcome.js?modified_time=<%= (new Date()).getTime() %>"></script>
       <script src="http://localhost:35729/livereload.js"></script>
     <% }else{ %> 
-      <script src="js/welcome_new.min.js?v=<%= appVersion %>"></script>
+      <script src="js/welcome.min.js?v=<%= appVersion %>"></script>
     <% } %>
   </body>
-</html>
+</html> 

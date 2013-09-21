@@ -3,7 +3,7 @@ define(function(require){
 		Backbone    = require('backbone'),
 		NewGistItem = Backbone.Model.extend({
 			initialize : function(){
-				console.log('newGistItem init')
+				console.log('newGistItem init');
 			},
 			defaults : {
 				fileName : '',

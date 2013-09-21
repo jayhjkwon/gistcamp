@@ -9,11 +9,11 @@ var
 	constants= require('./infra/constants').constants,
 	passport = require('passport'),
 	GitHubStrategy = require('passport-github').Strategy,
-    User     = require('./models/user'), 
-    request  = require('request'),
-    service   = require('./infra/service'),
-    async     = require('async'),
-    chat     = require('./routes/chat')
+  User     = require('./models/user'), 
+  request  = require('request'),
+  service   = require('./infra/service'),
+  async     = require('async'),
+  chat     = require('./routes/chat')
 ;
 
 
@@ -62,6 +62,7 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.use(express.favicon());
 app.use(express.logger('dev'));
+app.use(express.compress());
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.cookieParser('your secret here'));

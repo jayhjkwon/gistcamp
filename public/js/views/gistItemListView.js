@@ -29,10 +29,6 @@ define(function(require){
 				util.loadSpinner(true);
 			},
 
-			events : {
-				// 'scroll .gist-list' : 'onScroll'
-			},
-			
 			getGistList: function(mode, tagId){
 				var self = this;
 				var gistItemList = new GistItemList({'gistDataMode': mode, tagId: tagId });
@@ -57,7 +53,7 @@ define(function(require){
 						});
 					})
 					.always(function(){
-						$('.gist-list').niceScroll({cursorcolor: '#eee'});
+						$('.gist-list').niceScroll({cursorcolor: '#eee', cursorwidth:'1px'});
 						// $('.gist-list').getNiceScroll().resize();
 						self.loading(false);
 						util.loadSpinner(false);						

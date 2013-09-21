@@ -10,4 +10,4 @@ define({
 	server : {
 		options : {}
 	}
-})
+});

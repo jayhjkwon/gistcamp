@@ -6,21 +6,19 @@
 @title-color:#4f595f;
 
 @icon-box-color:#4a4a4a;
-
-@content-height:600px;
-
+ 
 
 
 //Common -------------------------------------
 
 html{
-     height: 100%;
-     // overflow-x:hidden;
+     // height: 100%;
+     overflow-x:hidden;
 }
 
 body{
      background-color: white;
-     height: 100%;
+   // height: 100%;
      font-family:  "Arial";
      overflow-x:hidden;
      // overflow-y:visible;  
@@ -37,33 +35,31 @@ body{
  
 // contnets ----------------------------------
 
- .sec-main{
- 	 width: 100%;
+ .sec-main{ 
      background-color: @main-bg-color;
-     height: @content-height;
+     height:540px;
  }
 
-  .sec-features{
- 	 width: 100%;
+  .sec-features{ 
      background-color: white;
      height: 800px;
  }
 
    .sec-sec3{
- 	 width: 100%;
+ 	// width: 100%;
      background-color: @features-color;
      height: 200px;
  }
 
- .sec-demo{
- 	width: 100%;
+ #sec-demo{
+ 	//width: 100%;
  	background-color: @demo-bg-color;
  	height: 900px;	
  }
 
 .sec-contact{
 
-	width: 100%;
+	//width: 100%;
  	background-color:  @main-bg-color;
  	height: 400px;		
 }
@@ -71,9 +67,14 @@ body{
 
 .sec-bottom{
 
-	width: 100%;
+	//width: 100%;
  	background-color:  black;
  	height: 200px;		
+}
+
+.sec-copyright{
+     background-color:  black;
+     height: 50px;      
 }
 
 
@@ -88,7 +89,7 @@ body{
 	
      margin-left:-100px;
      margin-top:110px; 
-     border-top:2px solid @title-color; 
+     border-top:1px solid @title-color; 
 }
 
 .common-icon-box{
@@ -149,10 +150,12 @@ body{
 }
 
 
-.span-point{
+.font-point{
 	padding-top: 90px;
 	padding-left: 50px;
+	padding-bottom :50px;
 	font-size: 100px;
+	font-weight:bold;
 	color:white;
 }
 
@@ -163,17 +166,23 @@ body{
 	  
      margin-top:110px; 
      border-bottom:1px solid @title-color; 
-     border-top: 1px solid @title-color;
+     border-top: 0.5px solid @title-color;
 }
 
 
 //contact -------------------------------------
 
-.font-contact{
+
+
+.font-connect-title{
 	color:white;
 	margin-top:100px;
-	margin-bottom:70px;
-
+	margin-bottom:70px;  
+} 
+ 
+.font-connect{
+	color:white;
+	 
 }
 
 
@@ -181,11 +190,101 @@ body{
 	 margin-left:100px;
      margin-top:110px; 
      border-bottom:1px solid white; 
-     border-top: 1px solid white;
+     border-top: 0.5px solid white;
+}
+
+.font-icon-connect{ 
+	color:white;
+	font-size : 50px; 
+	font-family:arial ; 
+	font-weight:bold;
 }
 
  
+
+
+
+.font-twitter{ 
+color:white;
+	font-size : 50px; 
+	font-family:arial ; 
+	font-weight:bold;
+	margin-left:-30px; 
+}
+
+
+ .font-twitter-circle{
+ color:#0586cd;
+ }
+
+.span-twitter{
+
+     cursor: pointer;
+
+     &:hover .font-twitter-circle{
+          color:lighten(#0586cd, 10%); 
+     }
+     
+}
+
+
+
+.font-facebook{ 
+	margin-left:-20px; 
+}
+
+
+
+ .font-facebook-circle{
+ color:#375085;
+ }
+
+.span-facebook {
+     cursor: pointer;
+
+     &:hover .font-facebook-circle{
+          color:lighten(#375085, 10%); 
+     }
+}
+
+
  
+
+.font-google{
+     margin-left: -10px;
+}
+.font-google-circle{
+     color:#dd4b39;
+}
+
+
+.span-google{
+     cursor: :pointer;
+     &:hover .font-google-circle{
+               color:lighten(#dd4b39, 10%);
+     }
+}
+ 
+.font-linkedin-circle{
+     color:#127eb4;
+}
+
+
+.span-linkedin{
+     cursor: pointer;
+
+     &:hover .font-linkedin-circle{
+          color: lighten(#127eb4, 10%); 
+     }
+}
+
+
+.copyright{  
+     color:white;
+}
+ 
+ 
+
 //main -----------------------------------------
 
 
@@ -225,6 +324,10 @@ body{
      color: white ;
      font-size:20px; 
 }
+
+.font4{
+     color:white;
+}
 .sign-in{
      position: relative ;
      top:220px;
@@ -238,7 +341,7 @@ body{
 a:hover{
      text-decoration: none;
      color:white;
-};
+}
 
 
 .main-alert{

@@ -71,7 +71,6 @@ module.exports = function (grunt) {
                     './public/js/welcome.min.js': 
                     [
                         './public/vendor/jquery/jquery.js', 
-                        './public/vendor/jquery.scrollTo/jquery.scrollTo.js',
                         './public/vendor/jquery-nicescroll/jquery.nicescroll.js', 
                         './public/js/welcome.js'
                     ]
@@ -97,6 +96,23 @@ module.exports = function (grunt) {
             }
           }
         },
+
+        jshint: {
+            options: {
+                smarttabs : true,
+                '-W099': true, 
+                '-W058': true,
+                curly: false,
+                eqeqeq: true,
+                eqnull: true,
+                browser: true,
+                globals: {
+                    jQuery: true
+                },
+                ignores: ['public/js/**/*.min.js']
+            },
+            files: ['public/js/**/*.js']
+        },
     });
 
     // Load tasks from NPM
@@ -106,6 +122,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
 
     // register task.
     grunt.registerTask('default', ['requirejs', 'less:production', 'cssmin', 'uglify']);
