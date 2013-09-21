@@ -71,7 +71,6 @@ module.exports = function (grunt) {
                     './public/js/welcome.min.js': 
                     [
                         './public/vendor/jquery/jquery.js', 
-                        './public/vendor/jquery.scrollTo/jquery.scrollTo.js',
                         './public/vendor/jquery-nicescroll/jquery.nicescroll.js', 
                         './public/js/welcome.js'
                     ]
