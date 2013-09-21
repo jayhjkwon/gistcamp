@@ -64,17 +64,98 @@
 	
 	.conversation-content {
 		position: absolute;
-		left:10px;
-		top:10px;
+		left:0px;
+		top:-40px;
 		right:0px;
 		bottom:50px;
 		overflow-x: hidden;
-		width:98%;
+		//width:98%;
 		white-space: pre-wrap;      /* CSS3 */   
         white-space: -moz-pre-wrap; /* Firefox */    
         white-space: -pre-wrap;     /* Opera <7 */   
         white-space: -o-pre-wrap;   /* Opera 7 */    
         word-wrap: break-word;      /* IE */
+        .chatul {
+        	//position: absolute;
+        	display: block;
+        	//overflow: auto;
+        	margin-left: 0;
+        	margin-top: 0;
+        	margin-bottom: -50px;
+        	padding-left: 0;
+        	top: 0;
+        	left: 0;
+        	background-color:#fff;
+        	.chatli {
+        		list-style-type: none;
+        		position: relative;
+        		margin: 0px 0px 0px 0px;
+        		line-height: 20px;
+        		border-left: 175px solid #f1f1f1;
+        		border-bottom: 1px solid #eee;
+        		.server {
+        			margin-left: -175px;
+		        	margin-right: 140px;
+	        		padding: 5px 5px 5px 5px;
+	        		word-wrap: break-word;
+		        	background-color:#fff;
+			        	.message {
+			        		color : #bbb;
+			        	}
+        		}
+	        	.left {
+		        	float:left;
+		        	width:170px;
+		        	margin-left: -175px;
+		        	padding:5px 0px 5px 5px;
+		        	background-color:#f1f1f1;
+			        	img.gravatar {
+			        		height:16px;
+			        		width:16px;
+			        		display:inline-block;
+			        		float:left;
+			        		margin:0 2px 0 0;
+			        		vertical-align:middle;
+			        	}
+			        	.name {
+			        		font-weight: 400;
+			        		font-size: small;
+			        	}
+	        	}
+	        	.middle {
+	        		margin-right: 140px;
+	        		padding: 5px 5px 5px 5px;
+	        		word-wrap: break-word;
+	        	}
+	        	.middle:before {
+        			content: "";
+        			position: absolute;
+        			left: -8px;
+        			top: 8px;
+        			width: 0;
+        			height: 0;
+        			border-bottom: 8px solid rgba(255,255,255,0);
+        			border-top: 8px solid rgba(255,255,255,0);
+        			border-right: 8px solid #fff;
+	        	}
+	        	.right {
+	        		position: absolute;
+	        		padding: 5px 5px 5px 5px;
+	        		bottom: 2px;
+	        		right: 0;
+	        		width: 120px;
+	        		font-size: .9em;
+	        		text-align: right;
+	        		margin-right: 20px;
+	        		.time {
+	        			color : #bbb;
+	        		}
+
+	        	}
+        	}
+        	
+        }
+        
 	}
 	.conversation-action {
 		position:absolute;

@@ -28,6 +28,17 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 			});
 		};
 
+		var datetimeNow = function() {
+			var currentdate = new Date(); 
+			var datetime = currentdate.getFullYear() + "-" 
+			                + (currentdate.getMonth()+1)  + "-"
+			                + currentdate.getDate() + " "
+			                + currentdate.getHours() + ":"  
+			                + currentdate.getMinutes() + ":" 
+			                + currentdate.getSeconds();
+			return datetime;
+		};
+
 		var connectSocketIO = function(callback){
 			var socket;
 			if (global.server.options.env === 'development')
@@ -49,15 +60,38 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 			});
 
 			global.socket.on('updatechat', function (username, data) {
-				if (username == 'SERVER') {
-					$('#conversation').append(data + '<br>');	
+				
+				if (username === 'SERVER') {
+
+					var server = '<div class="server">'
+					+ '<span class="message">' + data + '</span>'
+					+ '</div>';
+
+					var right = '<div class="right">'
+					+ '<span class="time">' + datetimeNow() + '</span>'
+					+ '</div>';
+
+					$('#conversation').append('<li class="chatli">' + server + right + '</li>');
 				}
 				else {
 					
-					$('#conversation').append('<img src=' + username.avatar + ' style="margin-top:5px;width:20px;height:20px;"/>' +  ' <b>'+username.login + ':</b> ' + data + '<br>');
-					//$('#conversation').append('<img src="http://www.gravatar.com/avatar/13edb3b0d8881221c62c3674bcc6339f.png" style="width:20px;height:20px;"/>' +  ' <b>'+username.login + ':</b> ' + data + '<br>');		
+					var left = '<div class="left">' 
+					+ '<img class="gravatar" src="' + username.avatar + '" </img>' 
+					+ '<div class="name">' + username.login + '</div>'
+					+ '</div>';
+
+					var middle = '<div class="middle">'
+					+ data
+					+ '</div>';
+
+					var right = '<div class="right">'
+					+ '<span class="time">' + datetimeNow() + '</span>'
+					+ '</div>';
+
+					$('#conversation').append('<li class="chatli">' + left + middle + right + '</li>');
 				}
-				$('#conversation').scrollTop($("#conversation")[0].scrollHeight);
+				
+				$('#conversation-content').scrollTop($("#conversation-content")[0].scrollHeight);
 			});
 
 			global.socket.on('updatealarm', function(user, data) {

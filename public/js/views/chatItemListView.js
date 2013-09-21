@@ -110,7 +110,7 @@ define(function(require){
 	    			// self.render();
 			    	// $('.chat-item').last().addClass('selected');
 			    	self.loading(false);
-			    	$('#conversation').scrollTop($("#conversation")[0].scrollHeight);
+			    	$('#conversation-content').scrollTop($("#conversation-content")[0].scrollHeight);
 	    		});
 			},
 
@@ -129,7 +129,7 @@ define(function(require){
 	    			// self.render();
 			    	// $('.chat-item').last().addClass('selected');
 			    	self.loading(false);
-			    	$('#conversation').scrollTop($("#conversation")[0].scrollHeight);
+			    	$('#conversation-content').scrollTop($("#conversation-content")[0].scrollHeight);
 	    		});
 			},
 
@@ -137,15 +137,33 @@ define(function(require){
 				$('#conversation').html('');
 				for (var i = 0; i < cotents.length; i++) {
 					if (cotents[i].user_login === 'SERVER') {
-						$('#conversation').append(cotents[i].content + '<br>');	
+
+						var server = '<div class="server">'
+						+ '<span class="message">' + cotents[i].content + '</span>'
+						+ '</div>';
+
+						var right = '<div class="right">'
+						+ '<span class="time">' + cotents[i].created_at + '</span>'
+						+ '</div>';
+
+						$('#conversation').append('<li class="chatli">' + server + right + '</li>');
 					}
 					else {
 						
-						$('#conversation').append('<img src=' 
-							+ cotents[i].avatar_url
-							+ ' style="margin-top:5px;width:20px;height:20px;"/>' +  ' <b>'
-							+ cotents[i].user_login + ':</b> ' 
-							+ cotents[i].content + '<br>');
+						var left = '<div class="left">' 
+						+ '<img class="gravatar" src="' + cotents[i].avatar_url + '" </img>' 
+						+ '<div class="name">' + cotents[i].user_login + '</div>'
+						+ '</div>';
+
+						var middle = '<div class="middle">'
+						+ cotents[i].content
+						+ '</div>';
+
+						var right = '<div class="right">'
+						+ '<span class="time">' + cotents[i].created_at + '</span>'
+						+ '</div>';
+
+						$('#conversation').append('<li class="chatli">' + left + middle + right + '</li>');
 					}
 				};
 			},
