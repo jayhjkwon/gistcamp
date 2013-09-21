@@ -126,5 +126,5 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
 
     // register task.
-    grunt.registerTask('default', ['jshint', 'requirejs', 'less:production', 'cssmin', 'uglify']);
+    grunt.registerTask('default', ['requirejs', 'less:production', 'cssmin', 'uglify']);
 };
