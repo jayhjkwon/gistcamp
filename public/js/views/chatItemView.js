@@ -18,10 +18,13 @@ define(function(require) {
 		ChatItemView = Marionette.ItemView.extend({			
 			template : chatItemTemplate,
 			className: 'row-fluid',
+			// modelEvents: {
+			//     "change": "modelChanged"
+		 //    },
 
 			initialize: function(options){
-				_.bindAll(this, 'onGistItemSelected', 'onAddClassSelected', 'onViewFileContent');
-				//this.subscriptionRemoveIsSelected = postalWrapper.subscribe(constants.REMOVE_IS_SELECTED, this.setIsSelectedGistFalse);
+				_.bindAll(this, 'onGistItemSelected', 'onAddClassSelected', 'onViewFileContent', 'modelChanged');
+				//this.subscriptionRemoveIsSelected = postalWrapper.subscribe(constants.REMOVE_IS_SELECTED, this.setIsSelectedGistFalse);	
 			},
 
 			events : {
@@ -33,6 +36,18 @@ define(function(require) {
 				divChatItem : '.chat-item',
 				btnView : '.file-content'
 			},
+
+			modelChanged: function(key, room) {
+
+		    	$('#'+key).html('');
+		    	var users = room.users;
+		    	for (var i = 0; i < users.length; i++) {
+		    		$('#'+ key).append('<img src="' + users[i].avatar + '" style="width:19px;height:19px;margin-top:2px;opacity:' + users[i].opacity + ';" />'); 	
+		    	};
+
+		    	//this.$el.html('<div>ttt</div>');
+		    	//this.el.innerHTML = this.template(this.model.toJSON());
+		    },
 
 			onViewFileContent: function(e){
 				//var url = 'http://localhost:3000/popupFileView';
@@ -73,7 +88,8 @@ define(function(require) {
 
 			    var content = $('#files-wrapper').html() + '</body></html>';
 			    popupLayoutContent += content;
-			    console.log(popupLayoutContent);
+			    //console.log(popupLayoutContent);
+			    newWindow.document.write('');
 				newWindow.document.write(popupLayoutContent);
 
 			    if (window.focus) {
@@ -93,8 +109,8 @@ define(function(require) {
 				
 				global.socket.emit('switchRoom', this.model.id);
 
-				$('.chat-item').removeClass('selected');
-				$(e.currentTarget).addClass('selected');
+				$('.chat-item-container .row-fluid').removeClass('selected');
+				$(e.currentTarget).parents('.row-fluid').addClass('selected');
 
 				//$('.btn btn-danger file-content').hide();
 				
@@ -105,9 +121,10 @@ define(function(require) {
 
 			onAddClassSelected : function() {
 
-				$('.chat-item').removeClass('selected');
-				this.ui.divChatItem.addClass('selected');
+				$('.chat-item-container .row-fluid').removeClass('selected');
+				this.ui.divChatItem.parents('.row-fluid').addClass('selected');
 
+				$('.file-content').hide();
 				this.ui.btnView.show();
 			}
 		})

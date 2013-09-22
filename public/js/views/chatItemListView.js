@@ -26,8 +26,10 @@ define(function(require){
 			rooms: {},
 			selectedRoomName: '',
 
-			initialize: function(){				
-				_.bindAll(this, 'getChatList', 'addChatList', 'onRender', 'onClose', 'removeChatList', 'onItemSelected', 'getChatHistory');
+			initialize: function(){
+
+				//console.log('###############ChatItemListView initialize');
+				_.bindAll(this, 'getChatList', 'addChatList', 'onClose', 'removeChatList', 'onItemSelected', 'getChatHistory');
 				
 				this.spinner = new Spinner();
 				this.subscriptionUpdateRoom = postalWrapper.subscribe(constants.CHAT_UPDATE_ROOM, this.getChatList);
@@ -41,55 +43,51 @@ define(function(require){
 
 			getChatList: function(){
 				var self = this;
-				setTimeout(function() {
-					self.rooms = global.rooms;
+				
+				self.rooms = global.rooms;
 
-					if (_.size(self.rooms) === 0){
-						self.collection.reset();	
-					}
-					// res.data['room'] = self.rooms[key];
-					// self.collection.reset(res.data);	
+				if (_.size(self.rooms) === 0){
+					self.collection.reset();	
+				}
+				// res.data['room'] = self.rooms[key];
+				// self.collection.reset(res.data);	
 
-					$.each(self.rooms, function(key, value) {
-			    		var chatItem = new ChatItem({'gistId': key});
-			    		chatItem.fetch()
-			    		.done(function(res) {
-			    						
-			    			var isUpdated = false;
+				$.each(global.rooms, function(key, value) {
+		    		var chatItem = new ChatItem({'gistId': key});
+		    		chatItem.fetch()
+		    		.done(function(res) {
+		    						
+		    			var isUpdated = false;
 
-				    		for (var index = self.collection.models.length - 1; index >= 0; index--) {
-			    				if (self.collection.models[index].id === key) {
-		    							// if (_.size(res.data['room']) != _.size(self.rooms[key])) {
-		    						res.data['room'] = self.rooms[key];
-									self.collection.reset(res.data);
-									
-									isUpdated = true;	
-		    						// }
-			    				}		    				
-				    		}
+			    		for (var index = self.collection.models.length - 1; index >= 0; index--) {
+		    				if (self.collection.models[index].id === key) {
+	    							// if (_.size(res.data['room']) != _.size(self.rooms[key])) {
+	    						res.data['room'] = self.rooms[key];
 
-			    			if (isUpdated == false) {
-								res.data['room'] = self.rooms[key];
-								self.collection.add(res.data);	
-			    			}
-			    		})
-			    		.always(function() {
-							self.loading(false);
-							for (var index = self.collection.models.length - 1; index >= 0; index--) {
-								if (self.collection.models[index].id === self.selectedRoomName) {
-				    					var childView = self.children.findByModel(self.collection.models[index]);
-										childView.onAddClassSelected();
-										break;
-			    				}
-			    			}
-						})
-			    	});
-				}, 600);
-			},
+	    			 			var childView = self.children.findByModel(self.collection.models[index]);
+								childView.modelChanged(key, self.rooms[key]);
 
-			onDomRefresh: function(){
-				// if ( !$('#comment-input').val())
-				// 	$('.btn-comments').trigger('click');
+								isUpdated = true;	
+	    						// }
+		    				}		    				
+			    		}
+
+		    			if (isUpdated == false) {
+							res.data['room'] = self.rooms[key];
+							self.collection.add(res.data);	
+		    			}
+		    		})
+		    		.always(function() {
+						self.loading(false);
+						for (var index = self.collection.models.length - 1; index >= 0; index--) {
+							if (self.collection.models[index].id === self.selectedRoomName) {
+			    					var childView = self.children.findByModel(self.collection.models[index]);
+									childView.onAddClassSelected();
+									break;
+		    				}
+		    			}
+					})
+		    	});
 			},
 
 			addChatList: function(gist, callback){
@@ -208,18 +206,15 @@ define(function(require){
 				// });
 			},
 
-			setLastItemSelected: function(){
-		    	$('.chat-item').last().trigger('click');
-		    },		    
-			onRender : function(){
-				$('.chat-list').niceScroll({cursorcolor: '#eee'});
+			// setLastItemSelected: function(){
+		 //    	$('.chat-item').last().trigger('click');
+		 //    },		    
+			// onRender : function(){
+			// 	$('.chat-list').niceScroll({cursorcolor: '#eee'});
 
-				// register scroll event handler, this shuld be registered after view rendered
-				$('.chat-list').off('scroll').on('scroll', this.onScroll);
-			},
-			onDomRefresh: function(){
-				// util.loadSpinner(false);
-			},
+			// 	// register scroll event handler, this shuld be registered after view rendered
+			// 	$('.chat-list').off('scroll').on('scroll', this.onScroll);
+			// },
 			// onScroll : function(){
 				// var w = $('.chat-list');
 				// if(w.scrollTop() + w.height() == $('.chat-item-container').height()) {

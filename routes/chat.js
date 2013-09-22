@@ -11,7 +11,7 @@ exports.start = function(io){
       return false;
 
     for(var i=0; i<target.length; i++) {
-        if(target[i].id == val) {
+        if(target[i].id === val) {
             //target.splice(i, 1);
             target[i].opacity = 0.4;
             return true;
@@ -23,7 +23,7 @@ exports.start = function(io){
 
   var addById = function(target, val) {
     for(var i=0; i<target.length; i++) {
-        if(target[i].id == val) {
+        if(target[i].id === val) {
             //target.splice(i, 1);
             target[i].opacity = 1.0;
             return true;
@@ -126,8 +126,16 @@ exports.start = function(io){
 
       var added = addById(rooms[roomname].users, socket.userid);
       if (added == false) {
-        usernames[socket.userid].opacity = 1;
-        rooms[roomname].users.push(usernames[socket.userid]);  
+        //usernames[socket.userid].opacity = 1;
+        var userinfo = {};
+        userinfo.id = usernames[socket.userid].id;
+        userinfo.login = usernames[socket.userid].login;
+        userinfo.socketid = usernames[socket.userid].socketid;
+        userinfo.avatar = usernames[socket.userid].avatar;
+        userinfo.url = usernames[socket.userid].url;
+        userinfo.opacity = 1;
+
+        rooms[roomname].users.push(userinfo);  
       }
 
       rooms[roomname].lastLeaveDatetime = undefined;
@@ -184,8 +192,16 @@ exports.start = function(io){
       
       var added = addById(rooms[newroom].users, socket.userid);
       if (added == false) {
-        usernames[socket.userid].opacity = 1;
-        rooms[newroom].users.push(usernames[socket.userid]);  
+        //usernames[socket.userid].opacity = 1;
+        var userinfo = {};
+        userinfo.id = usernames[socket.userid].id;
+        userinfo.login = usernames[socket.userid].login;
+        userinfo.socketid = usernames[socket.userid].socketid;
+        userinfo.avatar = usernames[socket.userid].avatar;
+        userinfo.url = usernames[socket.userid].url;
+        userinfo.opacity = 1;
+
+        rooms[newroom].users.push(userinfo);  
       }
 
       rooms[newroom].lastLeaveDatetime = undefined;
@@ -237,7 +253,7 @@ exports.start = function(io){
       
       if (socket.room != undefined && rooms[socket.room] != undefined) {
         socket.leave(socket.room);
-        removeById(rooms[socket.room.users], socket.userid);
+        removeById(rooms[socket.room].users, socket.userid);
         //rooms[socket.room].removeById(socket.userid);
         if (emptyRoomYn(rooms[socket.room].users) == true) {
           rooms[socket.room].lastLeaveDatetime = new Date().getTime();
