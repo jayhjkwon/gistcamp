@@ -7,7 +7,7 @@ $(function(){
   // });
 
 
-var gistUrl = "gistcamp.com";
+var gistUrl = "http://gistcamp.com";
 
 
 var popupWindow = function(url, title, w, h){
@@ -56,7 +56,7 @@ $(".span-facebook").on("click", function(e){
 
 $(".span-twitter").on("click", function(e){
     e.preventDefault();
-    var url = 'https://twitter.com/intent/tweet?via=gistcamp&url=' + encodeURIComponent(gistUrl);
+    var url = 'https://twitter.com/intent/tweet?via=GISTCAMP&url=' + encodeURIComponent(gistUrl) + '&text=Open source web interface for the GIST';
     var title = 'GistCamp';
     popupWindow(url, title, '473', '258'); 
 });
