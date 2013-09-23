@@ -223,27 +223,25 @@ exports.getGistById = function(req, res){
 	
 	console.log('getGistById : ' + gistId);
 
-	// var getGistByid = function(gistId, callback) {
-		github.gists.get({id : gistId}, 
-			function(err, data){	
-				console.log(err);
-				console.log(data);
+	github.gists.get({id : gistId}, 
+		function(err, data){	
+			console.log(err);
+			console.log(data);
 
-				if (data) {
-					ChatContent
-					.where('room_key', gistId)
-					.select()
-					.lean()
-					.exec(function(err, docs){
-						if (docs) {
-							data.content = docs;
-						}
-						sendData(data, req, res);
-					});
-				}
+			if (data) {
+				ChatContent
+				.where('room_key', gistId)
+				.select()
+				.lean()
+				.exec(function(err, docs){
+					if (docs) {
+						data.content = docs;
+					}
+					sendData(data, req, res);
+				});
 			}
-		);
-	// };
+		}
+	);
 };
 
 exports.getStarredGists = function(req, res){
@@ -341,7 +339,6 @@ exports.getGistListByTag = function(req, res){
 			var gists = docs[0].tags[0].gists;
 			var gistIds = _.pluck(gists, 'gist_id');
 			async.each(gistIds, getGistById, function(error, result){
-				// res.send({data: gistList});
 				async.series([
 					function(callback){
 						async.parallel([

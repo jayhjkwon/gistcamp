@@ -2,7 +2,6 @@ define(function(require){
 	var
 		Backbone		= require('backbone'),		
 		GistItem 		= Backbone.Model.extend({	
-
 			initialize: function(options){
 				this.id = options ? options.id || null : null;
 			},

@@ -45,7 +45,6 @@ define(function(require){
 							self.linkHeader = res.linkHeader;
 						}else{
 							self.lastPage = true;
-							self.showEndofDataSign();	
 						}						
 
 						async.eachLimit(res.data, 3, self.handleGist, function(error, result){
@@ -106,9 +105,6 @@ define(function(require){
 				// register scroll event handler, this shuld be registered after view rendered
 				$('.gist-list').off('scroll').on('scroll', this.onScroll);
 			},
-			onDomRefresh: function(){
-				// $('.gist-list').niceScroll({cursorcolor: '#eee'});
-			},
 			onScroll : function(){
 				var w = $('.gist-list');
 				console.log(w.scrollTop() + ', ' + w.height() + ', ' + w.scrollTop() + w.height() + ', ' + $('.gist-item-container').height());
@@ -130,11 +126,7 @@ define(function(require){
 					this.spinner.stop();					
 					$('.loading').remove();	
 				}
-			},
-			showEndofDataSign: function(){
-				// $('#gist-item-list').append('<div style="height:50px;font-size:15px;font-weight:bold;text-align:center;">End of Data..</div>');
 			}
-
 		})
 	;
 

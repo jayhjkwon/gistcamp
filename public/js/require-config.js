@@ -69,7 +69,6 @@ require.config({
             // set path for handlebar helpers
             return 'templates/helpers/' + name;
         }
-	}/*,
-    urlArgs: 'modified_time=' +  (new Date()).getTime()*/
+	}
 });
 
