@@ -23,7 +23,7 @@ define(function(require){
 			template : footerTemplate,
 
 			initialize: function(){
-				_.bindAll(this, 'deleteTag', 'shareEverNote', 'onTagItemHover', 'shareGg', 'shareFB', 'shareTW', 'shareFB', 'initializePopOverTag', 'onItemSelected', 'star', 'createTag', 'loading', 'onBtnCommentClick', 'onRoomCreated', 'tagOnGist', 'onCommentDeleted', 'onCommentAdded', 'onTagCollectionChange', 'initializePopOverShare');
+				_.bindAll(this, 'deleteTag', 'sharePocket', 'shareEverNote', 'onTagItemHover', 'shareGg', 'shareFB', 'shareTW', 'shareFB', 'initializePopOverTag', 'onItemSelected', 'star', 'createTag', 'loading', 'onBtnCommentClick', 'onRoomCreated', 'tagOnGist', 'onCommentDeleted', 'onCommentAdded', 'onTagCollectionChange', 'initializePopOverShare');
 
 				this.tags = new TagItemList();
 
@@ -48,6 +48,7 @@ define(function(require){
 				'click .share-twitter'   : 'shareTW',
 				'click .share-linkedin'  : 'shareLnk',
 				'click .share-evernote'  : 'shareEverNote',
+				'click .share-pocket'    : 'sharePocket',
 				'click .tag'             : 'onTagButtonClick',
 				'click .btn-del-tag'     : 'deleteTag',
 				'click .btn-delete-gist' : 'onDeleteGist'
@@ -379,6 +380,16 @@ define(function(require){
 				var title = 'GistCamp';
 				this.popupWindow(url, title, '626', '496');	
 				this.ui.btnShare.popover('hide');	
+			},
+
+			sharePocket : function(e){
+				e.preventDefault();
+				var gistUrl = this.model.get('html_url');
+				var description = this.model.get('description');
+				var url = 'https://getpocket.com/save?url=' + encodeURIComponent(gistUrl) + "&title=" + encodeURIComponent(description);
+				var title = 'GistCamp';
+				this.popupWindow(url, title, '550', '320');	
+				this.ui.btnShare.popover('hide');		
 			},
 
 			shareEverNote : function(e){
