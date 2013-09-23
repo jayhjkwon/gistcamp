@@ -5,7 +5,6 @@ var
 
 exports.index = function(req, res){
   res.render('index', { 
-  	title: 'Welcome to GistCamp',
   	devMode: config.options.env,
   	appVersion: packageJson.version,
     user : req.user
@@ -14,7 +13,6 @@ exports.index = function(req, res){
 
 exports.welcome = function(req, res){
   res.render('welcome', { 
-  	title: 'Welcome to GistCamp',
   	devMode: config.options.env,
   	appVersion: packageJson.version
   });
