@@ -23,7 +23,7 @@ define(function(require){
 			template : footerTemplate,
 
 			initialize: function(){
-				_.bindAll(this, 'deleteTag', 'onTagItemHover', 'shareGg', 'shareFB', 'shareTW', 'shareFB', 'initializePopOverTag', 'onItemSelected', 'star', 'createTag', 'loading', 'onBtnCommentClick', 'onRoomCreated', 'tagOnGist', 'onCommentDeleted', 'onCommentAdded', 'onTagCollectionChange', 'initializePopOverShare');
+				_.bindAll(this, 'deleteTag', 'shareEverNote', 'onTagItemHover', 'shareGg', 'shareFB', 'shareTW', 'shareFB', 'initializePopOverTag', 'onItemSelected', 'star', 'createTag', 'loading', 'onBtnCommentClick', 'onRoomCreated', 'tagOnGist', 'onCommentDeleted', 'onCommentAdded', 'onTagCollectionChange', 'initializePopOverShare');
 
 				this.tags = new TagItemList();
 
@@ -47,6 +47,7 @@ define(function(require){
 				'click .share-facebook'  : 'shareFB',
 				'click .share-twitter'   : 'shareTW',
 				'click .share-linkedin'  : 'shareLnk',
+				'click .share-evernote'  : 'shareEverNote',
 				'click .tag'             : 'onTagButtonClick',
 				'click .btn-del-tag'     : 'deleteTag',
 				'click .btn-delete-gist' : 'onDeleteGist'
@@ -378,6 +379,25 @@ define(function(require){
 				var title = 'GistCamp';
 				this.popupWindow(url, title, '626', '496');	
 				this.ui.btnShare.popover('hide');	
+			},
+
+			shareEverNote : function(e){
+				e.preventDefault();
+				var self = this;
+
+				service.isEvernoteAuthenticated().done(function(result){
+					if (result.authenticated){
+						service.saveNote(self.model.get('id')).done(function(result){
+							alert('saved');
+						});
+					}else{
+						var url = '/auth/evernote?gist_id=' + self.model.get('id');
+						var title = 'GistCamp';
+						self.popupWindow(url, title, '626', '449');	
+						self.ui.btnShare.popover('hide');			
+					}
+				});
+				
 			},
 
 			popupWindow: function(url, title, w, h){

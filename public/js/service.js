@@ -74,6 +74,26 @@ define(function(require){
 				});
 			
 			return xhr;	
+		},
+
+		isEvernoteAuthenticated = function(){
+			var xhr =
+				$.ajax({
+					type: 'GET',
+					url: '/api/evernote/is_authenticated'
+				});
+			
+			return xhr;
+		},
+
+		saveNote = function(gistId){
+			var xhr =
+				$.ajax({
+					type: 'POST',
+					url: '/api/evernote/save/' + gistId
+				});
+			
+			return xhr;		
 		}		
 	;
 
@@ -83,6 +103,8 @@ define(function(require){
 		deleteTagOnGist  : deleteTagOnGist,
 		getServerOptions : getServerOptions,
 		setStar          : setStar,
-		deleteStar       : deleteStar
+		deleteStar       : deleteStar,
+		isEvernoteAuthenticated : isEvernoteAuthenticated,
+		saveNote         : saveNote
 	};
 });

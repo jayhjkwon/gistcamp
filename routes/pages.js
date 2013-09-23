@@ -17,3 +17,7 @@ exports.welcome = function(req, res){
   	appVersion: packageJson.version
   });
 };
+
+exports.thanksEvernote = function(req, res){
+  res.render('thanksEvernote');
+};

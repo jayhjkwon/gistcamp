@@ -11,9 +11,10 @@ var
 	GitHubStrategy = require('passport-github').Strategy,
   User     = require('./models/user'), 
   request  = require('request'),
-  service   = require('./infra/service'),
-  async     = require('async'),
-  chat     = require('./routes/chat')
+  service  = require('./infra/service'),
+  async    = require('async'),
+  chat     = require('./routes/chat'),
+  evernote = require('./routes/api/evernote')
 ;
 
 
@@ -137,6 +138,7 @@ var ensureAuthenticated = function (req, res, next) {
 // web pages
 app.get('/', ensureAuthenticated, pages.index);
 app.get('/welcome', pages.welcome);
+app.get('/thanksEvernote', pages.thanksEvernote);
 app.get('/auth/github',
   passport.authenticate('github', {scope: ['user', 'user:email', 'user:follow', 'repo', 'notifications', 'gist']}),
   function(req, res){}
@@ -151,6 +153,8 @@ app.get('/logout', function(req, res){
   req.logout();
   res.redirect('/welcome');
 });
+app.get('/auth/evernote', evernote.auth);
+app.get('/auth/evernote/callback', evernote.authCallback);
 
 
 // restful services
@@ -189,6 +193,8 @@ app.get('/api/user/auth', ensureAuthenticated, user.getAuthUser);
 app.put('/api/user/following/:login_id', ensureAuthenticated, user.follow);
 app.delete('/api/user/following/:login_id', ensureAuthenticated, user.unfollow);
 
+app.post('/api/evernote/save/:gist_id', ensureAuthenticated, evernote.saveNote);
+app.get('/api/evernote/is_authenticated', ensureAuthenticated, evernote.isEvernoteAuthenticated);
 
 var server = http.createServer(app);
 io = require('socket.io').listen(server);
