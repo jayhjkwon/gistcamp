@@ -1,7 +1,7 @@
 require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 	'views/topView', 'views/footerView', 'constants', 'models/user', 'global', 'async',
 	'socketio', 'postalWrapper', 'toastr', 'service', 'mousetrap', 
-	'bootstrap', 'prettify', 'nicescroll', 'autoGrow', 'scrollTo'], 
+	'bootstrap', 'prettify', 'nicescroll', 'autoGrow', 'scrollTo', 'fancybox'], 
 	function($, _, Application, Router, shellView, topView, footerView, constants, User, global, async, 
 		socketio, postalWrapper, toastr, service, mousetrap){
 	$(function(){
@@ -47,6 +47,8 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 				socket = socketio.connect('http://gistcamp.nodejitsu.com');
 			global.socket = socket;
 			console.log('server options :' + global.server.options.env);
+
+			
 
 			// on connection to server, ask for user's name with an anonymous callback
 			global.socket.on('connect', function(){

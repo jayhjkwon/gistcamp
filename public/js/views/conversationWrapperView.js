@@ -29,17 +29,13 @@ define(function(require){
 
 			onDataSendClicked : function(){
 				var message = $('#data').val();
-
 				if (message)
 				{
 					$('#data').val('');
-					// tell server to execute 'sendchat' and send along one parameter
 					global.socket.emit('sendchat', message);	
 				}
-
 				
 				$('data').focus();
-				
 			},
 
 			onDataSendKeyPress : function(e){

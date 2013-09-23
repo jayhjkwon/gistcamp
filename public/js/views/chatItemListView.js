@@ -17,6 +17,7 @@ define(function(require){
 		ChatItemList    = require('models/chatItemList'),
 		ChatItem        = require('models/chatItem'),
 		postalWrapper   = require('postalWrapper'),
+		moment          = require('moment'),
 		
 		ChatItemListView = Marionette.CollectionView.extend({
 			className: 'chat-item-container',
@@ -27,8 +28,6 @@ define(function(require){
 			selectedRoomName: '',
 
 			initialize: function(){
-
-				//console.log('###############ChatItemListView initialize');
 				_.bindAll(this, 'getChatList', 'addChatList', 'onClose', 'removeChatList', 'onItemSelected', 'getChatHistory');
 				
 				this.spinner = new Spinner();
@@ -49,10 +48,8 @@ define(function(require){
 				if (_.size(self.rooms) === 0){
 					self.collection.reset();	
 				}
-				// res.data['room'] = self.rooms[key];
-				// self.collection.reset(res.data);	
 
-				$.each(global.rooms, function(key, value) {
+				$.each(self.rooms, function(key, value) {
 		    		var chatItem = new ChatItem({'gistId': key});
 		    		chatItem.fetch()
 		    		.done(function(res) {
@@ -61,14 +58,13 @@ define(function(require){
 
 			    		for (var index = self.collection.models.length - 1; index >= 0; index--) {
 		    				if (self.collection.models[index].id === key) {
-	    							// if (_.size(res.data['room']) != _.size(self.rooms[key])) {
+	    						
 	    						res.data['room'] = self.rooms[key];
 
 	    			 			var childView = self.children.findByModel(self.collection.models[index]);
 								childView.modelChanged(key, self.rooms[key]);
 
-								isUpdated = true;	
-	    						// }
+								isUpdated = true;
 		    				}		    				
 			    		}
 
@@ -104,8 +100,6 @@ define(function(require){
     				self.getChatHistory(res.data.content);
 	    		})
 	    		.always(function(){
-	    			// self.render();
-			    	// $('.chat-item').last().addClass('selected');
 			    	self.loading(false);
 			    	$('#conversation-content').scrollTop($("#conversation-content")[0].scrollHeight);
 	    		});
@@ -123,8 +117,6 @@ define(function(require){
 	    			self.getChatHistory(res.data.content);
 	    		})
 	    		.always(function(){
-	    			// self.render();
-			    	// $('.chat-item').last().addClass('selected');
 			    	self.loading(false);
 			    	$('#conversation-content').scrollTop($("#conversation-content")[0].scrollHeight);
 	    		});
@@ -175,19 +167,6 @@ define(function(require){
 	    		}
 			},
 
-			// handleGist : function(gist, callback){
-			// 	var self = this;
-			// 	var files = _.values(gist.files);
-			// 	async.each(files, self.setFileContent, function(error, result){
-			// 		callback(null, gist);
-			// 	});
-			// },			
-
-			// setFileContent : function(file, callback){
-			// 	var xhr = service.getFileContent(file, callback);
-			// 	this.xhrs.push(xhr);
-			// },
-
 			onClose: function(){
 				
 				this.subscriptionUpdateRoom.unsubscribe();
@@ -196,36 +175,8 @@ define(function(require){
 				this.subscriptionItemSelected.unsubscribe();
 
 				global.socket.emit('leaveRoom', this.selectedRoomName);
-				
-				// var self = this;
-				// _.each(self.xhrs, function(xhr){
-				// 	var s = xhr.state();
-				// 	if (s === 'pending') {
-				// 		xhr.abort();	// abort ajax requests those are not completed
-				// 	}
-				// });
 			},
 
-			// setLastItemSelected: function(){
-		 //    	$('.chat-item').last().trigger('click');
-		 //    },		    
-			// onRender : function(){
-			// 	$('.chat-list').niceScroll({cursorcolor: '#eee'});
-
-			// 	// register scroll event handler, this shuld be registered after view rendered
-			// 	$('.chat-list').off('scroll').on('scroll', this.onScroll);
-			// },
-			// onScroll : function(){
-				// var w = $('.chat-list');
-				// if(w.scrollTop() + w.height() == $('.chat-item-container').height()) {
-		  //      		this.loadMore();
-			 //    }
-			// },
-			// loadMore: function(){
-			// 	if(self.lastPage) return;
-			// 	this.loading(true);
-			// 	this.getGistList();
-			// },
 			loading: function(showSpinner){
 				if (showSpinner){
 					$('#chat-list').append('<div style="height:100px;" class="loading"></div>');
@@ -236,10 +187,6 @@ define(function(require){
 					$('.loading').remove();	
 				}
 			}
-			// showEndofDataSign: function(){
-			// 	$('#chat-list').append('<div style="height:50px;font-size:15px;font-weight:bold;text-align:center;">End of Data..</div>');
-			// }
-
 		})
 	;
 

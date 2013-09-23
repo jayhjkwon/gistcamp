@@ -22,7 +22,8 @@
     "markdown": "~0.5.0",
     "ace": "1.1.1",
     "select2": "~3.4.2",
-    "mousetrap": "~1.4.5"
+    "mousetrap": "~1.4.5",
+    "fancybox": "~2.1.5"
   },
   "resolutions": {
     "underscore": "1.5.1"

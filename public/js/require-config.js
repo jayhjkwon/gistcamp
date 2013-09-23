@@ -25,7 +25,8 @@ require.config({
         socketio       : '/socket.io/socket.io',
         toastr         : '../vendor/toastr/toastr',
         select2        : '../vendor/select2/select2',
-        mousetrap      : '../vendor/mousetrap/mousetrap'
+        mousetrap      : '../vendor/mousetrap/mousetrap',
+        fancybox       : '../vendor/fancybox/source/jquery.fancybox.pack'
 	},
 	shim: {
 		underscore: {

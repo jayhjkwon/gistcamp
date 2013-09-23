@@ -26,13 +26,6 @@ define(function(require){
 				chatList    : '#chat-list',
 				filesWrapper    : '#files-wrapper',
 				chatWrapper : '#chat-wrapper'
-			},
-
-			events : {
-				
-			},
-
-			onClose: function(){
 			}
 		})
 	;
