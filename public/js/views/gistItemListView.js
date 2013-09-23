@@ -81,7 +81,10 @@ define(function(require){
 					}
 				});
 			},
-
+			
+			getSharedGistList:function(){
+				this.getGistList(constants.GIST_SHARED);
+			},
 			getPublicGistList: function(){
 				this.getGistList(constants.GIST_PUBLIC);
 			},

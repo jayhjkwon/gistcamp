@@ -12,7 +12,8 @@ define(function(require){
 				'tagged/:id/:tag_url' : 'tagged',
 				'newgist'     : 'newGist',
 				'chat'        : 'chat',
-				'all'         : 'all'
+				'all'         : 'all',
+				'shared'      : 'shared'
 			},
 
 			controller: new Controller

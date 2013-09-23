@@ -56,6 +56,16 @@ define(function(require){
 			return xhr;
 		},
 
+		setShared = function(gistId, users){
+			var xhr =
+				$.ajax({
+					type: 'POST',
+					url: '/api/gist/shared/' + gistId + '/' + users
+				});
+			
+			return xhr;	
+		},
+
 		setStar = function(gistId){
 			var xhr =
 				$.ajax({
@@ -83,6 +93,7 @@ define(function(require){
 		deleteTagOnGist  : deleteTagOnGist,
 		getServerOptions : getServerOptions,
 		setStar          : setStar,
-		deleteStar       : deleteStar
+		deleteStar       : deleteStar,
+		setShared        : setShared
 	};
 });

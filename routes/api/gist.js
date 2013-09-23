@@ -8,6 +8,7 @@ var
     util      = require('../../infra/util'),
     User      = require('../../models/user'),
     ChatContent      = require('../../models/chatContent'),
+    SharedGist      = require('../../models/sharedGist'),
     mongoose  = require('mongoose')
 ;
 var cacheSeconds = 60 * 60 * 1 // 1 hour	
@@ -260,6 +261,7 @@ exports.getStarredGists = function(req, res){
 		getNextPage(linkHeader, req, res);
 	}
 };
+
 var addStarredGists = function(gists, containerArray){
 	var gistIds = _.pluck(gists, 'id');			
 	_.each(gistIds, function(gistId){
@@ -311,6 +313,95 @@ exports.getAllStarredGists = function(req, res, accessToken, callback){
 	getStarredGistsByPage(github, allGists, true, null, function(result){
 		callback(result);
 	});
+};
+
+exports.getSharedGists = function(req, res){
+
+	console.log('getSharedGists');
+	
+	var login_name = req.params.login_name;
+	var userId = service.getUserId(req);
+	var gistList = [];
+	var github = service.getGitHubApi(req);
+
+	var getGistById = function(gistId, callback){
+		github.gists.get({id : gistId}, 
+			function(err, data){	
+				gistList.push(data);
+				callback(null, data);
+			}
+		);
+	};
+
+	SharedGist 
+	.where('target_user_login', login_name) 
+	.select() 
+	.lean() 
+	.exec(function(err, docs){ 
+		if (docs) { 
+			var gistIds = _.pluck(docs, 'gist_id');
+			async.each(gistIds, getGistById, function(error, result){
+				async.series([
+					function(callback){
+						async.parallel([
+							function(cb){
+								setIsFollowing(req, gistList, cb);
+							},
+
+							function(cb){
+								getTagsByGistId(req, gistList, cb);
+							},
+
+							function(cb){
+								setIsStarred(req, gistList, cb);
+							}],
+
+							function(err, results){
+								callback(null);
+							}
+						)
+					},
+
+					function(callback){
+						res.send({data: gistList});
+						callback(null);
+					}
+				]);
+			});
+		}else{
+			res.send({data: gistList});
+		}
+	});
+};
+
+var trim = function(str) {
+    return str.replace(/(^\s*)|(\s*$)/gi, "");
+};
+
+exports.setSharedGists = function(req, res){
+
+	console.log('setSharedGists');
+	
+	var gist_id = req.params.gist_id;
+	var target_user_login = req.params.users;
+	var shared_user_login = service.getLoginName(req);
+	
+	var splitStr = target_user_login.split(',');
+	for(var i = 0; i<splitStr.length; i++)
+	{
+		// insert to mongodb
+		var sharedGist = new SharedGist();
+		sharedGist.shared_user_login = shared_user_login;
+		sharedGist.target_user_login = trim(splitStr[i]);
+		sharedGist.gist_id = gist_id;
+
+		sharedGist.save(function(err) {
+		if (err)
+		  console.log('sharedGist save error : ' + err);
+		});
+	}
+
+	res.send({data: "Success"});
 };
 
 exports.getGistListByTag = function(req, res){

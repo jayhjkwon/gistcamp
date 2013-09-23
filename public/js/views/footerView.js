@@ -23,7 +23,7 @@ define(function(require){
 			template : footerTemplate,
 
 			initialize: function(){
-				_.bindAll(this, 'deleteTag', 'onTagItemHover', 'shareGg', 'shareFB', 'shareTW', 'shareFB', 'initializePopOverTag', 'onItemSelected', 'star', 'createTag', 'loading', 'onBtnCommentClick', 'onRoomCreated', 'tagOnGist', 'onCommentDeleted', 'onCommentAdded', 'onTagCollectionChange', 'initializePopOverShare');
+				_.bindAll(this, 'deleteTag', 'onTagItemHover', 'shareWo', 'shareGg', 'shareFB', 'shareTW', 'shareFB', 'initializePopOverTag', 'onItemSelected', 'star', 'createTag', 'loading', 'onBtnCommentClick', 'onRoomCreated', 'tagOnGist', 'onCommentDeleted', 'onCommentAdded', 'onTagCollectionChange', 'initializePopOverShare');
 
 				this.tags = new TagItemList();
 
@@ -43,6 +43,7 @@ define(function(require){
 				'keydown #new-tag'       : 'createTag',
 				'click .tag-popup ul li a' : 'tagOnGist',
 				'click .btn-star'        : 'star',
+				'click .share-with-others'    : 'shareWo',
 				'click .share-google'    : 'shareGg',
 				'click .share-facebook'  : 'shareFB',
 				'click .share-twitter'   : 'shareTW',
@@ -344,6 +345,45 @@ define(function(require){
 				}
 			},
 
+			shareWo : function(e) {
+				e.preventDefault();
+				var self = this;
+
+				// 여기서 이벤트를 등록해야 이벤트가 동작한다.
+				// fancybox에 있는 버튼의 이벤트가 마리오넷에서는 동작하지 않는다. 
+				$('#btnGistShare').click(function(){
+					$.fancybox.close(true);
+					
+					var users = $('#sharedUsers').val();
+					$('#sharedUsers').val('');
+
+					service
+					.setShared(self.model.get('id'), users)
+					.done(function(data){
+						$('.starred-success').text('Shared Successfully').removeClass('starred-success-hide starred-success-show').addClass('starred-success-show');
+						setTimeout(function(){
+							$('.starred-success').removeClass('starred-success-hide starred-success-show').addClass('starred-success-hide');
+						}, 2000);
+					});
+				});
+
+				$.fancybox($('#share-input-popup'), {
+					fitToView	: true,
+					autoSize	: true,
+					closeClick	: false,
+					openEffect	: 'none',
+					closeEffect	: 'none',
+					afterClose : function() {
+						$('#btnGistShare').unbind('click');
+					},
+					afterShow : function() {
+						$('#sharedUsers').focus();
+					}
+				});
+
+				this.ui.btnShare.popover('hide');
+			},
+			
 			shareFB : function(e){
 				e.preventDefault();
 				var gistUrl = this.model.get('html_url');

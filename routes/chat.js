@@ -49,7 +49,7 @@ exports.start = function(io){
 
   var insertChatContent = function(room, userid, login, avatar, data) {
       // insert to mongodb
-      chatContent = new ChatContent();
+      var chatContent = new ChatContent();
       chatContent.room_key = room;
       chatContent.user_id = userid;
       chatContent.user_login = login;

@@ -161,6 +161,10 @@ app.get('/api/gist/user/:login_name', ensureAuthenticated, gist.getGistListByUse
 app.get('/api/gists/:gistId', gist.getGistById);
 app.get('/api/gist/friends', ensureAuthenticated, gist.getFriendsGist);
 app.get('/api/gist/starred', ensureAuthenticated, gist.getStarredGists);
+
+app.get('/api/gist/shared/:login_name', ensureAuthenticated, gist.getSharedGists);
+app.post('/api/gist/shared/:gist_id/:users', ensureAuthenticated, gist.setSharedGists);
+
 app.post('/api/gist/star/:gist_id', ensureAuthenticated, gist.setStar);
 app.delete('/api/gist/star/:gist_id', ensureAuthenticated, gist.deleteStar);
 

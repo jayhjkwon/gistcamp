@@ -123,6 +123,31 @@ define(function(require){
 
 			},
 
+			shared : function(){				
+				// LayoutView with regions
+				var gistListView = new GistListView();
+				shellView.main.show(gistListView);
+
+				// Gist Item on the left region
+				var gistItemListView = new GistItemListView;
+				gistItemListView.getSharedGistList();				
+				gistListView.gistItemList.show(gistItemListView);
+
+				// Gist Files on the center region
+				var filesWrapperView = new FilesWrapperView;
+				gistListView.filesWrapper.show(filesWrapperView);
+
+				// Comments on the right region
+				var commentsWrapperView = new CommentsWrapperView;
+				gistListView.commentsWrapper.show(commentsWrapperView);
+
+				Application.execute(constants.MENU_SELECTED,'shared');
+
+				var self = this;
+				self.showFooter();
+
+			},
+
 			forked : function(){
 				shellView.main.show(new GistListView({currentSelectedMenu: 'forked'}));
 				Application.execute(constants.MENU_SELECTED,'forked');

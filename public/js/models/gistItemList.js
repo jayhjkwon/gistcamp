@@ -25,6 +25,8 @@ define(function(require){
 						return '/api/gist/friends';
 					case constants.GIST_TAGGED_GISTS :
 						return '/api/gist/tagged/' + this.tagId;
+					case constants.GIST_SHARED :
+						return '/api/gist/shared/' + global.user.login;
 					default :
 						return '/api/gist/public';	
 				}
