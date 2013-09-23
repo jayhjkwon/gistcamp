@@ -7,7 +7,8 @@ var
     async     = require('async'),
     service   = require('../../infra/service'),
     User      = require('../../models/user'),
-    Evernote  = require('evernote').Evernote
+    Evernote  = require('evernote').Evernote,
+    crypto    = require('crypto');
 ;
 
 exports.isEvernoteAuthenticated = function(req, res){
@@ -16,6 +17,52 @@ exports.isEvernoteAuthenticated = function(req, res){
 	}else{
 		res.send({authenticated: false});
 	}
+};
+
+var makeNote = function(noteStore, noteTitle, noteBody, resources, parentNotebook, callback) {
+ 
+  // Create note object
+  var ourNote = new Evernote.Note();
+  ourNote.title = noteTitle;
+ 
+  // Build body of note
+  var nBody = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+  nBody += "<!DOCTYPE en-note SYSTEM \"http://xml.evernote.com/pub/enml2.dtd\">";
+  nBody += "<en-note>" + noteBody;
+ 
+  if (resources && resources.length > 0) {
+    // Add Resource objects to note body
+    nBody += "<br /><br />";
+    ourNote.resources = resources;
+    for (i in resources) {
+      var md5 = crypto.createHash('md5');
+      md5.update(resources[i].data.body);
+      var hexhash = md5.digest('hex');
+      nBody += "Attachment with hash " + hexhash + ": <br /><en-media type=\"" + resources[i].mime + "\" hash=\"" + hexhash + "\" /><br />"
+    }
+  }
+ 
+  nBody += "</en-note>";
+  ourNote.content = nBody;
+  
+  // parentNotebook is optional; if omitted, default notebook is used
+  if (parentNotebook && parentNotebook.guid) {
+    ourNote.notebookGuid = parentNotebook.guid;
+  }
+ 
+  // Attempt to create note in Evernote account
+  noteStore.createNote(ourNote, function(note) {
+    if (note.errorCode) {
+      // Something was wrong with the note data
+      // See EDAMErrorCode enumeration for error code explanation
+      // http://dev.evernote.com/documentation/reference/Errors.html#Enum_EDAMErrorCode
+      console.log('errorCode=' + note.errorCode);
+      console.log(note);
+    } else {
+      callback(note);
+    }
+  });
+ 
 };
 
 exports.saveNote = function(req, res){
@@ -45,14 +92,40 @@ exports.saveNote = function(req, res){
 						url: file.raw_url + '?access_token=' + accessToken,
 						timeout: 5000
 					}, function(error, response, body){	
-						file.file_content = body;
-						callback(null);
+						// file.file_content = body;
+						
+						var data = new Evernote.Data();
+						data.size = file.size;
+						data.bodyHash = body.toString('base64');
+						data.body = body;
+						
+						var attributes = new Evernote.ResourceAttributes();
+						attributes.fileName = file.filename;
+						
+						var resource = new Evernote.Resource();
+						resource.mime = file.type;
+						resource.data = data;
+						resource.attributes = attributes;
+
+						callback(null, resource);
 					});
 				};
 
 				var createNote = function(error, result){
+					var evernoteInfo = require('../../evernoteInfo').info;
+					var client = new Evernote.Client({token: req.session.evernote.oauthAccessToken, sandbox: evernoteInfo.SANDBOX});
+					var noteStore = client.getNoteStore();
+					var noteTitle = gist.description || 'Created from GISTCAMP';
+					var noteBody = '<h3>Created from GISTCAMP</h3><br />';
+
+					var resources = result;
+
+					makeNote(noteStore, noteTitle, noteBody, resources, null, function(){
+						cb(null);
+					});
+
 					// form note body
-					var note = new Evernote.Note();
+					/*var note = new Evernote.Note();
 					note.title = gist.description;
 					note.content = '<?xml version="1.0" encoding="UTF-8"?>';
 					note.content += '<!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">';
@@ -70,10 +143,10 @@ exports.saveNote = function(req, res){
 					var noteStore = client.getNoteStore();
 					noteStore.createNote(note, function(createdNote) {
 						cb(null);  
-					});
+					});*/
 				};
 
-				async.each(filesArray, getFileContent, createNote);
+				async.map(filesArray, getFileContent, createNote);
 			}
 		}	
 	],
@@ -105,7 +178,9 @@ exports.auth = function(req, res) {
 			req.session.evernote.oauthTokenSecret = oauthTokenSecret;
 
 			// redirect the user to authorize the token
-			res.redirect(client.getAuthorizeUrl(oauthToken));
+			setTimeout(function(){
+				res.redirect(client.getAuthorizeUrl(oauthToken));
+			}, 100);			
 		}
 	});
 };

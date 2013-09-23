@@ -387,8 +387,14 @@ define(function(require){
 
 				service.isEvernoteAuthenticated().done(function(result){
 					if (result.authenticated){
+						self.loading(true, e.target);
 						service.saveNote(self.model.get('id')).done(function(result){
-							alert('saved');
+							$(e.target).siblings('.saved').addClass('saved-show');
+							setTimeout(function(){
+								$(e.target).siblings('.saved').removeClass('saved-show');
+							}, 3000);
+						}).always(function(){
+							self.loading(false);
 						});
 					}else{
 						var url = '/auth/evernote?gist_id=' + self.model.get('id');
