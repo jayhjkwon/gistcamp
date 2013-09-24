@@ -18,7 +18,8 @@
     "socket.io": "",
     "passport-github": "~0.1.5",
     "passport": "~0.1.17",
-    "evernote": "~1.25.0"
+    "evernote": "~1.25.0",
+    "connect-domain": "~0.5.0"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
