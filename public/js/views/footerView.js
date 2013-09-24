@@ -360,10 +360,16 @@ define(function(require){
 					service
 					.setShared(self.model.get('id'), users)
 					.done(function(data){
+						$('.starred-success').css('left', '140px');
 						$('.starred-success').text('Shared Successfully').removeClass('starred-success-hide starred-success-show').addClass('starred-success-show');
 						setTimeout(function(){
 							$('.starred-success').removeClass('starred-success-hide starred-success-show').addClass('starred-success-hide');
+							setTimeout(function() {
+								$('.starred-success').css('left', '-40px');
+							}, 1000);
 						}, 2000);
+
+
 					});
 				});
 
