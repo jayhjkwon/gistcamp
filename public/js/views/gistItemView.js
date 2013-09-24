@@ -40,14 +40,14 @@ define(function(require){
 				var user = this.model.toJSON().user;
 				this.ui.btnFollow.prop('disabled', true);
 				if(this.ui.btnFollow.text() === 'Follow'){
-					userModel = new User({mode: constants.USER_FOLLOW, id:u.id, loginId: u.login});
+					userModel = new User({mode: constants.USER_FOLLOW, id:user.id, loginId: user.login});
 					userModel.save().done(function(){
 						self.ui.btnFollow.prop('disabled', false);
 						self.ui.btnFollow.text('Unfollow'); 
 						user.is_following_this_user = true;
 					});					
 				}else{
-					userModel = new User({mode: constants.USER_UNFOLLOW, id:u.id, loginId: u.login});
+					userModel = new User({mode: constants.USER_UNFOLLOW, id:user.id, loginId: user.login});
 					userModel.destroy({
 						success: function(){ 
 							self.ui.btnFollow.prop('disabled', false);
