@@ -38,6 +38,7 @@ var makeNote = function(noteStore, noteTitle, noteBody, resources, parentNoteboo
       var md5 = crypto.createHash('md5');
       md5.update(resources[i].data.body);
       var hexhash = md5.digest('hex');
+      resources[i].data.bodyHash = hexhash;
       nBody += "Attachment with hash " + hexhash + ": <br /><en-media type=\"" + resources[i].mime + "\" hash=\"" + hexhash + "\" /><br />"
     }
   }
@@ -92,11 +93,10 @@ exports.saveNote = function(req, res){
 						url: file.raw_url + '?access_token=' + accessToken,
 						timeout: 5000
 					}, function(error, response, body){	
-						// file.file_content = body;
-						
 						var data = new Evernote.Data();
 						data.size = file.size;
-						data.bodyHash = body.toString('base64');
+						//data.bodyHash = body.toString('base64');
+						// data.size = data.bodyHash.length;
 						data.body = body;
 						
 						var attributes = new Evernote.ResourceAttributes();
