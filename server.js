@@ -14,7 +14,8 @@ var
   service  = require('./infra/service'),
   async    = require('async'),
   chat     = require('./routes/chat'),
-  evernote = require('./routes/api/evernote')
+  evernote = require('./routes/api/evernote'),
+  connectDomain = require("connect-domain")
 ;
 
 
@@ -66,14 +67,26 @@ app.use(express.logger('dev'));
 app.use(express.compress());
 app.use(express.bodyParser());
 app.use(express.methodOverride());
-app.use(express.cookieParser('your secret here'));
+app.use(express.cookieParser('gistcamp'));
 app.use(express.session({cookie: { maxAge : 1000 * 60 * 60 * 24 * 30 }}));
 app.use(passport.initialize());
 app.use(passport.session());
 // app.use(checkRateLimit);
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(connectDomain());
+app.use(function(err, req, res, next) {
+    res.end(err.message);
+});
 
+/*var domain = require('domain');
+app.use(function(req, res, next) {
+    var requestDomain = domain.create();
+    requestDomain.add(req);
+    requestDomain.add(res);
+    requestDomain.on('error', next);
+    requestDomain.run(next);
+});*/
 
 
 // development only
@@ -198,6 +211,13 @@ app.put('/api/user/following/:login_id', ensureAuthenticated, user.follow);
 app.delete('/api/user/following/:login_id', ensureAuthenticated, user.unfollow);
 
 app.post('/api/evernote/save/:gist_id', ensureAuthenticated, evernote.saveNote);
+/*app.use(connectDomain())
+  .post('/api/evernote/save/:gist_id', ensureAuthenticated, evernote.saveNote)
+  .use(function(err, req, res, next) {
+    res.writeHeader(500, {'Content-Type' : "text/html"});
+    res.write("<h1>" + err.name + "</h1>");
+    res.end("<p style='border:1px dotted red'>" + err.message + "</p>");
+});*/
 app.get('/api/evernote/is_authenticated', ensureAuthenticated, evernote.isEvernoteAuthenticated);
 
 var server = http.createServer(app);

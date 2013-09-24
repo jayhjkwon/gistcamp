@@ -34,49 +34,57 @@ exports.isEvernoteAuthenticated = function(req, res){
 
 var makeNote = function(noteStore, noteTitle, noteBody, resources, parentNotebook, callback) {
  
-  // Create note object
-  var ourNote = new Evernote.Note();
-  ourNote.title = noteTitle;
+	// Create note object
+	var ourNote = new Evernote.Note();
+	if(noteTitle && noteTitle.length > 20){
+		ourNote.title = noteTitle.substring(0,20);
+	}else{
+		ourNote.title = noteTitle;
+	}
+
+	// Build body of note
+	var nBody = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+	nBody += "<!DOCTYPE en-note SYSTEM \"http://xml.evernote.com/pub/enml2.dtd\">";
+	nBody += "<en-note>" + noteBody;
+
+	if (resources && resources.length > 0) {
+		// Add Resource objects to note body
+		nBody += "<br /><br />";
+		ourNote.resources = resources;
+		for (i in resources) {
+		  var md5 = crypto.createHash('md5');
+		  var b = resources[i].data.body;
+		  md5.update(b);
+		  var hexhash = md5.digest('hex');
+		  // resources[i].data.bodyHash = hexhash;
+		  nBody += "Attachment with hash " + hexhash + ": <br /><en-media type=\"" + resources[i].mime + "\" hash=\"" + hexhash + "\" /><br />"
+		}
+	}
+
+	nBody += "</en-note>";
+	ourNote.content = nBody;
+
+	// parentNotebook is optional; if omitted, default notebook is used
+	if (parentNotebook && parentNotebook.guid) {
+		ourNote.notebookGuid = parentNotebook.guid;
+	}
  
-  // Build body of note
-  var nBody = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-  nBody += "<!DOCTYPE en-note SYSTEM \"http://xml.evernote.com/pub/enml2.dtd\">";
-  nBody += "<en-note>" + noteBody;
- 
-  if (resources && resources.length > 0) {
-    // Add Resource objects to note body
-    nBody += "<br /><br />";
-    ourNote.resources = resources;
-    for (i in resources) {
-      var md5 = crypto.createHash('md5');
-      md5.update(resources[i].data.body);
-      var hexhash = md5.digest('hex');
-      resources[i].data.bodyHash = hexhash;
-      nBody += "Attachment with hash " + hexhash + ": <br /><en-media type=\"" + resources[i].mime + "\" hash=\"" + hexhash + "\" /><br />"
-    }
-  }
- 
-  nBody += "</en-note>";
-  ourNote.content = nBody;
-  
-  // parentNotebook is optional; if omitted, default notebook is used
-  if (parentNotebook && parentNotebook.guid) {
-    ourNote.notebookGuid = parentNotebook.guid;
-  }
- 
-  // Attempt to create note in Evernote account
-  noteStore.createNote(ourNote, function(note) {
-    if (note.errorCode) {
-      // Something was wrong with the note data
-      // See EDAMErrorCode enumeration for error code explanation
-      // http://dev.evernote.com/documentation/reference/Errors.html#Enum_EDAMErrorCode
-      console.log('errorCode=' + note.errorCode);
-      console.log(note);
-    } else {
-      callback(note);
-    }
-  });
- 
+	try{
+		// Attempt to create note in Evernote account
+		noteStore.createNote(ourNote, function(note) {
+			if (note.errorCode) {
+			  // Something was wrong with the note data
+			  // See EDAMErrorCode enumeration for error code explanation
+			  // http://dev.evernote.com/documentation/reference/Errors.html#Enum_EDAMErrorCode
+			  console.log('errorCode=' + note.errorCode);
+			  console.log(note);
+			} else {
+			  callback(note);
+			}
+  		});
+ 	}catch(err){
+		console.log('error catched when creating note : ' + err);
+	}
 };
 
 exports.saveNote = function(req, res){
@@ -108,8 +116,7 @@ exports.saveNote = function(req, res){
 					}, function(error, response, body){	
 						var data = new Evernote.Data();
 						data.size = file.size;
-						//data.bodyHash = body.toString('base64');
-						// data.size = data.bodyHash.length;
+						data.bodyHash = body.toString('base64');
 						data.body = body;
 						
 						var attributes = new Evernote.ResourceAttributes();
@@ -130,13 +137,17 @@ exports.saveNote = function(req, res){
 					var noteStore = client.getNoteStore();
 					var noteTitle = gist.description || 'Created from GISTCAMP';
 					var noteBody = '<h3>Created from GISTCAMP</h3><br />';
-
 					var resources = result;
 
 					makeNote(noteStore, noteTitle, noteBody, resources, null, function(){
 						cb(null);
 					});
 				};
+
+				// filter image files
+				filesArray = _.filter(filesArray, function(file){
+					return file.type.indexOf('image') === -1;
+				});	
 
 				async.map(filesArray, getFileContent, createNote);
 			}
