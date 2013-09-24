@@ -23,7 +23,7 @@ define(function(require){
 			template : footerTemplate,
 
 			initialize: function(){
-				_.bindAll(this, 'deleteTag', 'onTagItemHover', 'shareWo', 'shareGg', 'shareFB', 'shareTW', 'shareFB', 'initializePopOverTag', 'onItemSelected', 'star', 'createTag', 'loading', 'onBtnCommentClick', 'onRoomCreated', 'tagOnGist', 'onCommentDeleted', 'onCommentAdded', 'onTagCollectionChange', 'initializePopOverShare');
+				_.bindAll(this, 'deleteTag', 'sharePocket', 'shareEverNote', 'onTagItemHover', 'shareWo', 'shareGg', 'shareFB', 'shareTW', 'shareFB', 'initializePopOverTag', 'onItemSelected', 'star', 'createTag', 'loading', 'onBtnCommentClick', 'onRoomCreated', 'tagOnGist', 'onCommentDeleted', 'onCommentAdded', 'onTagCollectionChange', 'initializePopOverShare');
 
 				this.tags = new TagItemList();
 
@@ -48,6 +48,8 @@ define(function(require){
 				'click .share-facebook'  : 'shareFB',
 				'click .share-twitter'   : 'shareTW',
 				'click .share-linkedin'  : 'shareLnk',
+				'click .share-evernote'  : 'shareEverNote',
+				'click .share-pocket'    : 'sharePocket',
 				'click .tag'             : 'onTagButtonClick',
 				'click .btn-del-tag'     : 'deleteTag',
 				'click .btn-delete-gist' : 'onDeleteGist'
@@ -349,8 +351,6 @@ define(function(require){
 				e.preventDefault();
 				var self = this;
 
-				// 여기서 이벤트를 등록해야 이벤트가 동작한다.
-				// fancybox에 있는 버튼의 이벤트가 마리오넷에서는 동작하지 않는다. 
 				$('#btnGistShare').click(function(){
 					$.fancybox.close(true);
 					
@@ -418,6 +418,41 @@ define(function(require){
 				var title = 'GistCamp';
 				this.popupWindow(url, title, '626', '496');	
 				this.ui.btnShare.popover('hide');	
+			},
+
+			sharePocket : function(e){
+				e.preventDefault();
+				var gistUrl = this.model.get('html_url');
+				var description = this.model.get('description');
+				var url = 'https://getpocket.com/save?url=' + encodeURIComponent(gistUrl) + "&title=" + encodeURIComponent(description);
+				var title = 'GistCamp';
+				this.popupWindow(url, title, '550', '320');	
+				this.ui.btnShare.popover('hide');		
+			},
+
+			shareEverNote : function(e){
+				e.preventDefault();
+				var self = this;
+
+				service.isEvernoteAuthenticated().done(function(result){
+					if (result.authenticated){
+						self.loading(true, e.target);
+						service.saveNote(self.model.get('id')).done(function(result){
+							$(e.target).siblings('.saved').addClass('saved-show');
+							setTimeout(function(){
+								$(e.target).siblings('.saved').removeClass('saved-show');
+							}, 3000);
+						}).always(function(){
+							self.loading(false);
+						});
+					}else{
+						var url = '/auth/evernote?gist_id=' + self.model.get('id');
+						var title = 'GistCamp';
+						self.popupWindow(url, title, '626', '449');	
+						self.ui.btnShare.popover('hide');			
+					}
+				});
+				
 			},
 
 			popupWindow: function(url, title, w, h){
