@@ -83,7 +83,6 @@ var makeNote = function(noteStore, noteTitle, noteBody, resources, parentNoteboo
   		});
  	}catch(err){
 		console.log('error catched when creating note : ' + err);
-		callback(note);
 	}
 };
 
