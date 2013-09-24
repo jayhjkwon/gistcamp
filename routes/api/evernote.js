@@ -53,7 +53,8 @@ var makeNote = function(noteStore, noteTitle, noteBody, resources, parentNoteboo
 		ourNote.resources = resources;
 		for (i in resources) {
 		  var md5 = crypto.createHash('md5');
-		  md5.update(resources[i].data.body);
+		  var b = resources[i].data.body;
+		  md5.update(b);
 		  var hexhash = md5.digest('hex');
 		  // resources[i].data.bodyHash = hexhash;
 		  nBody += "Attachment with hash " + hexhash + ": <br /><en-media type=\"" + resources[i].mime + "\" hash=\"" + hexhash + "\" /><br />"
@@ -116,7 +117,6 @@ exports.saveNote = function(req, res){
 						var data = new Evernote.Data();
 						data.size = file.size;
 						data.bodyHash = body.toString('base64');
-						// data.size = data.bodyHash.length;
 						data.body = body;
 						
 						var attributes = new Evernote.ResourceAttributes();
