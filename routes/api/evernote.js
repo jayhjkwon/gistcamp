@@ -8,8 +8,21 @@ var
     service   = require('../../infra/service'),
     User      = require('../../models/user'),
     Evernote  = require('evernote').Evernote,
-    crypto    = require('crypto');
+    crypto    = require('crypto'),
+    constants = require('../../infra/constants').constants
 ;
+var getEvernoteInfo = function(){
+	if (config.options.env === 'development'){
+		return {
+			API_CONSUMER_KEY    : constants.API_CONSUMER_KEY,
+		    API_CONSUMER_SECRET : constants.API_CONSUMER_SECRET,
+		    SANDBOX             : constants.SANDBOX,
+		    CALLBACK_URL        : constants.CALLBACK_URL
+		};
+	}else{
+		evernoteInfo = require('../../evernoteInfo').info;
+	}
+};
 
 exports.isEvernoteAuthenticated = function(req, res){
 	if(req.session.evernote && req.session.evernote.oauthAccessToken){
@@ -112,7 +125,7 @@ exports.saveNote = function(req, res){
 				};
 
 				var createNote = function(error, result){
-					var evernoteInfo = require('../../evernoteInfo').info;
+					var evernoteInfo = getEvernoteInfo();
 					var client = new Evernote.Client({token: req.session.evernote.oauthAccessToken, sandbox: evernoteInfo.SANDBOX});
 					var noteStore = client.getNoteStore();
 					var noteTitle = gist.description || 'Created from GISTCAMP';
@@ -123,27 +136,6 @@ exports.saveNote = function(req, res){
 					makeNote(noteStore, noteTitle, noteBody, resources, null, function(){
 						cb(null);
 					});
-
-					// form note body
-					/*var note = new Evernote.Note();
-					note.title = gist.description;
-					note.content = '<?xml version="1.0" encoding="UTF-8"?>';
-					note.content += '<!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">';
-					note.content += '<en-note>';
-					note.content += '<h3>Created from GISTCAMP</h3><br />';
-					_.each(filesArray, function(file){
-						note.content += '<div style="font-weight:bold;color:blue">' + file.filename + '<br /></div>';
-						note.content += '<div>' + file.file_content + '<br /></div>';
-					});
-					note.content += '</en-note>';
-
-					// save note
-					var evernoteInfo = require('../../evernoteInfo').info;
-					var client = new Evernote.Client({token: req.session.evernote.oauthAccessToken, sandbox: evernoteInfo.SANDBOX});
-					var noteStore = client.getNoteStore();
-					noteStore.createNote(note, function(createdNote) {
-						cb(null);  
-					});*/
 				};
 
 				async.map(filesArray, getFileContent, createNote);
@@ -157,9 +149,8 @@ exports.saveNote = function(req, res){
 
 exports.auth = function(req, res) {
 	var gistId = req.param('gist_id');
-
-	var evernoteInfo = require('../../evernoteInfo').info;
-	var callbackUrl = evernoteInfo.CALLBACU_URL;
+	var evernoteInfo = getEvernoteInfo();
+	var callbackUrl = evernoteInfo.CALLBACK_URL;
 	var client = new Evernote.Client({
 		consumerKey    : evernoteInfo.API_CONSUMER_KEY,
 		consumerSecret : evernoteInfo.API_CONSUMER_SECRET,
@@ -186,7 +177,7 @@ exports.auth = function(req, res) {
 };
 
 exports.authCallback = function(req, res) {
-	var evernoteInfo = require('../../evernoteInfo').info;
+	var evernoteInfo = getEvernoteInfo();
 	var client = new Evernote.Client({
 		consumerKey    : evernoteInfo.API_CONSUMER_KEY,
 		consumerSecret : evernoteInfo.API_CONSUMER_SECRET,
