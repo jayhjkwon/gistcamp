@@ -20,7 +20,7 @@ var getEvernoteInfo = function(){
 		    CALLBACK_URL        : constants.CALLBACK_URL
 		};
 	}else{
-		evernoteInfo = require('../../evernoteInfo').info;
+		return require('../../evernoteInfo').info;
 	}
 };
 
