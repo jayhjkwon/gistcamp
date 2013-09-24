@@ -224,14 +224,14 @@ define(function(require){
 
 			star: function(e){
 				var self = this;
-				$('.btn-star .icon-star').addClass('icon-spin');
+				$('.btn-star .icon-star').addClass('icon-spin star-spin');
 				if (self.model.get('is_starred')){
 					service.deleteStar(this.model.get('id')).done(function(data){
 						self.model.set('is_starred', false);
 						self.showStarActionMessage(false);
 						postalWrapper.publish(constants.GIST_STAR_CHANGED, self.model.toJSON());		
 					}).always(function(){
-						$('.btn-star .icon-star').removeClass('icon-spin');
+						$('.btn-star .icon-star').removeClass('icon-spin star-spin');
 					});	
 				}else{
 					service.setStar(this.model.get('id')).done(function(data){
@@ -239,7 +239,7 @@ define(function(require){
 						self.showStarActionMessage(true);
 						postalWrapper.publish(constants.GIST_STAR_CHANGED, self.model.toJSON());		
 					}).always(function(){
-						$('.btn-star .icon-star').removeClass('icon-spin');
+						$('.btn-star .icon-star').removeClass('icon-spin star-spin');
 					});	
 				}						
 			},
