@@ -332,9 +332,11 @@ exports.getSharedGists = function(req, res){
 
 	var getGistById = function(gistId, callback){
 		github.gists.get({id : gistId}, 
-			function(err, data){	
-				gistList.push(data);
-				callback(null, data);
+			function(err, data){
+				if (data) {
+					gistList.push(data);
+					callback(null, data);	
+				}	
 			}
 		);
 	};
@@ -419,8 +421,10 @@ exports.getGistListByTag = function(req, res){
 	var getGistById = function(gistId, callback){
 		github.gists.get({id : gistId}, 
 			function(err, data){	
-				gistList.push(data);
-				callback(null, data);
+				if (data) {
+					gistList.push(data);
+					callback(null, data);	
+				}
 			}
 		);
 	};
