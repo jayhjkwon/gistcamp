@@ -75,7 +75,11 @@ var setIsStarred = function(req, gists, cb){
 			async.each(
 				gists, 
 				function(gist, cb){	
-					if(!gist) cb(null);				
+					if (!gist) {
+						console.dir(gists);
+						cb(null);
+					}
+							
 					var exist = _.find(starredGists, function(starredGistId){
 						return starredGistId === gist.id;
 					});
@@ -114,13 +118,13 @@ var setIsFollowing = function(req, gists, cb){
 		},
 
 		function(callback){
-			// if(!gists) callback(null);
-			// console.dir(gists);
-
 			async.each(
 				gists, 
 				function(gist, cb){					
-					if (!gist) cb(null);
+					if (!gist) {
+						console.dir(gists);
+						cb(null);
+					}
 					
 					var exist = _.find(followings, function(login){
 						return login === gist.user.login;
