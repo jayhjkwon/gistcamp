@@ -335,8 +335,8 @@ exports.getSharedGists = function(req, res){
 			function(err, data){
 				if (data) {
 					gistList.push(data);
-					callback(null, data);	
-				}	
+				}
+				callback(null, data);	
 			}
 		);
 	};
@@ -423,8 +423,8 @@ exports.getGistListByTag = function(req, res){
 			function(err, data){	
 				if (data) {
 					gistList.push(data);
-					callback(null, data);	
 				}
+				callback(null, data);	
 			}
 		);
 	};
