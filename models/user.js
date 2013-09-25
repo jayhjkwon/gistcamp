@@ -40,6 +40,7 @@ var userSchema = new mongoose.Schema({
   created_at        : String,
   updated_at        : String,
   public_gists      : Number,  
+  gistcamp_joindate : String,
   tags 			        : 
     [
     	{
