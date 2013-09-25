@@ -153,7 +153,8 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 				selectedGist.removeClass('selected');
 	    		$(nextGist).addClass('selected');
 	    		$(nextGist).find('.gist-item').trigger('click');
-	   			$('.gist-list').scrollTo($(nextGist), {offset:0});	
+	    		var half = $('.gist-list').height() * 0.4;
+	   			$('.gist-list').scrollTo($(nextGist), {offset:-half});	
 			};
 
 			mousetrap.bind('down', function(){
