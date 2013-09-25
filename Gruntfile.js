@@ -86,8 +86,8 @@ module.exports = function (grunt) {
                 './public/vendor/bootstrap/docs/assets/css/bootstrap.css',
                 './public/vendor/font-awesome/css/font-awesome.css', 
                 './public/vendor/toastr/toastr.css',
-                './public/vendor/select2/select2.css',
-                './public/vendor/fancybox/source/jquery.fancybox.css'
+                './public/vendor/select2/select2.css'/*,
+                './public/vendor/fancybox/source/jquery.fancybox.css'*/
               ],
               './public/styles/welcome-thirdparty.min.css': 
               [

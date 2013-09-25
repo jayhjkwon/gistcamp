@@ -1,21 +1,26 @@
+process.on('uncaughtException', function(err){
+  console.log('Caught exception: ' + err);
+});
+
 var 
-	express  = require('express'), 
-	pages    = require('./routes/pages'),
-	user     = require('./routes/api/user'), 
-	http     = require('http'), 
-	path     = require('path'), 
-	config   = require('./infra/config'), 
-	gist     = require('./routes/api/gist'),
-	constants= require('./infra/constants').constants,
-	passport = require('passport'),
-	GitHubStrategy = require('passport-github').Strategy,
+  express  = require('express'), 
+  pages    = require('./routes/pages'),
+  user     = require('./routes/api/user'), 
+  http     = require('http'), 
+  path     = require('path'), 
+  config   = require('./infra/config'), 
+  gist     = require('./routes/api/gist'),
+  constants= require('./infra/constants').constants,
+  passport = require('passport'),
+  GitHubStrategy = require('passport-github').Strategy,
   User     = require('./models/user'), 
   request  = require('request'),
   service  = require('./infra/service'),
   async    = require('async'),
   chat     = require('./routes/chat'),
   evernote = require('./routes/api/evernote'),
-  connectDomain = require("connect-domain")
+  connectDomain = require("connect-domain"),
+  moment   = require('moment')
 ;
 
 
@@ -79,16 +84,6 @@ app.use(function(err, req, res, next) {
     res.end(err.message);
 });
 
-/*var domain = require('domain');
-app.use(function(req, res, next) {
-    var requestDomain = domain.create();
-    requestDomain.add(req);
-    requestDomain.add(res);
-    requestDomain.on('error', next);
-    requestDomain.run(next);
-});*/
-
-
 // development only
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
@@ -125,12 +120,20 @@ passport.use(new GitHubStrategy({
               userToSave.starred_gists = allStarredGists;
               cb(null);
             });      			
-      		}
+      		},
+          function(cb){
+            User.findOne({id:userToSave.id}, function(err, doc){
+              if(!doc){
+                userToSave.gistcamp_joindate = moment.utc().format('YYYY-MM-DDTHH:mm:ssZ');
+              }
+              cb(null);
+            });
+          }
       	],
-      		function(err, results){
+      		function(err, results){            
       			User.findOneAndUpdate({id: userToSave.id}, userToSave, {upsert:true}, function(err, userInfo){
-					return done(null, {access_token:userInfo.access_token, login:userInfo.login, id:userInfo.id});  	
-				});      			
+    					return done(null, {access_token:userInfo.access_token, login:userInfo.login, id:userInfo.id});  	
+    				});      			
       		}
       	);      	
     });
