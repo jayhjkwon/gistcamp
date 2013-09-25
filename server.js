@@ -1,3 +1,7 @@
+process.on('uncaughtException', function(err){
+  console.log('Caught exception: ' + err);
+});
+
 var 
   express  = require('express'), 
   pages    = require('./routes/pages'),
