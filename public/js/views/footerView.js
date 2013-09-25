@@ -23,7 +23,7 @@ define(function(require){
 			template : footerTemplate,
 
 			initialize: function(){
-				_.bindAll(this, 'deleteTag', 'sharePocket', 'shareEverNote', 'onTagItemHover', 'shareWo', 'shareGg', 'shareFB', 'shareTW', 'shareFB', 'initializePopOverTag', 'onItemSelected', 'star', 'createTag', 'loading', 'onBtnCommentClick', 'onRoomCreated', 'tagOnGist', 'onCommentDeleted', 'onCommentAdded', 'onTagCollectionChange', 'initializePopOverShare');
+				_.bindAll(this, 'popupWindow', 'deleteTag', 'sharePocket', 'shareEverNote', 'onTagItemHover', 'shareWo', 'shareGg', 'shareFB', 'shareTW', 'shareFB', 'initializePopOverTag', 'onItemSelected', 'star', 'createTag', 'loading', 'onBtnCommentClick', 'onRoomCreated', 'tagOnGist', 'onCommentDeleted', 'onCommentAdded', 'onTagCollectionChange', 'initializePopOverShare');
 
 				this.tags = new TagItemList();
 
@@ -463,12 +463,16 @@ define(function(require){
 
 			popupWindow: function(url, title, w, h){
 				var left, top, newWindow, dualScreenLeft, dualScreenTop;
-
+				var win = window;
 		    	dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : screen.left;
 		    	dualScreenTop = window.screenTop != undefined ? window.screenTop : screen.top;
 			    left = ((screen.width / 2) - (w / 2)) + dualScreenLeft;
 			    top = ((screen.height / 2) - (h / 2)) + dualScreenTop;
 			    newWindow = window.open(url, title, 'scrollbars=yes, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
+
+			    if(newWindow == null || typeof(newWindow) == 'undefined'){
+			    	alert('Please, turn off your pop-up blocker for the GISTCAMP');
+			    }
 
 			    if (window.focus) {
 			        newWindow.focus();
