@@ -119,6 +119,8 @@ var setIsFollowing = function(req, gists, cb){
 			async.each(
 				gists, 
 				function(gist, cb){					
+					if (!gist) cb(null);
+					
 					var exist = _.find(followings, function(login){
 						return login === gist.user.login;
 					});
