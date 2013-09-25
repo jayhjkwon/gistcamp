@@ -5,6 +5,6 @@ define(function(require){
 	;
 
 	Handlebars.registerHelper('isViewing', function(user, options){
-		return '<button class="btn btn-danger file-content" style="display:none">View</button>';
+		return '<button class="btn btn-danger file-content" style="display:none">Files</button>';
 	});
 });
