@@ -103,7 +103,8 @@ var setIsFollowing = function(req, gists, cb){
 	var userId = service.getUserId(req);
 	var followings = [];
 
-	async.series([
+	async.series(
+	[
 		function(callback){
 			User.find({'id':userId}).select('followings').lean().exec(function(error, docs){
 				followings = docs[0].followings;
@@ -112,6 +113,9 @@ var setIsFollowing = function(req, gists, cb){
 		},
 
 		function(callback){
+			// if(!gists) callback(null);
+			console.dir(gists);
+
 			async.each(
 				gists, 
 				function(gist, cb){					
