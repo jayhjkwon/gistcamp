@@ -28,6 +28,7 @@ var GITHUB_CLIENT_ID;
 var GITHUB_CLIENT_SECRET;
 var callbackURL;
 
+
 if (config.options.env === 'development'){
   GITHUB_CLIENT_ID = constants.GITHUB_CLIENT_ID; 
   GITHUB_CLIENT_SECRET = constants.GITHUB_CLIENT_SECRET;
@@ -63,8 +64,11 @@ var checkRateLimit = function(req, res, next){
 };
 
 // all environments
-app.set('env', config.options.env);
-app.set('port', process.env.PORT || 3000);
+if(config.options.env === 'development'){
+  app.set('port', 3000);
+}else{
+  app.set('port', 80);
+}
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.use(express.favicon());
@@ -215,25 +219,14 @@ app.put('/api/user/following/:login_id', ensureAuthenticated, user.follow);
 app.delete('/api/user/following/:login_id', ensureAuthenticated, user.unfollow);
 
 app.post('/api/evernote/save/:gist_id', ensureAuthenticated, evernote.saveNote);
-/*app.use(connectDomain())
-  .post('/api/evernote/save/:gist_id', ensureAuthenticated, evernote.saveNote)
-  .use(function(err, req, res, next) {
-    res.writeHeader(500, {'Content-Type' : "text/html"});
-    res.write("<h1>" + err.name + "</h1>");
-    res.end("<p style='border:1px dotted red'>" + err.message + "</p>");
-  });*/
 app.get('/api/evernote/is_authenticated', ensureAuthenticated, evernote.isEvernoteAuthenticated);
 
 var server = http.createServer(app);
-io = require('socket.io').listen(server);
+var io = require('socket.io').listen(server);
 
 chat.start(io);
 
 server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
-
-// http.createServer(app).listen(app.get('port'), function(){
-//  console.log('Express server listening on port ' + app.get('port'));
-// });
 
