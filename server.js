@@ -80,9 +80,9 @@ app.use(passport.session());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(connectDomain());
-app.use(function(err, req, res, next) {
-  console.error('Error Occurred: ' + err.message);
-  res.end(err.message);
+app.use(function(err, req, res, next) { // error handler middleware should be placed at the bottom of the 'use'
+  console.error('Error Occurred: ' + err.stack);
+  res.end(500, err.message);
 });
 
 // development only
