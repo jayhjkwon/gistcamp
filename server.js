@@ -1,7 +1,3 @@
-process.on('uncaughtException', function(err){
-  console.error('Caught exception: ' + err);
-});
-
 var 
 express  = require('express'), 
 pages    = require('./routes/pages'),
@@ -23,6 +19,10 @@ connectDomain = require("connect-domain"),
 moment   = require('moment')
 ;
 
+// TODO : Remove uncaughtexception
+process.on('uncaughtException', function(err){
+  console.error('Caught exception: ' + err);
+});
 
 var GITHUB_CLIENT_ID;
 var GITHUB_CLIENT_SECRET;
