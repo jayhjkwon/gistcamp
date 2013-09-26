@@ -1,78 +1,78 @@
 define(function(require){
-	var
-		$             = require('jquery'),
-		_             = require('underscore'),
-		Marionette    = require('marionette'),
-		topTemplate   = require('hbs!templates/topTemplate'),
-		Application   = require('application'),
-		constants     = require('constants'),
-		global        = require('global'),
-		TagItemList   = require('models/tagItemList'),
-		postalWrapper = require('postalWrapper'),		
+  var
+  $             = require('jquery'),
+  _             = require('underscore'),
+  Marionette    = require('marionette'),
+  topTemplate   = require('hbs!templates/topTemplate'),
+  Application   = require('application'),
+  constants     = require('constants'),
+  global        = require('global'),
+  TagItemList   = require('models/tagItemList'),
+  postalWrapper = require('postalWrapper'),   
 
-		TopView = Marionette.ItemView.extend({
-			className: 'navbar-inner',
-			template: topTemplate,
+  TopView = Marionette.ItemView.extend({
+    className: 'navbar-inner',
+    template: topTemplate,
 
-			initialize: function(){
-				console.log('TopView initialized');
-				var self = this;
-				_.bindAll(this, 'activateMenu', 'showTagInfo', 'onTagChanged');
+    initialize: function(){
+      console.log('TopView initialized');
+      var self = this;
+      _.bindAll(this, 'activateMenu', 'showTagInfo', 'onTagChanged');
 
-				Application.commands.setHandler(constants.MENU_SELECTED, function(menu){
-					self.activateMenu(menu);
-				});				
+      Application.commands.setHandler(constants.MENU_SELECTED, function(menu){
+        self.activateMenu(menu);
+      });       
 
-				this.showTagInfo();
+      this.showTagInfo();
 
-				this.subscription = postalWrapper.subscribe(constants.TAG_CHANGED, this.onTagChanged);
-			},
+      this.subscription = postalWrapper.subscribe(constants.TAG_CHANGED, this.onTagChanged);
+    },
 
-			events: {
-				'click #btn-refresh' : 'onRefreshClick'
-			},
+    events: {
+      'click #btn-refresh' : 'onRefreshClick'
+    },
 
-			onRender: function(){
-				this.showUserInfo();
-			},
+    onRender: function(){
+      this.showUserInfo();
+    },
 
-			showTagInfo: function(){
-				this.collection = new TagItemList();
-				this.collection.fetch();
-			},
+    showTagInfo: function(){
+      this.collection = new TagItemList();
+      this.collection.fetch();
+    },
 
-			onTagChanged: function(tags){
-				this.collection.reset(tags);
-				this.render();
-			},
+    onTagChanged: function(tags){
+      this.collection.reset(tags);
+      this.render();
+    },
 
-			showUserInfo: function(){
-				$('#loggedin-user-name').text(global.user.name);
-				$('.loggedin-user-avatar').attr('src', global.user.avatar);
-				$('.loggedin-user-url').attr('href', global.user.url);
-			},
+    showUserInfo: function(){
+      $('#loggedin-user-name').text(global.user.name);
+      $('.loggedin-user-avatar').attr('src', global.user.avatar);
+      $('.loggedin-user-url').attr('href', global.user.url);
+    },
 
-			onRefreshClick: function(e){
-				window.location.reload(true);
-			},			
+    onRefreshClick: function(e){
+      window.location.reload(true);
+    },      
 
-			activateMenu: function(menu){
-				this.removeActiveClass();						
-				$('.nav li a[href="#' + menu + '"]').parent().addClass('active');
-			},
+    activateMenu: function(menu){
+      this.removeActiveClass();           
+      $('.nav li a[href="#' + menu + '"]').parent().addClass('active');
+    },
 
-			removeActiveClass: function(){
-				$('.nav li').removeClass('active');
-			},
+    removeActiveClass: function(){
+      $('.nav li').removeClass('active');
+    },
 
-			onClose: function(){
-				this.subscription.unsubscribe();
-			}
+    onClose: function(){
+      this.subscription.unsubscribe();
+    }
 
-		})
-	;
+  })
+;
 
-	// note that returning instance of TopView so that only one instance will be created 
-	// in terms of 'shellview, topview, footerview', we do not need multiple instances of them through the application
-	return new TopView;		
+  // note that returning instance of TopView so that only one instance will be created 
+  // in terms of 'shellview, topview, footerview', we do not need multiple instances of them through the application
+  return new TopView;   
 });

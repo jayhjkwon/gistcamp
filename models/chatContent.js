@@ -10,7 +10,7 @@ if (config.options.env === 'development'){
 }
 
 var chatContentSchema = new mongoose.Schema({
-  room_key			  : String, // unique
+  room_key        : String, // unique
   user_id         : Number,
   user_login      : String,
   avatar_url      : String,

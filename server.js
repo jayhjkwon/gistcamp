@@ -3,24 +3,24 @@ process.on('uncaughtException', function(err){
 });
 
 var 
-  express  = require('express'), 
-  pages    = require('./routes/pages'),
-  user     = require('./routes/api/user'), 
-  http     = require('http'), 
-  path     = require('path'), 
-  config   = require('./infra/config'), 
-  gist     = require('./routes/api/gist'),
-  constants= require('./infra/constants').constants,
-  passport = require('passport'),
-  GitHubStrategy = require('passport-github').Strategy,
-  User     = require('./models/user'), 
-  request  = require('request'),
-  service  = require('./infra/service'),
-  async    = require('async'),
-  chat     = require('./routes/chat'),
-  evernote = require('./routes/api/evernote'),
-  connectDomain = require("connect-domain"),
-  moment   = require('moment')
+express  = require('express'), 
+pages    = require('./routes/pages'),
+user     = require('./routes/api/user'), 
+http     = require('http'), 
+path     = require('path'), 
+config   = require('./infra/config'), 
+gist     = require('./routes/api/gist'),
+constants= require('./infra/constants').constants,
+passport = require('passport'),
+GitHubStrategy = require('passport-github').Strategy,
+User     = require('./models/user'), 
+request  = require('request'),
+service  = require('./infra/service'),
+async    = require('async'),
+chat     = require('./routes/chat'),
+evernote = require('./routes/api/evernote'),
+connectDomain = require("connect-domain"),
+moment   = require('moment')
 ;
 
 
@@ -29,37 +29,37 @@ var GITHUB_CLIENT_SECRET;
 var callbackURL;
 
 if (config.options.env === 'development'){
-	GITHUB_CLIENT_ID = constants.GITHUB_CLIENT_ID; 
-	GITHUB_CLIENT_SECRET = constants.GITHUB_CLIENT_SECRET;
+  GITHUB_CLIENT_ID = constants.GITHUB_CLIENT_ID; 
+  GITHUB_CLIENT_SECRET = constants.GITHUB_CLIENT_SECRET;
 }else{
-	var github = require('./githubInfo');
-	GITHUB_CLIENT_ID = github.info.GITHUB_CLIENT_ID; 
-	GITHUB_CLIENT_SECRET = github.info.GITHUB_CLIENT_SECRET;
+  var github = require('./githubInfo');
+  GITHUB_CLIENT_ID = github.info.GITHUB_CLIENT_ID; 
+  GITHUB_CLIENT_SECRET = github.info.GITHUB_CLIENT_SECRET;
 }
 
 if(config.options.env === 'development'){
-    callbackURL = 'http://localhost:3000/auth/github/callback';
+  callbackURL = 'http://localhost:3000/auth/github/callback';
 }else{
-	var github = require('./githubInfo');
-  	callbackURL = github.info.CALLBACK_URL;
+  var github = require('./githubInfo');
+ callbackURL = github.info.CALLBACK_URL;
 }
 
 var app = express();
 
 var checkRateLimit = function(req, res, next){
-	var accessToken = service.getAccessToken(req);
-	if(accessToken){
-		request.get({
-			url: config.options.githubHost + '/rate_limit?access_token=' + accessToken,
-		}, function(error, response, body){	
-			console.log('*******************************************');
-			console.log('Rate Limit Checking');
-			console.log(body);
-			console.log('*******************************************');
-		});
-	}
+  var accessToken = service.getAccessToken(req);
+  if(accessToken){
+    request.get({
+      url: config.options.githubHost + '/rate_limit?access_token=' + accessToken,
+    }, function(error, response, body){ 
+      console.log('*******************************************');
+      console.log('Rate Limit Checking');
+      console.log(body);
+      console.log('*******************************************');
+    });
+  }
 
-	next();
+  next();
 };
 
 // all environments
@@ -81,7 +81,7 @@ app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(connectDomain());
 app.use(function(err, req, res, next) {
-    res.end(err.message);
+  res.end(err.message);
 });
 
 // development only
@@ -99,53 +99,53 @@ passport.deserializeUser(function(obj, done) {
 
 
 passport.use(new GitHubStrategy({
-    clientID: GITHUB_CLIENT_ID,
-    clientSecret: GITHUB_CLIENT_SECRET,
-    callbackURL: callbackURL
-  },
-  function(accessToken, refreshToken, profile, done) {
-    process.nextTick(function () {
-		var userToSave = profile._json;
-      	userToSave.access_token = accessToken;
+  clientID: GITHUB_CLIENT_ID,
+  clientSecret: GITHUB_CLIENT_SECRET,
+  callbackURL: callbackURL
+},
+function(accessToken, refreshToken, profile, done) {
+  process.nextTick(function () {
+    var userToSave = profile._json;
+    userToSave.access_token = accessToken;
 
-      	async.parallel([
-      		function(cb){
-      			user.getAllFollowings(null, null, accessToken, function(followings){
-      				userToSave.followings = followings;
-      				cb(null);
-      			});
-      		},
-      		function(cb){
-            gist.getAllStarredGists(null, null, accessToken, function(allStarredGists){
-              userToSave.starred_gists = allStarredGists;
-              cb(null);
-            });      			
-      		},
-          function(cb){
-            User.findOne({id:userToSave.id}, function(err, doc){
-              if(!doc){
-                userToSave.gistcamp_joindate = moment.utc().format('YYYY-MM-DDTHH:mm:ssZ');
-              }
-              cb(null);
-            });
-          }
-      	],
-      		function(err, results){            
-      			User.findOneAndUpdate({id: userToSave.id}, userToSave, {upsert:true}, function(err, userInfo){
-    					return done(null, {access_token:userInfo.access_token, login:userInfo.login, id:userInfo.id});  	
-    				});      			
-      		}
-      	);      	
-    });
-  }
+    async.parallel([
+      function(cb){
+       user.getAllFollowings(null, null, accessToken, function(followings){
+        userToSave.followings = followings;
+        cb(null);
+      });
+     },
+     function(cb){
+      gist.getAllStarredGists(null, null, accessToken, function(allStarredGists){
+        userToSave.starred_gists = allStarredGists;
+        cb(null);
+      });           
+    },
+    function(cb){
+      User.findOne({id:userToSave.id}, function(err, doc){
+        if(!doc){
+          userToSave.gistcamp_joindate = moment.utc().format('YYYY-MM-DDTHH:mm:ssZ');
+        }
+        cb(null);
+      });
+    }
+    ],
+    function(err, results){            
+     User.findOneAndUpdate({id: userToSave.id}, userToSave, {upsert:true}, function(err, userInfo){
+       return done(null, {access_token:userInfo.access_token, login:userInfo.login, id:userInfo.id});   
+     });            
+   }
+   );       
+  });
+}
 ));
 
 
 
 var ensureAuthenticated = function (req, res, next) {
   if (req.isAuthenticated()) { 
-  	// checkRateLimit(req);
-  	return next(); 
+    // checkRateLimit(req);
+    return next(); 
   }
   res.redirect('/welcome');
 };
@@ -158,13 +158,13 @@ app.get('/thanksEvernote', pages.thanksEvernote);
 app.get('/auth/github',
   passport.authenticate('github', {scope: ['user', 'user:email', 'user:follow', 'repo', 'notifications', 'gist']}),
   function(req, res){}
-);
+  );
 app.get('/auth/github/callback', 
   passport.authenticate('github', { failureRedirect: '/welcome' }),
   function(req, res) {
     res.redirect('/');
   }
-);
+  );
 app.get('/logout', function(req, res){
   req.logout();
   res.redirect('/welcome');
@@ -220,7 +220,7 @@ app.post('/api/evernote/save/:gist_id', ensureAuthenticated, evernote.saveNote);
     res.writeHeader(500, {'Content-Type' : "text/html"});
     res.write("<h1>" + err.name + "</h1>");
     res.end("<p style='border:1px dotted red'>" + err.message + "</p>");
-});*/
+  });*/
 app.get('/api/evernote/is_authenticated', ensureAuthenticated, evernote.isEvernoteAuthenticated);
 
 var server = http.createServer(app);
