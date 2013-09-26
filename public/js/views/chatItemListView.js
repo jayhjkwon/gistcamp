@@ -132,7 +132,7 @@ define(function(require){
 						+ '</div>';
 
 						var right = '<div class="right">'
-						+ '<span class="time">' + cotents[i].created_at + '</span>'
+						+ '<span class="time">' + moment(cotents[i].created_at).format('MM/DD/YYYY h:mm:ss A') + '</span>'
 						+ '</div>';
 
 						$('#conversation').append('<li class="chatli">' + server + right + '</li>');
@@ -149,7 +149,7 @@ define(function(require){
 						+ '</div>';
 
 						var right = '<div class="right">'
-						+ '<span class="time">' + cotents[i].created_at + '</span>'
+						+ '<span class="time">' + moment(cotents[i].created_at).format('MM/DD/YYYY h:mm:ss A') + '</span>'
 						+ '</div>';
 
 						$('#conversation').append('<li class="chatli">' + left + middle + right + '</li>');

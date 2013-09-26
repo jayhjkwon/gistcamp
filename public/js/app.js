@@ -1,9 +1,9 @@
 require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 	'views/topView', 'views/footerView', 'constants', 'models/user', 'global', 'async',
-	'socketio', 'postalWrapper', 'toastr', 'service', 'mousetrap', 
+	'socketio', 'postalWrapper', 'toastr', 'service', 'mousetrap', 'moment', 
 	'bootstrap', 'prettify', 'nicescroll', 'autoGrow', 'scrollTo', 'fancybox'], 
 	function($, _, Application, Router, shellView, topView, footerView, constants, User, global, async, 
-		socketio, postalWrapper, toastr, service, mousetrap){
+		socketio, postalWrapper, toastr, service, mousetrap, moment){
 	$(function(){
 		var el = shellView.render().el;
 
@@ -26,17 +26,6 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 
 				callback(null, user);
 			});
-		};
-
-		var datetimeNow = function() {
-			var currentdate = new Date(); 
-			var datetime = currentdate.getFullYear() + "-" 
-			                + (currentdate.getMonth()+1)  + "-"
-			                + currentdate.getDate() + " "
-			                + currentdate.getHours() + ":"  
-			                + currentdate.getMinutes() + ":" 
-			                + currentdate.getSeconds();
-			return datetime;
 		};
 
 		var connectSocketIO = function(callback){
@@ -69,7 +58,7 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 					+ '</div>';
 
 					var right = '<div class="right">'
-					+ '<span class="time">' + datetimeNow() + '</span>'
+					+ '<span class="time">' + moment(new Date()).format('MM/DD/YYYY h:mm:ss A') + '</span>'
 					+ '</div>';
 
 					$('#conversation').append('<li class="chatli">' + server + right + '</li>');
@@ -86,7 +75,7 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 					+ '</div>';
 
 					var right = '<div class="right">'
-					+ '<span class="time">' + datetimeNow() + '</span>'
+					+ '<span class="time">' + moment(new Date()).format('MM/DD/YYYY h:mm:ss A') + '</span>'
 					+ '</div>';
 
 					$('#conversation').append('<li class="chatli">' + left + middle + right + '</li>');
