@@ -20,9 +20,9 @@ moment   = require('moment')
 ;
 
 // TODO : Remove uncaughtexception
-process.on('uncaughtException', function(err){
-  console.error('Caught exception: ' + err);
-});
+// process.on('uncaughtException', function(err){
+//   console.error('Caught exception: ' + err);
+// });
 
 var GITHUB_CLIENT_ID;
 var GITHUB_CLIENT_SECRET;
@@ -81,6 +81,7 @@ app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(connectDomain());
 app.use(function(err, req, res, next) {
+  console.error('Error Occurred: ' + err.message);
   res.end(err.message);
 });
 
