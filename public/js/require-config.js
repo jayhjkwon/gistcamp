@@ -69,9 +69,9 @@ require.config({
     templateExtension : 'html',
     disableI18n : true,
     helperPathCallback: function(name){
-            // set path for handlebar helpers
-            return 'templates/helpers/' + name;
-          }
-        }
-      });
+      // set path for handlebar helpers
+      return 'templates/helpers/' + name;
+    }
+  }
+});
 
