@@ -20,9 +20,9 @@ moment   = require('moment')
 ;
 
 // TODO : Remove uncaughtexception
-/*process.on('uncaughtException', function(err){
+process.on('uncaughtException', function(err){
   console.error('Caught exception: ' + err);
-});*/
+});
 
 var GITHUB_CLIENT_ID;
 var GITHUB_CLIENT_SECRET;
