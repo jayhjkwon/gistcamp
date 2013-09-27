@@ -60,6 +60,9 @@ require.config({
     },
     socketio: {
       exports: 'io'
+    },
+    fancybox: {
+      deps: ['jquery']
     }
   },
   hbs : {
