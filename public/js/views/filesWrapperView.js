@@ -29,7 +29,9 @@ define(function(require){
     },
     
     onDomRefresh: function(){
-      $('.files-wrapper').niceScroll({cursorcolor: '#eee'});
+      if($('files-wrapper')[0]){
+        $('.files-wrapper').niceScroll({cursorcolor: '#eee'});
+      }
       $('.carousel').carousel({interval: false}).on('slid', this.markActiveFileHeader);
 
       if (this.selectedGistItem){
