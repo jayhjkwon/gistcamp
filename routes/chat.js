@@ -6,6 +6,19 @@ var
 
 exports.start = function(io){
 
+  var removeBySocketId = function(target, val) {
+    if (target == undefined)
+      return false;
+
+    for(var key in target) {
+      if (target[key].id === val) {
+        return key;
+      }
+    }
+
+    return false;
+  };
+
   var removeById = function(target, val) {
     if (target == undefined)
       return false;
@@ -92,7 +105,7 @@ exports.start = function(io){
 
       // add the client's username to the global list
       user.socketid = socket.id;
-      usernames[user.id] = user;
+      usernames[socket.id] = user;
     });
 
     socket.on('getrooms', function() {
@@ -120,11 +133,11 @@ exports.start = function(io){
       if (added == false) {
         //usernames[socket.userid].opacity = 1;
         var userinfo = {};
-        userinfo.id = usernames[socket.userid].id;
-        userinfo.login = usernames[socket.userid].login;
-        userinfo.socketid = usernames[socket.userid].socketid;
-        userinfo.avatar = usernames[socket.userid].avatar;
-        userinfo.url = usernames[socket.userid].url;
+        userinfo.id = usernames[socket.id].id;
+        userinfo.login = usernames[socket.id].login;
+        userinfo.socketid = usernames[socket.id].socketid;
+        userinfo.avatar = usernames[socket.id].avatar;
+        userinfo.url = usernames[socket.id].url;
         userinfo.opacity = 1;
 
         rooms[roomname].users.push(userinfo);  
@@ -143,14 +156,15 @@ exports.start = function(io){
     // when the client emits 'sendchat', this listens and executes
     socket.on('sendchat', function (data) {
       // we tell the client to execute 'updatechat' with 2 parameters
-      io.sockets.in(socket.room).emit('updatechat', usernames[socket.userid], data);
-      insertChatContent(socket.room, socket.userid, usernames[socket.userid].login, usernames[socket.userid].avatar, data);
+      io.sockets.in(socket.room).emit('updatechat', usernames[socket.id], data);
+      insertChatContent(socket.room, socket.userid, usernames[socket.id].login, usernames[socket.id].avatar, data);
     });
 
     socket.on('sendalarm', function (userid, data) {
-      var receiver = usernames[userid];
-      if (receiver != undefined) {
-        io.sockets.socket(receiver.socketid).emit('updatealarm', usernames[socket.userid], data);
+
+      var receiverSocketId = removeBySocketId(usernames, userid)
+      if (receiverSocketId != false) {
+        io.sockets.socket(receiverSocketId).emit('updatealarm', usernames[socket.id], data);
       }
     });
     
@@ -159,7 +173,7 @@ exports.start = function(io){
         socket.leave(socket.room);
         removeById(rooms[socket.room].users, socket.userid);
 
-        var data = usernames[socket.userid].login + ' has left this room';
+        var data = usernames[socket.id].login + ' has left this room';
         socket.broadcast.to(socket.room).emit('updatechat', 'SERVER', data);
 
         if (emptyRoomYn(rooms[socket.room].users) == true) {
@@ -176,11 +190,11 @@ exports.start = function(io){
       if (added == false) {
         //usernames[socket.userid].opacity = 1;
         var userinfo = {};
-        userinfo.id = usernames[socket.userid].id;
-        userinfo.login = usernames[socket.userid].login;
-        userinfo.socketid = usernames[socket.userid].socketid;
-        userinfo.avatar = usernames[socket.userid].avatar;
-        userinfo.url = usernames[socket.userid].url;
+        userinfo.id = usernames[socket.id].id;
+        userinfo.login = usernames[socket.id].login;
+        userinfo.socketid = usernames[socket.id].socketid;
+        userinfo.avatar = usernames[socket.id].avatar;
+        userinfo.url = usernames[socket.id].url;
         userinfo.opacity = 1;
 
         rooms[newroom].users.push(userinfo);  
@@ -191,7 +205,7 @@ exports.start = function(io){
       
       // update socket session room title
       socket.room = newroom;
-      var data = usernames[socket.userid].login + ' has joined this room';
+      var data = usernames[socket.id].login + ' has joined this room';
       socket.broadcast.to(newroom).emit('updatechat', 'SERVER', data);
 
       socket.emit('updaterooms', rooms);
@@ -208,8 +222,8 @@ exports.start = function(io){
           rooms[leaveRoom].lastLeaveDatetime = new Date().getTime();
         }
 
-        if (usernames[socket.userid] != undefined) {
-          var data = usernames[socket.userid].login + ' has left this room';
+        if (usernames[socket.id] != undefined) {
+          var data = usernames[socket.id].login + ' has left this room';
           socket.broadcast.to(leaveRoom).emit('updatechat', 'SERVER', data);
         }
 
@@ -220,8 +234,7 @@ exports.start = function(io){
     // when the user disconnects.. perform this
     socket.on('disconnect', function(){
       // remove the username from global usernames list
-      var userid = socket.userid;
-      delete usernames[socket.userid];
+      delete usernames[socket.id];
       
       if (socket.room != undefined && rooms[socket.room] != undefined) {
         socket.leave(socket.room);
