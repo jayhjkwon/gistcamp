@@ -2,7 +2,6 @@ $(function(){
  
   var gistUrl = "http://gistcamp.com";
 
-
   var popupWindow = function(url, title, w, h){
     var left, top, newWindow, dualScreenLeft, dualScreenTop;
 
@@ -17,27 +16,19 @@ $(function(){
     }
   }; 
 
-  
-
   $(".span-linkedin").on("click", function(e){
     e.preventDefault();
     var url = 'https://www.linkedin.com/shareArticle?mini=true&url=' + encodeURIComponent(gistUrl);
     var title = 'GistCamp';
     popupWindow(url, title, '626', '496'); 
-    
   });
-
-
-
 
   $(".span-google").on("click", function(e){
     e.preventDefault(); 
     var url = 'https://plus.google.com/share?url=' + encodeURIComponent(gistUrl);
     var title = 'GistCamp';
     popupWindow(url, title, '473', '216');  
-    
   });
-  
 
   $(".span-facebook").on("click", function(e){
     e.preventDefault();
@@ -46,19 +37,10 @@ $(function(){
     popupWindow(url, title, '626', '436');   
   });
 
-
   $(".span-twitter").on("click", function(e){
     e.preventDefault();
-    var url = 'https://twitter.com/intent/tweet?via=GISTCAMP&url=' + encodeURIComponent(gistUrl) + '&text=Open source web interface for the GIST';
+    var url = 'https://twitter.com/intent/tweet?via=GistCamp&url=' + encodeURIComponent(gistUrl) + '&text=The Best Open Web Interface for Gist';
     var title = 'GistCamp';
     popupWindow(url, title, '473', '258'); 
   });
-
-
-
-  
-
-  
-
 });
-
