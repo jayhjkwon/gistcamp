@@ -5,7 +5,7 @@ define(function(require){
   Marionette      = require('marionette'),
   footerTemplate  = require('hbs!templates/footerTemplate'),
   postalWrapper   = require('postalWrapper'),
-  constants     = require('constants'),   
+  constants       = require('constants'),   
   store           = require('store'),
   bootstrap       = require('bootstrap'),
   TagItem         = require('models/tagItem'),
@@ -86,7 +86,7 @@ define(function(require){
         this.ui.btnTag.popover({
           html  : true,
           placement: 'top',
-          title : function(){ return '<div><i class="icon-tag"></i> Tag gist</div>'; },
+          title : function(){ return '<div><i class="icon-tag"></i> Tag this gist</div>'; },
           content : function(){ return $('.tag-area').html(); }         
         });
 
@@ -97,7 +97,7 @@ define(function(require){
         this.ui.btnShare.popover({
           html  : true,
           placement: 'top',
-          title : function(){ return '<div><i class="icon-share"></i> Share gist</div>'; },
+          title : function(){ return '<div><i class="icon-share"></i> Share this gist</div>'; },
           content : function(){ return $('.share-area').html(); }         
         });
       },
