@@ -64,6 +64,7 @@ var checkRateLimit = function(req, res, next){
 };
 
 // all environments
+app.set('env', config.options.env);
 if(config.options.env === 'development'){
   app.set('port', 3000);
 }else{
