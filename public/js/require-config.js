@@ -1,5 +1,6 @@
 require.config({
   baseUrl: '../js',
+  waitSeconds: 200,
   paths: {
     jquery       : '../vendor/jquery/jquery',
     domReady       : '../vendor/requirejs-domready/domReady',
