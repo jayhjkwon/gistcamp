@@ -16,7 +16,9 @@ async    = require('async'),
 chat     = require('./routes/chat'),
 evernote = require('./routes/api/evernote'),
 connectDomain = require("connect-domain"),
-moment   = require('moment')
+moment   = require('moment'),
+mongoose = require('mongoose'),
+MongoStore = require('connect-mongo')(express)
 ;
 
 // TODO : Remove uncaughtexception
@@ -27,6 +29,13 @@ moment   = require('moment')
 var GITHUB_CLIENT_ID;
 var GITHUB_CLIENT_SECRET;
 var callbackURL;
+var mongoUrl;
+if (config.options.env === 'development'){
+  mongoUrl = 'mongodb://localhost/gistcamp';
+}else{
+  var github   = require('../githubInfo');
+  mongoUrl = github.info.MONGO_URL;
+}
 
 
 if (config.options.env === 'development'){
@@ -77,7 +86,10 @@ app.use(express.compress());
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.cookieParser('gistcamp'));
-app.use(express.session({cookie: { maxAge : 1000 * 60 * 60 * 24 * 30 }}));
+app.use(express.session({
+  cookie: { maxAge : 1000 * 60 * 60 * 24 * 30 },
+  store: new MongoStore({ url: mongoUrl })
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 // app.use(checkRateLimit);
@@ -172,6 +184,7 @@ app.get('/auth/github/callback',
   );
 app.get('/logout', function(req, res){
   req.logout();
+  // req.session.destroy();
   res.redirect('/welcome');
 });
 app.get('/auth/evernote', evernote.auth);
