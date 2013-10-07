@@ -42,8 +42,8 @@ if (config.options.env === 'development'){
   var github   = require('./githubInfo');
   GITHUB_CLIENT_ID = github.info.GITHUB_CLIENT_ID; 
   GITHUB_CLIENT_SECRET = github.info.GITHUB_CLIENT_SECRET;
-  mongoUrl = github.info.MONGO_URL;
   callbackURL = github.info.CALLBACK_URL;
+  mongoUrl = github.info.MONGO_URL;
   cookieParserSecret = github.info.COOKIE_PARSET_SECRET;
 }
 
@@ -103,7 +103,7 @@ app.use(express.logger('dev'));
 app.use(express.compress());
 app.use(express.bodyParser());
 app.use(express.methodOverride());
-app.use(express.cookieParser('gistcamp'));
+app.use(express.cookieParser(cookieParserSecret));
 app.use(express.session({
   cookie: { maxAge : 1000 * 60 * 60 * 24 * 30 },
   store: new MongoStore({ url: mongoUrl })
