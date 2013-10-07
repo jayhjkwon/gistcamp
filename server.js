@@ -34,7 +34,7 @@ var mongoUrl;
 if (config.options.env === 'development'){
   mongoUrl = 'mongodb://localhost/gistcamp';
 }else{
-  var github   = require('../githubInfo');
+  var github   = require('./githubInfo');
   mongoUrl = github.info.MONGO_URL;
 }
 
