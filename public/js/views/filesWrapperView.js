@@ -29,7 +29,7 @@ define(function(require){
     },
     
     onDomRefresh: function(){
-      if($('files-wrapper')[0]){
+      if($('.files-wrapper').length){
         $('.files-wrapper').niceScroll({cursorcolor: '#eee'});
       }
       $('.carousel').carousel({interval: false}).on('slid', this.markActiveFileHeader);
