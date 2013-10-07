@@ -30,15 +30,24 @@ var GITHUB_CLIENT_ID;
 var GITHUB_CLIENT_SECRET;
 var callbackURL;
 var mongoUrl;
+var cookieParserSecret;
 
 if (config.options.env === 'development'){
+  GITHUB_CLIENT_ID = constants.GITHUB_CLIENT_ID; 
+  GITHUB_CLIENT_SECRET = constants.GITHUB_CLIENT_SECRET;
+  callbackURL = 'http://localhost:3000/auth/github/callback';
   mongoUrl = 'mongodb://localhost/gistcamp';
+  cookieParserSecret = 'gistcamp';
 }else{
   var github   = require('./githubInfo');
+  GITHUB_CLIENT_ID = github.info.GITHUB_CLIENT_ID; 
+  GITHUB_CLIENT_SECRET = github.info.GITHUB_CLIENT_SECRET;
   mongoUrl = github.info.MONGO_URL;
+  callbackURL = github.info.CALLBACK_URL;
+  cookieParserSecret = github.info.COOKIE_PARSET_SECRET;
 }
 
-if (config.options.env === 'development'){
+/*if (config.options.env === 'development'){
   GITHUB_CLIENT_ID = constants.GITHUB_CLIENT_ID; 
   GITHUB_CLIENT_SECRET = constants.GITHUB_CLIENT_SECRET;
 }else{
@@ -52,7 +61,7 @@ if(config.options.env === 'development'){
 }else{
   var github = require('./githubInfo');
  callbackURL = github.info.CALLBACK_URL;
-}
+}*/
 
 var app = express();
 
