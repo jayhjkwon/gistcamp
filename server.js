@@ -16,18 +16,27 @@ var
   chat     = require('./routes/chat'),
   evernote = require('./routes/api/evernote'),
   connectDomain = require("connect-domain"),
-  moment   = require('moment')
+  moment   = require('moment'),
+  mongoose = require('mongoose'),
+  MongoStore = require('connect-mongo')(express)
 ;
 
 // TODO : Remove uncaughtexception
-process.on('uncaughtException', function(err){
+/*process.on('uncaughtException', function(err){
   console.error('Caught exception: ' + err);
-});
+});*/
 
 var GITHUB_CLIENT_ID;
 var GITHUB_CLIENT_SECRET;
 var callbackURL;
+var mongoUrl;
 
+if (config.options.env === 'development'){
+  mongoUrl = 'mongodb://localhost/gistcamp';
+}else{
+  var github   = require('../githubInfo');
+  mongoUrl = github.info.MONGO_URL;
+}
 
 if (config.options.env === 'development'){
   GITHUB_CLIENT_ID = constants.GITHUB_CLIENT_ID; 
@@ -63,6 +72,14 @@ var checkRateLimit = function(req, res, next){
   next();
 };
 
+var ensureAuthenticated = function (req, res, next) {
+  if (req.isAuthenticated()) { 
+    // checkRateLimit(req);
+    return next(); 
+  }
+  res.redirect('/welcome');
+};
+
 // all environments
 app.set('env', config.options.env);
 if(config.options.env === 'development'){
@@ -78,7 +95,10 @@ app.use(express.compress());
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.cookieParser('gistcamp'));
-app.use(express.session({cookie: { maxAge : 1000 * 60 * 60 * 24 * 30 }}));
+app.use(express.session({
+  cookie: { maxAge : 1000 * 60 * 60 * 24 * 30 },
+  store: new MongoStore({ url: mongoUrl })
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 // app.use(checkRateLimit);
@@ -102,7 +122,6 @@ passport.serializeUser(function(user, done) {
 passport.deserializeUser(function(obj, done) {
   done(null, obj);
 });
-
 
 passport.use(new GitHubStrategy({
   clientID: GITHUB_CLIENT_ID,
@@ -146,17 +165,6 @@ function(accessToken, refreshToken, profile, done) {
 }
 ));
 
-
-
-var ensureAuthenticated = function (req, res, next) {
-  if (req.isAuthenticated()) { 
-    // checkRateLimit(req);
-    return next(); 
-  }
-  res.redirect('/welcome');
-};
-
-
 // web pages
 app.get('/', ensureAuthenticated, pages.index);
 app.get('/welcome', pages.welcome);
@@ -173,6 +181,7 @@ app.get('/auth/github/callback',
   );
 app.get('/logout', function(req, res){
   req.logout();
+  // req.session.destroy();
   res.redirect('/welcome');
 });
 app.get('/auth/evernote', evernote.auth);
