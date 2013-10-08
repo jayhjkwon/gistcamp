@@ -31,6 +31,8 @@ var GITHUB_CLIENT_SECRET;
 var callbackURL;
 var mongoUrl;
 var cookieParserSecret;
+var db;
+var mongostore;
 
 if (config.options.env === 'development'){
   GITHUB_CLIENT_ID = constants.GITHUB_CLIENT_ID; 
@@ -38,6 +40,10 @@ if (config.options.env === 'development'){
   callbackURL = 'http://localhost:3000/auth/github/callback';
   mongoUrl = 'mongodb://localhost/gistcamp';
   cookieParserSecret = 'gistcamp';
+  db = mongoose.connect('mongodb://localhost/gistcamp', function(err){
+    console.log('mongodb connected');
+    mongostore = new MongoStore({ url: mongoUrl });
+  });
 }else{
   var github   = require('./githubInfo');
   GITHUB_CLIENT_ID = github.info.GITHUB_CLIENT_ID; 
@@ -45,23 +51,11 @@ if (config.options.env === 'development'){
   callbackURL = github.info.CALLBACK_URL;
   mongoUrl = github.info.MONGO_URL;
   cookieParserSecret = github.info.COOKIE_PARSET_SECRET;
+  db = mongoose.connect(github.info.MONGO_URL, function(err){
+    console.log('mongodb connected');
+    mongostore = new MongoStore({ url: mongoUrl });
+  });
 }
-
-/*if (config.options.env === 'development'){
-  GITHUB_CLIENT_ID = constants.GITHUB_CLIENT_ID; 
-  GITHUB_CLIENT_SECRET = constants.GITHUB_CLIENT_SECRET;
-}else{
-  var github = require('./githubInfo');
-  GITHUB_CLIENT_ID = github.info.GITHUB_CLIENT_ID; 
-  GITHUB_CLIENT_SECRET = github.info.GITHUB_CLIENT_SECRET;
-}
-
-if(config.options.env === 'development'){
-  callbackURL = 'http://localhost:3000/auth/github/callback';
-}else{
-  var github = require('./githubInfo');
- callbackURL = github.info.CALLBACK_URL;
-}*/
 
 var app = express();
 
@@ -105,8 +99,8 @@ app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.cookieParser(cookieParserSecret));
 app.use(express.session({
-  cookie: { maxAge : 1000 * 60 * 60 * 24 * 30, httpOnly: false },
-  store: new MongoStore({ url: mongoUrl })
+  cookie: { maxAge : 1000 * 60 * 60 * 24 * 30 },
+  store: mongostore  //new MongoStore({ url: mongoUrl })
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -245,7 +239,10 @@ var io = require('socket.io').listen(server);
 
 chat.start(io);
 
-server.listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
-});
+setTimeout(function(){
+  server.listen(app.get('port'), function(){
+    console.log('Express server listening on port ' + app.get('port'));
+  });
+}, 5000);
+
 
