@@ -1,13 +1,5 @@
-var config   = require('../infra/config');
 var mongoose = require('mongoose');
-
-var db;
-if (config.options.env === 'development'){
-  db = mongoose.createConnection('mongodb://localhost/gistcamp', { server: { poolSize: 5 } });
-}else{
-  var github   = require('../githubInfo');
-  db = mongoose.createConnection(github.info.MONGO_URL, { server: { poolSize: 5 } });
-}
+var db = require('../infra/dataService').getMongoConnection();
 
 var chatContentSchema = new mongoose.Schema({
   room_key        : String, // unique

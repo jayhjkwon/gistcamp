@@ -17,9 +17,10 @@ var
   evernote = require('./routes/api/evernote'),
   connectDomain = require("connect-domain"),
   moment   = require('moment'),
-  mongoose = require('mongoose'),
   MongoStore = require('connect-mongo')(express)
 ;
+
+var app = express();
 
 // TODO : Remove uncaughtexception
 /*process.on('uncaughtException', function(err){
@@ -31,8 +32,9 @@ var GITHUB_CLIENT_SECRET;
 var callbackURL;
 var mongoUrl;
 var cookieParserSecret;
-// var db;
-// var mongostore;
+var db;
+
+app.set('env', config.options.env);
 
 if (config.options.env === 'development'){
   GITHUB_CLIENT_ID = constants.GITHUB_CLIENT_ID; 
@@ -40,10 +42,8 @@ if (config.options.env === 'development'){
   callbackURL = 'http://localhost:3000/auth/github/callback';
   mongoUrl = 'mongodb://localhost/gistcamp';
   cookieParserSecret = 'gistcamp';
-  // db = mongoose.connect('mongodb://localhost/gistcamp', function(err){
-  //   console.log('mongodb connected');
-  //   mongostore = new MongoStore({ url: mongoUrl });
-  // });
+  app.set('port', 3000);
+  app.use(express.errorHandler());  // development only
 }else{
   var github   = require('./githubInfo');
   GITHUB_CLIENT_ID = github.info.GITHUB_CLIENT_ID; 
@@ -51,13 +51,8 @@ if (config.options.env === 'development'){
   callbackURL = github.info.CALLBACK_URL;
   mongoUrl = github.info.MONGO_URL;
   cookieParserSecret = github.info.COOKIE_PARSET_SECRET;
-  // db = mongoose.connect(github.info.MONGO_URL, function(err){
-  //   console.log('mongodb connected');
-  //   mongostore = new MongoStore({ url: mongoUrl });
-  // });
+  app.set('port', 80);
 }
-
-var app = express();
 
 var checkRateLimit = function(req, res, next){
   var accessToken = service.getAccessToken(req);
@@ -84,12 +79,6 @@ var ensureAuthenticated = function (req, res, next) {
 };
 
 // all environments
-app.set('env', config.options.env);
-if(config.options.env === 'development'){
-  app.set('port', 3000);
-}else{
-  app.set('port', 80);
-}
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.use(express.favicon());
@@ -103,7 +92,7 @@ app.use(express.session({
   store: new MongoStore({ url: mongoUrl })
 }));
 app.use(passport.initialize());
-app.use(passport.session());
+app.use(passport.session());  
 // app.use(checkRateLimit);
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
@@ -113,11 +102,7 @@ app.use(function(err, req, res, next) { // error handler middleware should be pl
   res.end(500, err.message);
 });
 
-// development only
-if ('development' == app.get('env')) {
-  app.use(express.errorHandler());
-}
-
+/* passport */
 passport.serializeUser(function(user, done) {
   done(null, user);
 });
@@ -168,7 +153,7 @@ function(accessToken, refreshToken, profile, done) {
 }
 ));
 
-// web pages
+/* web pages */
 app.get('/', ensureAuthenticated, pages.index);
 app.get('/welcome', pages.welcome);
 app.get('/thanksEvernote', pages.thanksEvernote);
@@ -181,7 +166,7 @@ app.get('/auth/github/callback',
   function(req, res) {
     res.redirect('/');
   }
-  );
+);
 app.get('/logout', function(req, res){
   req.logout();
   // req.session.destroy();
@@ -191,7 +176,7 @@ app.get('/auth/evernote', evernote.auth);
 app.get('/auth/evernote/callback', evernote.authCallback);
 
 
-// restful services
+/* restful services */
 app.get('/api/server/options', ensureAuthenticated, function(req, res){ res.send(config.options);});
 app.get('/api/gist/public', ensureAuthenticated, gist.getPublicGists);
 app.get('/api/gist/user/:login_name', ensureAuthenticated, gist.getGistListByUser);
@@ -234,14 +219,9 @@ app.delete('/api/user/following/:login_id', ensureAuthenticated, user.unfollow);
 app.post('/api/evernote/save/:gist_id', ensureAuthenticated, evernote.saveNote);
 app.get('/api/evernote/is_authenticated', ensureAuthenticated, evernote.isEvernoteAuthenticated);
 
-
-setTimeout(function(){
-  var server = http.createServer(app);
-  var io = require('socket.io').listen(server);
-  chat.start(io);
-  server.listen(app.get('port'), function(){
-    console.log('Express server listening on port ' + app.get('port'));
-  });
-}, 5000);
-
-
+var server = http.createServer(app);
+var io = require('socket.io').listen(server);
+chat.start(io);
+server.listen(app.get('port'), function(){
+  console.log('Express server listening on port ' + app.get('port'));
+});

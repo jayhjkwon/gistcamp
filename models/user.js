@@ -1,20 +1,12 @@
-var config   = require('../infra/config');
 var mongoose = require('mongoose');
-
-var db;
-if (config.options.env === 'development'){
-  db = mongoose.connect('mongodb://localhost/gistcamp');
-}else{
-  var github   = require('../githubInfo');
-  db = mongoose.connect(github.info.MONGO_URL);
-}
+var db = require('../infra/dataService').getMongoConnection();
 
 var userSchema = new mongoose.Schema({
-  login			        : String, // unique
+  login             : String, // unique
   id                : Number, // unique
   access_token      : String, // unique
-  avatar_url  	    : String,
-  gravatar_id 	    : String,
+  avatar_url        : String,
+  gravatar_id       : String,
   url               : String,
   html_url          : String,
   followers_url     : String,
@@ -27,30 +19,30 @@ var userSchema = new mongoose.Schema({
   events_url        : String,
   received_events_url: String,
   type              : String,  
-  name             	: String, 
-  company    	      : String,
+  name              : String, 
+  company           : String,
   blog              : String,
   location          : String,
   email             : String,
   hireable          : Boolean,
   bio               : String,
-  public_repos 	    : Number,  
+  public_repos      : Number,  
   followers         : Number,
   following         : Number,  
   created_at        : String,
   updated_at        : String,
   public_gists      : Number,  
   gistcamp_joindate : String,
-  tags 			        : 
+  tags              : 
     [
-    	{
+      {
         // tag_id   : Number,
-      	tag_name : String,
+        tag_name : String,
         tag_url  : String, 
         gists    : 
           [
             {
-             	gist_id: String
+              gist_id: String
             }
           ]
       }                  
