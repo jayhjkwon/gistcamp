@@ -89,7 +89,7 @@ app.use(express.methodOverride());
 app.use(express.cookieParser(cookieParserSecret));
 app.use(express.session({
   cookie: { maxAge : 1000 * 60 * 60 * 24 * 30 },
-  store: new MongoStore({ url: mongoUrl })
+  store: new MongoStore({ url: mongoUrl, auto_reconnect: true })
 }));
 app.use(passport.initialize());
 app.use(passport.session());  
