@@ -43,6 +43,7 @@ if (config.options.env === 'development'){
   mongoUrl = 'mongodb://localhost/gistcamp';
   cookieParserSecret = 'gistcamp';
   app.set('port', 3000);
+  cookieMaxAge = 1000 * 60 * 60 * 24 * 30;
   app.use(express.errorHandler());  // development only
 }else{
   var github   = require('./githubInfo');
@@ -52,6 +53,7 @@ if (config.options.env === 'development'){
   mongoUrl = github.info.MONGO_URL;
   cookieParserSecret = github.info.COOKIE_PARSET_SECRET;
   app.set('port', 80);
+  cookieMaxAge = github.info.COOKIE_MAX_AGE;
 }
 
 var checkRateLimit = function(req, res, next){
@@ -89,7 +91,7 @@ app.use(express.methodOverride());
 app.use(express.cookieParser());
 app.use(express.session({
   secret: cookieParserSecret,
-  cookie: { maxAge : 1000 * 60 * 60 * 24 * 30 },
+  cookie: { maxAge : cookieMaxAge },
   store: new MongoStore({ url: mongoUrl, auto_reconnect: true })
 }));
 app.use(passport.initialize());
