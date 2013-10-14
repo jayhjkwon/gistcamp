@@ -86,8 +86,9 @@ app.use(express.logger('dev'));
 app.use(express.compress());
 app.use(express.bodyParser());
 app.use(express.methodOverride());
-app.use(express.cookieParser(cookieParserSecret));
+app.use(express.cookieParser());
 app.use(express.session({
+  secret: cookieParserSecret,
   cookie: { maxAge : 1000 * 60 * 60 * 24 * 30 },
   store: new MongoStore({ url: mongoUrl, auto_reconnect: true })
 }));
