@@ -67,6 +67,50 @@ define(function(require){
 
         Application.execute(constants.MENU_SELECTED,'friends');
       },
+
+      friendsList : function(){
+        // LayoutView with regions
+        var gistListView = new GistListView();
+        shellView.main.show(gistListView);
+        shellView.showFooterRegion();
+
+        // Gist Item on the left region
+        var gistItemListView = new GistItemListView;
+        gistItemListView.getFriendsGistList();              
+        gistListView.gistItemList.show(gistItemListView);
+
+        // Gist Files on the center region
+        var filesWrapperView = new FilesWrapperView;
+        gistListView.filesWrapper.show(filesWrapperView);
+
+        // Comments on the right region
+        var commentsWrapperView = new CommentsWrapperView;
+        gistListView.commentsWrapper.show(commentsWrapperView);
+
+        Application.execute(constants.MENU_SELECTED,'friends');
+      },
+
+      friendsGists : function(){
+        // LayoutView with regions
+        var gistListView = new GistListView();
+        shellView.main.show(gistListView);
+        shellView.showFooterRegion();
+
+        // Gist Item on the left region
+        var gistItemListView = new GistItemListView;
+        gistItemListView.getFriendsGistList();              
+        gistListView.gistItemList.show(gistItemListView);
+
+        // Gist Files on the center region
+        var filesWrapperView = new FilesWrapperView;
+        gistListView.filesWrapper.show(filesWrapperView);
+
+        // Comments on the right region
+        var commentsWrapperView = new CommentsWrapperView;
+        gistListView.commentsWrapper.show(commentsWrapperView);
+
+        Application.execute(constants.MENU_SELECTED,'friends');
+      },
       
       myGists : function(){
         // LayoutView with regions

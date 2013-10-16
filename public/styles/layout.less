@@ -3,6 +3,7 @@
 // @files-wrapper-width: 50%;
 @comments-wrapper-width: 300px;
 @footer-height: 70px;
+@friends-list-width: 170px;
 
 /* layout */
 body {
@@ -37,13 +38,25 @@ header {
 		top:0px;
 		bottom:@footer-height;
 		left:0;
-		right:0;		
+		right:0;	
+
+		.friends-list {
+			position: absolute;
+			top:0px;
+			bottom:0px;
+			left:0;
+			width:@friends-list-width;
+			overflow-y:auto;
+			// border-right:solid 1px #eee;
+			// padding-top:10px;
+			border-right:1px solid darken(#eee, 20%);
+		}	
 
 		.gist-list {
 			position: absolute;
 			top:0px;
 			bottom:0px;
-			left:0;
+			left:@friends-list-width+1px;
 			width:@gist-list-width;
 			overflow-y:auto;
 			// border-right:solid 1px #eee;
@@ -55,7 +68,7 @@ header {
 			position: absolute;
 			top:0px;
 			bottom:0px;
-			left:@gist-list-width+1px;
+			left:@gist-list-width + @friends-list-width + 2px;
 			right:@comments-wrapper-width;
 			background-color: white;
 			overflow-y:auto;
