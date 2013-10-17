@@ -1,19 +1,22 @@
 define(function(require){
   var 
-    _                   = require('underscore'),
-    Marionette          = require('marionette'),
-    Application         = require('application'),
-    GistListView        = require('views/gistListView'),
-    GistItemListView    = require('views/gistItemListView'),
-    shellView           = require('views/shellView'),       
-    constants           = require('constants'),
-    FilesWrapperView    = require('views/filesWrapperView'),
-    CommentsWrapperView = require('views/CommentsWrapperView'),
-    CreateGistView = require('views/createGistView'),
-    ChatView            = require('views/chatView'),
-    ChatItemListView    = require('views/chatItemListView'),
+    _                       = require('underscore'),
+    Marionette              = require('marionette'),
+    Application             = require('application'),
+    GistListView            = require('views/gistListView'),
+    GistItemListView        = require('views/gistItemListView'),
+    shellView               = require('views/shellView'),       
+    constants               = require('constants'),
+    FilesWrapperView        = require('views/filesWrapperView'),
+    CommentsWrapperView     = require('views/CommentsWrapperView'),
+    CreateGistView          = require('views/createGistView'),
+    ChatView                = require('views/chatView'),
+    ChatItemListView        = require('views/chatItemListView'),
     ConversationWrapperView = require('views/conversationWrapperView'),
-    global              = require('global')
+    global                  = require('global'),
+    FriendsView             = require('views/friends/friendsView'),
+    FriendsItemListView     = require('views/friends/friendsItemListView'),
+    FriendsSearchContainerView = require('views/friends/friendsSearchContainerView')
   ;
   
   var
@@ -69,24 +72,27 @@ define(function(require){
       },
 
       friendsList : function(){
-        // LayoutView with regions
-        var gistListView = new GistListView();
-        shellView.main.show(gistListView);
-        shellView.showFooterRegion();
+        // Layout View with regions
+        var friendsView = new FriendsView();
+        shellView.main.show(friendsView);
+        shellView.hideFooterRegion();
 
-        // Gist Item on the left region
-        var gistItemListView = new GistItemListView;
-        gistItemListView.getFriendsGistList();              
-        gistListView.gistItemList.show(gistItemListView);
+        // Friends Items on the left region
+        var friendsItemListView = new FriendsItemListView;
+        friendsView.friendsItemList.show(friendsItemListView);
 
-        // Gist Files on the center region
-        var filesWrapperView = new FilesWrapperView;
-        gistListView.filesWrapper.show(filesWrapperView);
+        // Followers and Followings on the center region
+        var friendsSearchContainerView = new FriendsSearchContainerView;
+        
+        var followingsView = new FriendsSearchView;
+        friendsSearchContainerView.followings.show(followingsView);
+        
+        var followersView = new FriendsSearchView;
+        friendsSearchContainerView.followers.show(followersView);
 
-        // Comments on the right region
-        var commentsWrapperView = new CommentsWrapperView;
-        gistListView.commentsWrapper.show(commentsWrapperView);
+        friendsView.friendsSearchContainer.show(friendsSearchContainerView);
 
+        // notify menu selected
         Application.execute(constants.MENU_SELECTED,'friends');
       },
 

@@ -4,7 +4,7 @@ define(function(require){
     _               = require('underscore'),
     Backbone        = require('backbone'),
     Marionette      = require('marionette'),
-    friendsItemTemplate= require('hbs!templates/friendsItemTemplate'),
+    friendsItemTemplate= require('hbs!templates/friends/friendsItemTemplate'),
     Application     = require('application'),
     constants       = require('constants'),
     postalWrapper   = require('postalWrapper'),

@@ -18,11 +18,11 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 		var getLoginUserInfo = function(callback){
 			var user = new User({mode: constants.USER_AUTH});
 			user.fetch().done(function(result){
-				global.user.id = result.id;
-				global.user.login = result.login;
-				global.user.name = result.name;
+				global.user.id     = result.id;
+				global.user.login  = result.login;
+				global.user.name   = result.name;
 				global.user.avatar = result.avatar_url;
-				global.user.url = result.html_url;
+				global.user.url    = result.html_url;
 
 				callback(null, user);
 			});

@@ -3,7 +3,7 @@ define(function(require){
     $               = require('jquery'),
     _               = require('underscore'),
     Marionette      = require('marionette'),
-    friendsTemplate= require('hbs!templates/friendsTemplate'),
+    friendsTemplate= require('hbs!templates/friends/friendsTemplate'),
     Application     = require('application'),
     constants       = require('constants'),   
     nicescroll      = require('nicescroll'),
@@ -18,7 +18,7 @@ define(function(require){
 
       regions : {
         friendsItemList : '#friends-item-list',
-        friendsAllList  : '#friends-all-list'
+        friendsSearchContainer  : '#friends-search-container'
       }
     })
   ;
