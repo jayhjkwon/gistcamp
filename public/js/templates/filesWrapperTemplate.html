@@ -6,14 +6,18 @@
   <div class="carousel-inner">
   {{#each items}}
     {{#if isActive}}
-    <div class="item active">
+      <div class="item active">
     {{else}}
-    <div class="item">
+      <div class="item">
     {{/if}}
     {{#if isMarkdown}}
-    <pre class="prettyprint">{{{file_content}}}</pre>
+      <pre class="prettyprint">{{{file_content}}}</pre>
     {{else}}
-    <pre class="prettyprint">{{file_content}}</pre>
+      {{#if isImage}}
+        <pre><img src="{{raw_url}}" /></pre>
+      {{else}}
+        <pre class="prettyprint">{{file_content}}</pre>
+      {{/if}}
     {{/if}}      
     </div>    
   {{/each}}

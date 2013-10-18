@@ -4,9 +4,13 @@ define(function(require){
   markdown = require('markdown'),
 
   getFileContent = function(file, callback){
-    var isMarkdown = false;
+    // var isMarkdown = false;
     if (file.language && file.language.toLowerCase() === 'markdown'){
       file.isMarkdown = true;
+    }
+
+    if (file.type === 'image/jpeg' || file.type === 'image/jpg' || file.type === 'image/png' || file.type === 'image/gif'){
+      file.isImage = true;
     }
 
     var xhr =
