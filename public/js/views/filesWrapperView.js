@@ -44,77 +44,80 @@ define(function(require){
         }
       },
 
-      markActiveFileHeader: function(){
-        var activeIndex = $('.carousel-inner .item').index($('.carousel-inner .item.active'));
-        $('.pivot-headers a').removeClass('active');
-        var pivotHeader = $('.pivot-headers a')[activeIndex];
-        $(pivotHeader).addClass('active');
-      },
+    markActiveFileHeader: function(){
+      var activeIndex = $('.carousel-inner .item').index($('.carousel-inner .item.active'));
+      $('.pivot-headers a').removeClass('active');
+      var pivotHeader = $('.pivot-headers a')[activeIndex];
+      $(pivotHeader).addClass('active');
+    },
 
-      bindFiles : function(gistItem){
-        var self = this;
-        var filesArray = _.toArray(gistItem.files);
+    bindFiles : function(gistItem){
+      var self = this;
+      var filesArray = _.toArray(gistItem.files);
 
-        if (filesArray.length){
-          filesArray[0].isActive = true;
-        }
+      if (filesArray.length){
+        filesArray[0].isActive = true;
+      }
 
-        if (self.refreshRequested || (filesArray.length && !filesArray[0].file_content)){ // in case that file contents are not set yet
-          if (self.refreshRequested)
-            $('.btn-reload .icon-refresh').removeClass('icon-spin').addClass('icon-spin');
-          else
-            self.loading(true);
+      if (self.refreshRequested || (filesArray.length && !filesArray[0].file_content)){ // in case that file contents are not set yet
+        if (self.refreshRequested)
+          $('.btn-reload .icon-refresh').removeClass('icon-spin').addClass('icon-spin');
+        else
+          self.loading(true);
 
-          self.collection = new Files(filesArray);
-          self.collection.fetch({data: {files: filesArray}})
-          .done(function(){
-            _.each(self.collection.models, function(file){
-              if (file.get('language') && file.get('language').toLowerCase() === 'markdown' && file.get('file_content')){
-                file.set('isMarkdown', true);
-                file.set('file_content', markdown.toHTML(file.get('file_content')));
-              }
-            });
-            self.render();            
-          })
-          .always(function(){
-            self.loading(false);  
-            if (self.refreshRequested){
-              self.refreshRequested = false;
-              $('.btn-reload .icon-refresh').removeClass('icon-spin');
+        self.collection = new Files(filesArray);
+        self.collection.fetch({data: {files: filesArray}})
+        .done(function(){
+          _.each(self.collection.models, function(file){
+            if (file.get('language') && file.get('language').toLowerCase() === 'markdown' && file.get('file_content')){
+              file.set('isMarkdown', true);
+              file.set('file_content', markdown.toHTML(file.get('file_content')));
+            }
+            if (file.get('type') === 'image/jpeg' || file.get('type') === 'image/jpg' || file.get('type') === 'image/png' || file.get('type') === 'image/gif'){
+              file.set('isImage', true);
             }
           });
+          self.render();            
+        })
+        .always(function(){
+          self.loading(false);  
+          if (self.refreshRequested){
+            self.refreshRequested = false;
+            $('.btn-reload .icon-refresh').removeClass('icon-spin');
+          }
+        });
 
-        }else{
-          self.collection = new Files(filesArray);
-          self.render();
-        }
-      },
-
-      onItemSelected: function(gistItem){
-        this.selectedGistItem = gistItem; // for refreshing files later
-        this.bindFiles(gistItem);
-      },
-
-      onRefreshRequested : function(){
-        var self = this;
-        self.refreshRequested = true;
-        self.bindFiles(self.selectedGistItem);
-      },
-
-      loading: function(showSpinner){
-        if (showSpinner){
-          var target = $('.files-wrapper')[0];
-          this.spinner.spin(target);
-        }else{          
-          this.spinner.stop();          
-        }
-      },
-      
-      onClose: function(){
-        this.subscriptionItemSelected.unsubscribe();
-        this.subscriptionReload.unsubscribe();
+      }else{
+        self.collection = new Files(filesArray);
+        self.render();
       }
-    })
+    },
+
+    onItemSelected: function(gistItem){
+      this.selectedGistItem = gistItem; // for refreshing files later
+      this.bindFiles(gistItem);
+    },
+
+    onRefreshRequested : function(){
+      var self = this;
+      self.refreshRequested = true;
+      self.bindFiles(self.selectedGistItem);
+    },
+
+    loading: function(showSpinner){
+      if (showSpinner){
+        var target = $('.files-wrapper')[0];
+        this.spinner.spin(target);
+      }else{          
+        this.spinner.stop();          
+      }
+    },
+    
+    onClose: function(){
+      this.subscriptionItemSelected.unsubscribe();
+      this.subscriptionReload.unsubscribe();
+    }
+  })
 ;
 
 return FilesWrapperView;
