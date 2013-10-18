@@ -23,5 +23,5 @@ define(function(require){
     })
   ;
 
-  return friendsSearchContainerView;
+  return FriendsSearchContainerView;
 });

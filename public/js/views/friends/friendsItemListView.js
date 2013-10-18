@@ -6,7 +6,7 @@ define(function(require){
     Marionette   = require('marionette'),    
     Handlebars   = require('handlebars'),
     Spinner      = require('spin'),
-    NoItemsView  = require('./NoItemsView'),
+    NoItemsView  = require('../noItemsView'),
     constants    = require('constants'),
     util         = require('util'),
     async        = require('async'),

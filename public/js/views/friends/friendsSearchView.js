@@ -7,6 +7,7 @@ define(function(require){
     constants              = require('constants'),   
     nicescroll             = require('nicescroll'),
     bootstrap              = require('bootstrap'),
+    FriendsItemView        = require('./friendsItemView'),
     friendsSearchTemplate  = require('hbs!templates/friends/friendsSearchTemplate')
     
     FriendsSearchView = Marionette.CompositeView.extend({

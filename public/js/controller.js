@@ -16,7 +16,8 @@ define(function(require){
     global                  = require('global'),
     FriendsView             = require('views/friends/friendsView'),
     FriendsItemListView     = require('views/friends/friendsItemListView'),
-    FriendsSearchContainerView = require('views/friends/friendsSearchContainerView')
+    FriendsSearchContainerView = require('views/friends/friendsSearchContainerView'),
+    FriendsSearchView       = require('views/friends/friendsSearchView')
   ;
   
   var
