@@ -40,15 +40,13 @@ header {
 		left:0;
 		right:0;	
 
-		.friends-list {
+		.friends-item-list {
 			position: absolute;
 			top:0px;
 			bottom:0px;
 			left:0;
 			width:@friends-list-width;
 			overflow-y:auto;
-			// border-right:solid 1px #eee;
-			// padding-top:10px;
 			border-right:1px solid darken(#eee, 20%);
 		}	
 
@@ -56,11 +54,9 @@ header {
 			position: absolute;
 			top:0px;
 			bottom:0px;
-			left:@friends-list-width+1px;
+			left:0px;
 			width:@gist-list-width;
 			overflow-y:auto;
-			// border-right:solid 1px #eee;
-			// padding-top:10px;
 			border-right:1px solid darken(#eee, 20%);
 		}
 
@@ -68,7 +64,7 @@ header {
 			position: absolute;
 			top:0px;
 			bottom:0px;
-			left:@gist-list-width + @friends-list-width + 2px;
+			left:@gist-list-width + 1px;
 			right:@comments-wrapper-width;
 			background-color: white;
 			overflow-y:auto;

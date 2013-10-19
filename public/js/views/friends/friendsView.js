@@ -12,7 +12,7 @@ define(function(require){
     FriendsView = Marionette.Layout.extend({
       template : friendsTemplate,
       className: 'main-content',
-
+      
       initialize: function(){
       },
 
