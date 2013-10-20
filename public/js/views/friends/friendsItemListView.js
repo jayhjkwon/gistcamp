@@ -14,14 +14,21 @@ define(function(require){
     File         = require('models/file'),
     nicescroll   = require('nicescroll'),
     FriendsItemView = require('./friendsItemView'),
-    FriendsItemList = require('models/friendsItemList'),
+    FriendsItemList = require('models/friendsItemList'),    
+    jqueryui     = require('jqueryui'),
     
     FriendsItemListView = Marionette.CollectionView.extend({
       className: 'friends-item-container',
       itemView: FriendsItemView,
       collection: new FriendsItemList,
 
-      initialize: function(){       
+      initialize: function(){     
+        this.collection.add([{}, {}, {}, {}])  ;
+      },
+
+      onDomRefresh: function(){
+        $( ".friends-item-container" ).sortable({delay: 100, distance: 15});
+        // $( ".friends-item-container" ).disableSelection();
       }
     })
   ;

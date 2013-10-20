@@ -2,7 +2,7 @@ define(function(require){
   var
   Backbone = require('backbone'),   
   
-  FriendsItemList = Backbone.Model.extend({
+  FriendsItemList = Backbone.Collection.extend({
     initialize: function(options){
       this.id = options ? options.id || null : null;
     }     

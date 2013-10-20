@@ -27,7 +27,8 @@ require.config({
     toastr         : '../vendor/toastr/toastr',
     select2        : '../vendor/select2/select2',
     mousetrap      : '../vendor/mousetrap/mousetrap',
-    fancybox       : '../vendor/fancybox/source/jquery.fancybox.pack'
+    fancybox       : '../vendor/fancybox/source/jquery.fancybox.pack',
+    jqueryui       : '../vendor/jquery-ui/ui/jquery-ui'
   },
   shim: {
     underscore: {
@@ -63,6 +64,9 @@ require.config({
       exports: 'io'
     },
     fancybox: {
+      deps: ['jquery']
+    },
+    jqueryui: {
       deps: ['jquery']
     }
   },

@@ -46,9 +46,20 @@ header {
 			bottom:0px;
 			left:0;
 			width:@friends-list-width;
+			overflow-x: hidden;
 			overflow-y:auto;
-			border-right:1px solid darken(#eee, 20%);
+			border-right:1px solid darken(#eee, 20%);			
 		}	
+
+		.friends-search-container {
+			position: absolute;
+			top:0px;
+			bottom:0px;
+			left:@friends-list-width + 1px;
+			right:0;
+			background-color: white;
+			overflow-y:auto;			
+		}
 
 		.gist-list {
 			position: absolute;

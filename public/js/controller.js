@@ -86,7 +86,7 @@ define(function(require){
         var friendsSearchContainerView = new FriendsSearchContainerView;
         
         var followingsView = new FriendsSearchView;
-        friendsSearchContainerView.followings.show(followingsView);
+        friendsSearchContainerView.following.show(followingsView);
         
         var followersView = new FriendsSearchView;
         friendsSearchContainerView.followers.show(followersView);

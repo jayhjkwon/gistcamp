@@ -23,7 +23,8 @@
     "ace": "1.1.1",
     "select2": "~3.4.2",
     "mousetrap": "~1.4.5",
-    "fancybox": "~2.1.5"
+    "fancybox": "~2.1.5",
+    "jquery-ui": "~1.10.3"
   },
   "resolutions": {
     "underscore": "1.5.1"

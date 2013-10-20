@@ -1,5 +1,6 @@
 .friends-item-container {
 	.row-fluid {
+		cursor: move;
 		border-bottom: solid 1px darken(#d8d8d8, 10%);
 		padding:5px 0;
 		background-color: darken(#f5f5f5, 1%);
@@ -30,7 +31,7 @@
 }
 
 .friends-item {
-	cursor:pointer;
+	// cursor:pointer;
 	margin-bottom:15px;
 	height: 100%;
 	position:relative;
@@ -43,39 +44,22 @@
 	}
 	.detail {
 		margin-left:5px;
-		padding-top:3px;
-		.title {
+		padding-top:6px;
+		.name {
 			height:20px;
-			font-size:11px;
-			font-weight:500;
+			font-size:12px;
+			font-weight:bold;
 			text-overflow:ellipsis;
 			overflow: hidden;
 			word-break: break-all;
 		}
-		.subtitle {
-			font-size: 11px !important;
+		.followings,  .followers {
 			height:20px;
-			.social{
-				margin-right:7px;
-			}
-		}
-		p{
-			font-size:12px;
-			overflow:hidden;
-			font-weight: bold;
-			word-wrap:break-word;
-		}
-		.social a{
-			color: #008641;
-			font-weight:400;
-		}		
-		.tags {
-			font-size:10px;		
+			font-size:11px;
+			text-overflow:ellipsis;
+			overflow: hidden;
 			word-break: break-all;
-			line-height: 12px;
-			margin-bottom:5px;
-		}	
-
+		}
 	}
 
 	.follow-user{

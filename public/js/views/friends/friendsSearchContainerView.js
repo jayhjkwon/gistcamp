@@ -17,9 +17,14 @@ define(function(require){
       },
 
       regions : {
-        followings : '.follwings',
+        following : '.follwing',
         followers  : '.followers'
+      },
+
+      onRender: function(){
+        $('#friends-tab #following').tab('show');
       }
+
     })
   ;
 
