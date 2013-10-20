@@ -200,6 +200,11 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 				postalWrapper.publish(constants.STAR);
 			});
 
+			mousetrap.bind('g h', function(){
+				var router = new Router;
+				router.navigate('shared', {trigger: true});
+			});
+
 			callback(null);
 		};
 
