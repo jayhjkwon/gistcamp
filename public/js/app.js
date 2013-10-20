@@ -50,7 +50,7 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 				global.socket.emit('adduser', global.user);
 			});
 
-			global.socket.on('updatechat', function (username, data) {
+			global.socket.on('updatechat', function (username, data, date) {
 				if (username === 'SERVER') {
 
 					var server = '<div class="server">'
@@ -58,7 +58,7 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 					+ '</div>';
 
 					var right = '<div class="right">'
-					+ '<span class="time">' + moment(new Date()).format('MM/DD/YYYY h:mm:ss A') + '</span>'
+					+ '<span class="time">' + moment(date).format('MM/DD/YYYY h:mm:ss A') + '</span>'
 					+ '</div>';
 
 					$('#conversation').append('<li class="chatli">' + server + right + '</li>');
@@ -75,7 +75,7 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 					+ '</div>';
 
 					var right = '<div class="right">'
-					+ '<span class="time">' + moment(new Date()).format('MM/DD/YYYY h:mm:ss A') + '</span>'
+					+ '<span class="time">' + moment(date).format('MM/DD/YYYY h:mm:ss A') + '</span>'
 					+ '</div>';
 
 					$('#conversation').append('<li class="chatli">' + left + middle + right + '</li>');
