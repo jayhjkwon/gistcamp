@@ -11,21 +11,19 @@ define(function(require){
     friendsSearchTemplate  = require('hbs!templates/friends/friendsSearchTemplate'),
     FriendsItemList        = require('models/friendsItemList'),    
     
-    FriendsSearchView = Marionette.CompositeView.extend({
+    FollowersSearchView = Marionette.CompositeView.extend({
       template : friendsSearchTemplate,
       itemViewContainer : 'div.friends-list',
       itemView : FriendsItemView,
       collection: new FriendsItemList,
 
       initialize: function(){     
-        // this.collection.add([{}])  ;
-      },  
-
-      onRender: function(){
-        this.collection.add([{}])  ;
+        console.log('followers=' + this.collection.length);
+        this.collection.add([{}, {}]);
+        console.log('followers=' + this.collection.length);
       }
     })
   ;
 
-  return FriendsSearchView;
+  return FollowersSearchView;
 });

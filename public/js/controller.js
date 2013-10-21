@@ -17,7 +17,8 @@ define(function(require){
     FriendsView             = require('views/friends/friendsView'),
     FriendsItemListView     = require('views/friends/friendsItemListView'),
     FriendsSearchContainerView = require('views/friends/friendsSearchContainerView'),
-    FriendsSearchView       = require('views/friends/friendsSearchView')
+    FollowingSearchView     = require('views/friends/followingSearchView'),
+    FollowersSearchView     = require('views/friends/followersSearchView')
   ;
   
   var
@@ -86,11 +87,11 @@ define(function(require){
         var friendsSearchContainerView = new FriendsSearchContainerView;
         friendsView.friendsSearchContainer.show(friendsSearchContainerView);
         
-        var followingsView = new FriendsSearchView;
-        friendsSearchContainerView.following.show(followingsView);
+        var followingSearchView = new FollowingSearchView;
+        friendsSearchContainerView.following.show(followingSearchView);
         
-        var followersView = new FriendsSearchView;
-        friendsSearchContainerView.followers.show(followersView);
+        var followersSearchView = new FollowersSearchView;
+        friendsSearchContainerView.followers.show(followersSearchView);
 
         // notify menu selected
         Application.execute(constants.MENU_SELECTED,'friends');

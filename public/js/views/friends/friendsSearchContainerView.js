@@ -17,14 +17,9 @@ define(function(require){
       },
 
       regions : {
-        followers : '#followers-tab-content',
-        following : '#follwing-tab-content'
-      },
-
-      onDomRefresh: function(){
-        // $('#friends-tab li:last a').tab('show');
+        following : '#following-tab-content',
+        followers : '#followers-tab-content'
       }
-      
     })
   ;
 
