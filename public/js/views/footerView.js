@@ -360,6 +360,20 @@ define(function(require){
           service
           .setShared(self.model.get('id'), users)
           .done(function(data){
+
+            var splitStr = users.split(',');
+            for(var i = 0; i<splitStr.length; i++)
+            {
+              // send a notification
+              var text = '';
+              if (self.model.attributes.description != undefined)
+                text = '(' + self.model.attributes.description + ')';
+
+              var msg = global.user.name + ' just shared gist' + text;
+              msg = msg + '</br>';
+              global.socket.emit('sendalarmByLogin', splitStr[i], msg);
+            }
+
             $('.starred-success').css('left', '140px');
             $('.starred-success').text('Shared Successfully').removeClass('starred-success-hide starred-success-show').addClass('starred-success-show');
             setTimeout(function(){
