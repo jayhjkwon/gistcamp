@@ -18,7 +18,7 @@ define(function(require){
 
       regions : {
         friendsItemList : '#friends-item-list',
-        friendsSearchContainer  : '#friends-search-container'
+        friendsSearchContainer : '#friends-search-container'
       }
     })
   ;

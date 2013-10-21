@@ -13,18 +13,18 @@ define(function(require){
       
       template : friendsSearchContainerTemplate,
 
-      initialize: function(menu){
+      initialize: function(){
       },
 
       regions : {
-        following : '.follwing',
-        followers  : '.followers'
+        followers : '#followers-tab-content',
+        following : '#follwing-tab-content'
       },
 
-      onRender: function(){
-        $('#friends-tab #following').tab('show');
+      onDomRefresh: function(){
+        // $('#friends-tab li:last a').tab('show');
       }
-
+      
     })
   ;
 

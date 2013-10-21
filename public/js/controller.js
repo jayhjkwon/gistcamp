@@ -84,14 +84,13 @@ define(function(require){
 
         // Followers and Followings on the center region
         var friendsSearchContainerView = new FriendsSearchContainerView;
+        friendsView.friendsSearchContainer.show(friendsSearchContainerView);
         
         var followingsView = new FriendsSearchView;
         friendsSearchContainerView.following.show(followingsView);
         
         var followersView = new FriendsSearchView;
         friendsSearchContainerView.followers.show(followersView);
-
-        friendsView.friendsSearchContainer.show(friendsSearchContainerView);
 
         // notify menu selected
         Application.execute(constants.MENU_SELECTED,'friends');
