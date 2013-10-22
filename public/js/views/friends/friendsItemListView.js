@@ -27,8 +27,15 @@ define(function(require){
       },
 
       onDomRefresh: function(){
-        $( ".friends-item-container" ).sortable({delay: 100, distance: 15});
-        // $( ".friends-item-container" ).disableSelection();
+        $('.friends-item-container' ).sortable({
+          delay: 100, 
+          distance: 15, 
+          tolerance: 'pointer',
+          revert: 'invalid',
+          placeholder: 'placeholder',
+          forceHelperSize: true
+        });
+        $('.friends-item-container' ).disableSelection();
       }
     })
   ;

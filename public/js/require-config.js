@@ -28,7 +28,8 @@ require.config({
     select2        : '../vendor/select2/select2',
     mousetrap      : '../vendor/mousetrap/mousetrap',
     fancybox       : '../vendor/fancybox/source/jquery.fancybox.pack',
-    jqueryui       : '../vendor/jquery-ui/ui/jquery-ui'
+    jqueryui       : '../vendor/jquery-ui/ui/jquery-ui',
+    stickit        : '../vendor/backbone.stickit/backbone.stickit'
   },
   shim: {
     underscore: {
@@ -68,6 +69,10 @@ require.config({
     },
     jqueryui: {
       deps: ['jquery']
+    },
+    Stickit: {
+      deps: ['jquery', 'underscore', 'backbone'],
+      exports: 'Stickit'
     }
   },
   hbs : {

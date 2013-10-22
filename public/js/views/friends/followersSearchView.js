@@ -10,7 +10,7 @@ define(function(require){
     FriendsItemView        = require('./friendsItemView'),
     friendsSearchTemplate  = require('hbs!templates/friends/friendsSearchTemplate'),
     FriendsItemList        = require('models/friendsItemList'),    
-    
+
     FollowersSearchView = Marionette.CompositeView.extend({
       template : friendsSearchTemplate,
       itemViewContainer : 'div.friends-list',
