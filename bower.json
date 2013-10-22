@@ -25,7 +25,7 @@
     "mousetrap": "~1.4.5",
     "fancybox": "~2.1.5",
     "jquery-ui": "~1.10.3",
-    "backbone.stickit": "~0.6.3"
+    "tipsy": "~0.1.7"
   },
   "resolutions": {
     "underscore": "1.5.1"

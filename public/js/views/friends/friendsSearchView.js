@@ -10,16 +10,14 @@ define(function(require){
     FriendsItemView        = require('./friendsItemView'),
     friendsSearchTemplate  = require('hbs!templates/friends/friendsSearchTemplate'),
     FriendsItemList        = require('models/friendsItemList'), 
-    Stickit                = require('stickit'),
     
     FriendsSearchView = Marionette.CompositeView.extend({
       template : friendsSearchTemplate,
       itemViewContainer : 'div.friends-list',
       itemView : FriendsItemView,
+      mode: '',
 
       initialize: function(){     
-        var test = Stickit;
-        var tes = Marionette;
         _.bindAll(this, 'getFollowing', 'getFollowers');
         this.collection = new FriendsItemList;  
       },
@@ -28,13 +26,18 @@ define(function(require){
         'click .loadmore' : 'loadMore'
       },
 
+      onDomRefresh: function(){
+      },
+
       getFollowing: function(){
+        this.mode = 'following';
         console.log('following=' + this.collection.length);
-        this.collection.add([{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}]);
+        this.collection.add([{test:'test'}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}]);
         console.log('following=' + this.collection.length);
       },
 
       getFollowers: function(){
+        this.mode = 'followers';
         console.log('followers=' + this.collection.length);
         this.collection.add([{}, {}, {}, {}, {}, {}, {}]);
         console.log('followers=' + this.collection.length);

@@ -31,6 +31,14 @@
 			background-color: darken(#f5f5f5, 10%);
 			background-image: none;
 		}
+
+		&:hover .minus {
+		    display:block;
+		}
+
+		.plus {
+			display:none;
+		}
 	}
 
 	.placeholder {
@@ -75,6 +83,22 @@
 		}
 	}
 
+	.plus, .minus {
+		display:none;
+		position : absolute;
+		top:-1px;
+		right:0;
+		opacity:0.4;
+		font-size:30px;
+		background-color:gray;
+		color:#fff;
+		cursor:pointer;
+	}
+
+	.minus {
+		top:-5px;
+	}
+
 	.follow-user{
 		display:none;
 		font-size:11px;
@@ -105,13 +129,23 @@
 		width: 170px;
 		margin:10px;
 		border: solid 1px darken(#eee, 20%);	
-		border-radius:3px;
+		// border-radius:3px;
 		float: left;	
+
+		&:hover .plus {
+		    display:block;
+		}
+
+		.minus {
+			display:none;
+		}
 	}
 
 	.loadmore {
 		margin:10px 0 0 10px;
 	}
+
+	
 }
 
 

@@ -29,7 +29,7 @@ require.config({
     mousetrap      : '../vendor/mousetrap/mousetrap',
     fancybox       : '../vendor/fancybox/source/jquery.fancybox.pack',
     jqueryui       : '../vendor/jquery-ui/ui/jquery-ui',
-    stickit        : '../vendor/backbone.stickit/backbone.stickit'
+    tipsy          : '../vendor/tipsy/src/javascripts/jquery.tipsy'
   },
   shim: {
     underscore: {
@@ -70,9 +70,8 @@ require.config({
     jqueryui: {
       deps: ['jquery']
     },
-    Stickit: {
-      deps: ['jquery', 'underscore', 'backbone'],
-      exports: 'Stickit'
+    tipsy: {
+      deps: ['jquery']
     }
   },
   hbs : {
