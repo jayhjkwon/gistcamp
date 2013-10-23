@@ -20,10 +20,11 @@ define(function(require){
     className: 'gist-item-container',
     itemView: GistItemView,
     collection: new GistItemList,
-    xhrs : [],
+    xhrs : [],    
 
     initialize: function(){       
       _.bindAll(this, 'getGistList', 'onRender', 'onScroll', 'handleGist', 'setFileContent', 'onClose');
+      this.isLoading = false;
       this.xhrs.length = 0;
       this.spinner = new Spinner();
       util.loadSpinner(true);
@@ -31,6 +32,10 @@ define(function(require){
 
     getGistList: function(mode, tagId){
       var self = this;
+      
+      if (self.isLoading) return;
+      self.isLoading = true;
+
       var gistItemList = new GistItemList({'gistDataMode': mode, tagId: tagId });
       gistItemList.fetch({data: {linkHeader: self.linkHeader}})
       .done(function(res){
@@ -48,15 +53,16 @@ define(function(require){
         }           
 
         async.eachLimit(res.data, 3, self.handleGist, function(error, result){
-              // do nothing, because file content is set in setFileContent method
-            });
+          // do nothing, because file content is set in setFileContent method
+        });
       })
       .always(function(){
+        self.isLoading = false;
         $('.gist-list').niceScroll({cursorcolor: '#eee', cursorwidth:'1px'});
-            // $('.gist-list').getNiceScroll().resize();
-            self.loading(false);
-            util.loadSpinner(false);            
-          });
+        // $('.gist-list').getNiceScroll().resize();
+        self.loading(false);
+        util.loadSpinner(false);            
+      });
     },
     
     handleGist : function(gist, callback){
@@ -108,29 +114,30 @@ define(function(require){
         // register scroll event handler, this shuld be registered after view rendered
         $('.gist-list').off('scroll').on('scroll', this.onScroll);
       },
-      onScroll : function(){
-        var w = $('.gist-list');
-        console.log(w.scrollTop() + ', ' + w.height() + ', ' + w.scrollTop() + w.height() + ', ' + $('.gist-item-container').height());
-        if(w.scrollTop() + w.height() >= $('.gist-item-container').height()) {
-          this.loadMore();
-        }
-      },
-      loadMore: function(){
-        if(this.lastPage) return;
-        this.loading(true);
-        this.getGistList();
-      },
-      loading: function(showSpinner){
-        if (showSpinner){
-          $('#gist-item-list').append('<div style="height:100px;" class="loading"></div>');
-          var target = $('#gist-item-list .loading')[0];
-          this.spinner.spin(target);
-        }else{          
-          this.spinner.stop();          
-          $('.loading').remove(); 
-        }
+    onScroll : function(){
+      var w = $('.gist-list');
+      // console.log(w.scrollTop() + ', ' + w.height() + ', ' + w.scrollTop() + w.height() + ', ' + $('.gist-item-container').height());
+      if(w.scrollTop() + w.height() >= $('.gist-item-container').height()) {
+        this.loadMore();
       }
-    })
+    },
+    loadMore: function(){
+      console.log('loadMore');
+      if(this.lastPage) return;
+      this.loading(true);
+      this.getGistList();
+    },
+    loading: function(showSpinner){
+      if (showSpinner){
+        $('#gist-item-list').append('<div style="height:100px;" class="loading"></div>');
+        var target = $('#gist-item-list .loading')[0];
+        this.spinner.spin(target);
+      }else{          
+        this.spinner.stop();          
+        $('.loading').remove(); 
+      }
+    }
+  })
 ;
 
 return GistItemListView;

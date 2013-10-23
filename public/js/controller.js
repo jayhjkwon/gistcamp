@@ -82,6 +82,7 @@ define(function(require){
         // Friends Items on the left region
         var friendsItemListView = new FriendsItemListView;
         friendsView.friendsItemList.show(friendsItemListView);
+        friendsItemListView.getWatchingList();
 
         // Followers and Followings on the center region
         var friendsSearchContainerView = new FriendsSearchContainerView;

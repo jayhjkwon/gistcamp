@@ -19,11 +19,15 @@ define(function(require){
     
     FriendsItemListView = Marionette.CollectionView.extend({
       className: 'friends-item-container',
-      itemView: FriendsItemView,
-      collection: new FriendsItemList,
+      itemView: FriendsItemView,      
 
-      initialize: function(){     
-        this.collection.add([{}, {}, {}, {}])  ;
+      initialize: function(){   
+        _.bindAll(this, 'getWatchingList');
+        this.collection = new FriendsItemList;          
+      },
+
+      getWatchingList: function(){
+        this.collection.add([{}, {}, {}, {}]);
       },
 
       onDomRefresh: function(){
@@ -36,6 +40,10 @@ define(function(require){
           forceHelperSize: true
         });
         $('.friends-item-container' ).disableSelection();
+      },
+
+      onRender : function(){
+        $('.friends-item-list').niceScroll({cursorcolor: '#eee'});
       }
     })
   ;
