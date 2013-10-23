@@ -15,6 +15,16 @@ define(function(require){
       className : 'row-fluid',
 
       initialize : function(){
+        _.bindAll(this, 'plus');
+      },
+
+      events: {
+        'click .plus' : 'plus'
+      },
+
+      plus: function(e){
+        Application.execute('view:remove', this.model);
+        this.close();
       },
 
       onRender: function(){

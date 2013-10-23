@@ -24,20 +24,37 @@ define(function(require){
       mode: '',
 
       initialize: function(){     
+        var self = this;
         _.bindAll(this, 'onRender', 'onDomRefresh', 'getFriends', 'getFollowing', 'getFollowers', 'onScroll', 'loadMore', 'loading');
         this.isLoading = false;
         this.collection = new FriendsItemList;  
         this.spinner = new Spinner();
+        var self = this;
+        Application.commands.setHandler('view:remove', function(model){
+          console.log(self.collection.length);
+          // removeChildview(childView);
+          // self.collection.shift();
+          var col = self.collection.remove(model);
+          console.log(self.collection.length);
+        });   
       },
 
       events: {
-        'click .loadmore .btn' : 'loadMore'
+        'click .loadmore .btn' : 'loadMore'/*,
+        'click .plus' : 'plus'*/
+      },
+
+      plus: function(){
+        this.collection.shift();
       },
 
       onDomRefresh: function(){
+
+
       },
 
       onRender : function(){
+
         $('.friends-search-container').niceScroll({cursorcolor: '#eee'});
         // $('.friends-search-container').off('scroll').on('scroll', this.onScroll);
       },
@@ -49,7 +66,7 @@ define(function(require){
         this.isLoading = true;
 
         setTimeout(function(){
-          self.collection.add([{}, {},  {}, {}, {}, {}]);
+          self.collection.add([{id:'test'}, {},  {}, {}, {}, {}]);
           self.isLoading = false;
           self.loading(false); 
           $('.friends-search-container').getNiceScroll().resize();       
