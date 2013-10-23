@@ -11,6 +11,7 @@
 		border-bottom: solid 1px darken(#d8d8d8, 10%);
 		padding:5px 0;
 		.row-fluid-bg();
+
 		&.selected {
 			background-color: #fff !important;
 			background-image: linear-gradient(to bottom, #fff, #fff);
@@ -36,7 +37,7 @@
 		    display:block;
 		}
 
-		.plus {
+		.profile, .name, .plus {
 			display:none;
 		}
 	}
@@ -56,17 +57,78 @@
 	margin-bottom:15px;
 	height: 100%;
 	position:relative;
-	img { 
-		width:60px !important;
-		height:64px !important;
-		max-width:60px !important;
-		margin:5px 0px 5px 5px;
-		border-radius:3px;
+
+	.left {
+		width: 65px;
+		img { 
+			width:60px !important;
+			height:64px !important;
+			max-width:60px !important;
+			margin:5px 0px 5px 5px;
+			border-radius:3px;
+		}
 	}
+
+	.bottom {
+		margin-left: 15px;
+		width: 200px;
+		font-size:11px;
+
+		.blog {
+			a {
+				color: #438eb8;	
+				text-decoration: none;
+				&:hover {
+					font-size:12px;
+				}				
+			}
+		}
+	}
+	
+
+	.profile {
+		margin-top:3px;
+		font-size: 12px;
+		color: #438eb8;
+		// margin:0 0 0 13px;
+		a { 
+			text-decoration: none;
+			color: #438eb8;
+			// margin-left:3px;
+			font-size:11px;			
+			&:hover{
+				font-size:12px;
+			}
+		}
+		i {
+			margin-right:3px;
+		}
+	}
+
+	/*.follow-user{
+		// display:none;
+		font-size:11px;
+		line-height: 15px;
+		padding:2px 0px;
+		margin:0 0 5px 6px;
+		width:60px;
+		text-align: center;
+	}*/
+
 	.detail {
 		margin-left:5px;
-		padding-top:6px;
+		padding-top:5px;
 		.name {
+			height:20px;
+			font-size:13px;
+			font-weight:bold;
+			text-overflow:ellipsis;
+			overflow: hidden;
+			word-break: break-all;
+			margin-left:-2px;
+			margin-bottom:3px;
+		}
+		.login {
 			height:20px;
 			font-size:12px;
 			font-weight:bold;
@@ -98,16 +160,6 @@
 	.minus {
 		top:-5px;
 	}
-
-	.follow-user{
-		display:none;
-		font-size:11px;
-		line-height: 15px;
-		padding:2px 0px;
-		margin:0 0 5px 6px;
-		width:60px;
-		text-align: center;
-	}
 }
 
 .friends-search-container{
@@ -126,11 +178,14 @@
 
 	.row-fluid {
 		.row-fluid-bg();
-		width: 170px;
+		width: 200px;
 		margin:10px;
+		padding-bottom: 3px;
 		border: solid 1px darken(#eee, 20%);	
 		// border-radius:3px;
 		float: left;	
+
+		
 
 		&:hover .plus {
 		    display:block;
@@ -138,11 +193,11 @@
 
 		.minus {
 			display:none;
-		}
+		}		
 	}
 
 	.loadmore {
-		margin:10px 0 0 10px;
+		margin:10px 10px 0 10px;
 	}
 
 	
