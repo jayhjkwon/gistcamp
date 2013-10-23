@@ -25,6 +25,7 @@ define(function(){
     COMMENT_DELETE      : 'COMMENT_DELETE',
     COMMENT_ADD         : 'COMMENT_ADD',
     GIST_STAR_CHANGED   : 'GIST_STAR_CHANGED',
-    STAR                : 'STAR'
+    STAR                : 'STAR',
+    ADD_TO_WATCH        : 'ADD_TO_WATCH'
   };
 });

@@ -23,13 +23,18 @@ define(function(require){
       },
 
       plus: function(e){
-        Application.execute('view:remove', this.model);
+        this.trigger('close', this.model);  // parent view (friendsSearchView) listen this event
+        postalWrapper.publish(constants.ADD_TO_WATCH, this.model);
         this.close();
       },
 
       onRender: function(){
         $('.plus').tipsy({gravity: 's', fade: true});
         $('.minus').tipsy({gravity: 's', fade: true});
+      },
+
+      onClose: function(){
+        $('.tipsy').remove();
       }
     })
   ;

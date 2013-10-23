@@ -16,18 +16,33 @@ define(function(require){
     FriendsItemView = require('./friendsItemView'),
     FriendsItemList = require('models/friendsItemList'),    
     jqueryui     = require('jqueryui'),
+    postalWrapper= require('postalWrapper'),    
     
     FriendsItemListView = Marionette.CollectionView.extend({
       className: 'friends-item-container',
       itemView: FriendsItemView,      
 
       initialize: function(){   
-        _.bindAll(this, 'getWatchingList');
-        this.collection = new FriendsItemList;          
+        _.bindAll(this, 'getWatchingList', 'addWatch');
+        this.collection = new FriendsItemList;      
+        this.subscription = postalWrapper.subscribe(constants.ADD_TO_WATCH, this.addWatch);    
       },
 
       getWatchingList: function(){
         this.collection.add([{}, {}, {}, {}]);
+      },
+
+      addWatch: function(model){
+        this.isAddedFromFriends = true;
+        this.collection.add(model);
+      },
+
+      onAfterItemAdded: function(itemView){
+        console.dir(itemView);
+        if (this.isAddedFromFriends){
+          itemView.$el.hide().show('bounce');
+          this.isAddedFromFriends = false;
+        }
       },
 
       onDomRefresh: function(){
@@ -44,6 +59,10 @@ define(function(require){
 
       onRender : function(){
         $('.friends-item-list').niceScroll({cursorcolor: '#eee'});
+      },
+
+      onClose: function(){
+        this.subscription.unsubscribe();
       }
     })
   ;

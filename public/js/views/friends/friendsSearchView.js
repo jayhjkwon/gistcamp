@@ -12,10 +12,10 @@ define(function(require){
     friendsSearchTemplate  = require('hbs!templates/friends/friendsSearchTemplate'),
     FriendsItemList        = require('models/friendsItemList'), 
     Spinner                = require('spin'),
+    postalWrapper          = require('postalWrapper'),
     
     FriendsSearchView = Marionette.CompositeView.extend({
       template : friendsSearchTemplate,
-      // itemViewContainer : 'div.friends-list',
       itemViewContainer: function(){
         return this.$el.find('.friends-list');
       },
@@ -25,36 +25,26 @@ define(function(require){
 
       initialize: function(){     
         var self = this;
-        _.bindAll(this, 'onRender', 'onDomRefresh', 'getFriends', 'getFollowing', 'getFollowers', 'onScroll', 'loadMore', 'loading');
+        _.bindAll(this, 'removeCardView', 'onRender', 'onDomRefresh', 'getFriends', 'getFollowing', 'getFollowers', 'onScroll', 'loadMore', 'loading');
         this.isLoading = false;
         this.collection = new FriendsItemList;  
         this.spinner = new Spinner();
-        var self = this;
-        Application.commands.setHandler('view:remove', function(model){
-          console.log(self.collection.length);
-          // removeChildview(childView);
-          // self.collection.shift();
-          var col = self.collection.remove(model);
-          console.log(self.collection.length);
-        });   
+        this.on('itemview:close', self.removeCardView);
       },
 
       events: {
-        'click .loadmore .btn' : 'loadMore'/*,
-        'click .plus' : 'plus'*/
+        'click .loadmore .btn' : 'loadMore'
       },
 
-      plus: function(){
-        this.collection.shift();
+      removeCardView: function(childView, model){
+        this.collection.remove(model);
+        console.log(this.collection.length);
       },
 
       onDomRefresh: function(){
-
-
       },
 
       onRender : function(){
-
         $('.friends-search-container').niceScroll({cursorcolor: '#eee'});
         // $('.friends-search-container').off('scroll').on('scroll', this.onScroll);
       },
@@ -65,8 +55,14 @@ define(function(require){
         if(this.isLoading) return;
         this.isLoading = true;
 
+        if(!self.i)
+          self.i = 0;
+        var max = self.i + 5;
         setTimeout(function(){
-          self.collection.add([{id:'test'}, {},  {}, {}, {}, {}]);
+          for(self.i; self.i<max; self.i++){
+            self.collection.add({id:self.i});  
+          }
+          
           self.isLoading = false;
           self.loading(false); 
           $('.friends-search-container').getNiceScroll().resize();       
@@ -76,13 +72,13 @@ define(function(require){
       getFollowing: function(){
         this.mode = 'following';
         this.getFriends();
-        this.collection.add([{}, {}, {}, {}]);
+        // this.collection.add([{}, {}, {}, {}]);
       },
 
       getFollowers: function(){
         this.mode = 'followers';
         this.getFriends();
-        this.collection.add([{}, {}, {}, {}]);
+        // this.collection.add([{}, {}, {}, {}]);
       },
 
       onScroll : function(){
@@ -94,7 +90,6 @@ define(function(require){
       },
       
       loadMore: function(){
-        console.log('loadMore');
         if(this.lastPage) return;
         this.loading(true);
         this.getFriends();
