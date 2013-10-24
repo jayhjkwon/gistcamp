@@ -48,18 +48,17 @@ define(function(require){
       console.log('onMenuChanged');
     },
 
-      // check if elem is visible
-      isScrolledIntoView : function(scrollElem, elem) {
-        var docViewTop = $(scrollElem).scrollTop();
-        var docViewBottom = docViewTop + $(scrollElem).height();
+    // check if elem is visible
+    isScrolledIntoView : function(scrollElem, elem) {
+      var docViewTop = $(scrollElem).scrollTop();
+      var docViewBottom = docViewTop + $(scrollElem).height();
 
-        var elemTop = $(elem).offset().top;
-        var elemBottom = elemTop + $(elem).height();
+      var elemTop = $(elem).offset().top;
+      var elemBottom = elemTop + $(elem).height();
 
-        return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
-      }
-
-    })
+      return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
+    }
+  })
 ;
 
 return GistListView;

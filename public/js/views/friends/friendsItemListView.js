@@ -38,9 +38,10 @@ define(function(require){
       },
 
       onAfterItemAdded: function(itemView){
-        console.dir(itemView);
         if (this.isAddedFromFriends){
           itemView.$el.hide().show('bounce');
+          var list = document.querySelector('.friends-item-list');
+          list.scrollTop = list.scrollHeight;
           this.isAddedFromFriends = false;
         }
       },
