@@ -222,6 +222,13 @@ app.delete('/api/user/following/:login_id', ensureAuthenticated, user.unfollow);
 app.post('/api/evernote/save/:gist_id', ensureAuthenticated, evernote.saveNote);
 app.get('/api/evernote/is_authenticated', ensureAuthenticated, evernote.isEvernoteAuthenticated);
 
+app.get('/api/friends/watch', ensureAuthenticated, user.getWatch);
+app.post('/api/friends/watch', ensureAuthenticated, user.addWatch);
+app.delete('/api/friends/watch', ensureAuthenticated, user.deleteWatch);
+app.get('/api/friends/following', ensureAuthenticated, user.getFollowing);
+app.get('/api/friends/followers', ensureAuthenticated, user.getFollowers);
+
+
 var server = http.createServer(app);
 var io = require('socket.io').listen(server);
 chat.start(io);

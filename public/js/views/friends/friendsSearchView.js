@@ -10,9 +10,11 @@ define(function(require){
     // FriendsItemView        = require('./friendsItemView'),
     FriendsCardView        = require('./friendsCardView'),
     friendsSearchTemplate  = require('hbs!templates/friends/friendsSearchTemplate'),
-    FriendsItemList        = require('models/friendsItemList'), 
+    Friends                = require('models/friends'), 
     Spinner                = require('spin'),
     postalWrapper          = require('postalWrapper'),
+    Friend                 = require('models/friend'),
+    util                   = require('util'),
     
     FriendsSearchView = Marionette.CompositeView.extend({
       template : friendsSearchTemplate,
@@ -23,22 +25,39 @@ define(function(require){
       className: 'friends-search-view',
       mode: '',
 
-      initialize: function(){     
-        var self = this;
-        _.bindAll(this, 'removeCardView', 'onRender', 'onDomRefresh', 'getFriends', 'getFollowing', 'getFollowers', 'onScroll', 'loadMore', 'loading');
+      initialize: function(options){     
+        this.mode = options.mode;
+        _.bindAll(this, 'addCardView', 'removeCardView', 'onRender', 'onDomRefresh', 'getFriends', 'getFollowing', 'getFollowers', 'onScroll', 'loadMore', 'loading');
         this.isLoading = false;
-        this.collection = new FriendsItemList;  
+        this.collection = new Friends();  
         this.spinner = new Spinner();
         this.on('itemview:close', self.removeCardView);
+        this.subscription = postalWrapper.subscribe(constants.REMOVE_FROM_WATCH, this.addCardView);    
       },
 
       events: {
         'click .loadmore .btn' : 'loadMore'
       },
 
+      // TODO : check user passed in is following or follower then add collection if it matches with 'this.mode'
+      addCardView: function(model){
+        this.isAddedFromWatch = true;
+        this.collection.add(model);
+        console.log(this.collection.length);
+      },
+
       removeCardView: function(childView, model){
         this.collection.remove(model);
         console.log(this.collection.length);
+      },
+
+      onAfterItemAdded: function(itemView){
+        if (this.isAddedFromWatch){
+          itemView.$el.hide().show('bounce');
+          var list = document.querySelector('.friends-search-container');
+          list.scrollTop = list.scrollHeight;
+          this.isAddedFromWatch = false;
+        }
       },
 
       onDomRefresh: function(){
@@ -52,33 +71,41 @@ define(function(require){
       getFriends: function(){
         var self = this;
 
-        if(this.isLoading) return;
-        this.isLoading = true;
+        if(self.isLoading) return;
+        self.isLoading = true;
+        self.loading(true);
+        // util.loadSpinner(true);
 
-        if(!self.i)
-          self.i = 0;
-        var max = self.i + 5;
-        setTimeout(function(){
-          for(self.i; self.i<max; self.i++){
-            self.collection.add({id:self.i});  
+        var friends = new Friends({mode: self.mode});
+        // self.collection.fetch({data: {linkHeader: self.linkHeader}})
+        friends.fetch({data: {linkHeader: self.linkHeader}})
+        .done(function(res){
+          if (!self.linkHeader){
+            self.collection.set(res.data);
+          }else{
+            self.collection.add(res.data);
           }
           
+          if (res.hasNextPage){
+            self.linkHeader = res.linkHeader;
+          }else{
+            self.lastPage = true;
+          }           
+        })
+        .always(function(){
           self.isLoading = false;
-          self.loading(false); 
-          $('.friends-search-container').getNiceScroll().resize();       
-        }, 1000);
+          self.loading(false);
+          // util.loadSpinner(false);            
+          $('.friends-search-container').getNiceScroll().resize();          
+        });
       },
 
       getFollowing: function(){
-        this.mode = 'following';
         this.getFriends();
-        // this.collection.add([{}, {}, {}, {}]);
       },
 
       getFollowers: function(){
-        this.mode = 'followers';
         this.getFriends();
-        // this.collection.add([{}, {}, {}, {}]);
       },
 
       onScroll : function(){
@@ -90,27 +117,21 @@ define(function(require){
       },
       
       loadMore: function(){
-        if(this.lastPage) return;
-        this.loading(true);
+        if(this.lastPage) return;        
         this.getFriends();
       },
 
       loading: function(showSpinner){
-        /*if (showSpinner){
-          this.$el.find('.loadmore').prepend('<div style="height:30px;" class="loading"></div>');
-          var target = this.$el.find('.loadmore .loading')[0];
-          this.spinner.spin(target);
-        }else{          
-          this.spinner.stop();          
-          this.$el.find('.loading').remove(); 
-        }*/
-
         if(showSpinner){
           this.$el.find('.loadmore i.icon-spin').addClass('icon-refresh');
         }else{
           this.$el.find('.loadmore i.icon-spin').removeClass('icon-refresh');
 
         }
+      },
+
+      onClose: function(){
+        this.subscription.unsubscribe();
       }
     })
   ;

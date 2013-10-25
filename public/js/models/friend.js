@@ -2,12 +2,17 @@ define(function(require){
   var
   Backbone = require('backbone'),   
   
-  FriendsItemList = Backbone.Collection.extend({
+  Friend  = Backbone.Model.extend({
     initialize: function(options){
       this.id = options ? options.id || null : null;
+    },
+
+    url : function(){
+      // if(this.id)
+      //   return "/api/gist/tags/" + this.id;      
     }     
   })
   ;
 
-  return FriendsItemList;
+  return Friend;
 });

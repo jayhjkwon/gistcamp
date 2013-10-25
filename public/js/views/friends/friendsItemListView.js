@@ -14,7 +14,7 @@ define(function(require){
     File         = require('models/file'),
     nicescroll   = require('nicescroll'),
     FriendsItemView = require('./friendsItemView'),
-    FriendsItemList = require('models/friendsItemList'),    
+    Friends      = require('models/friends'),    
     jqueryui     = require('jqueryui'),
     postalWrapper= require('postalWrapper'),    
     
@@ -23,9 +23,15 @@ define(function(require){
       itemView: FriendsItemView,      
 
       initialize: function(){   
-        _.bindAll(this, 'getWatchingList', 'addWatch');
-        this.collection = new FriendsItemList;      
+        _.bindAll(this, 'getWatchingList', 'addWatch', 'removeItemView');
+        this.collection = new Friends;      
         this.subscription = postalWrapper.subscribe(constants.ADD_TO_WATCH, this.addWatch);    
+        this.on('itemview:close', this.removeItemView);
+      },
+
+      removeItemView: function(childView, model){
+        this.collection.remove(model);
+        console.log(this.collection.length);
       },
 
       getWatchingList: function(){

@@ -88,13 +88,13 @@ define(function(require){
         var friendsSearchContainerView = new FriendsSearchContainerView;
         friendsView.friendsSearchContainer.show(friendsSearchContainerView);
         
-        var followingSearchView = new FriendsSearchView;
+        var followingSearchView = new FriendsSearchView({mode: 'following'});
         friendsSearchContainerView.following.show(followingSearchView);
-        followingSearchView.getFollowing();
+        followingSearchView.getFriends();
         
-        var followersSearchView = new FriendsSearchView;
+        var followersSearchView = new FriendsSearchView({mode: 'followers'});
         friendsSearchContainerView.followers.show(followersSearchView);
-        followersSearchView.getFollowers();
+        followersSearchView.getFriends();
 
         // notify menu selected
         Application.execute(constants.MENU_SELECTED,'friends');

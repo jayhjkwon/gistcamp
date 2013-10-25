@@ -26,6 +26,7 @@ define(function(){
     COMMENT_ADD         : 'COMMENT_ADD',
     GIST_STAR_CHANGED   : 'GIST_STAR_CHANGED',
     STAR                : 'STAR',
-    ADD_TO_WATCH        : 'ADD_TO_WATCH'
+    ADD_TO_WATCH        : 'ADD_TO_WATCH',
+    REMOVE_FROM_WATCH   : 'REMOVE_FROM_WATCH'
   };
 });

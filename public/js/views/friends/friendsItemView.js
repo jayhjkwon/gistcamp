@@ -15,11 +15,26 @@ define(function(require){
       className : 'row-fluid',
 
       initialize : function(){
+        _.bindAll(this, 'minus');
+      },
+
+      events: {
+        'click .minus' : 'minus'
+      },
+
+      minus: function(){
+        this.trigger('close', this.model);  // parent view (friendsItemListView) listen this event
+        postalWrapper.publish(constants.REMOVE_FROM_WATCH, this.model);
+        this.close();
       },
 
       onRender: function(){
         $('.plus').tipsy({gravity: 's', fade: true});
         $('.minus').tipsy({gravity: 's', fade: true});
+      },
+
+      onClose: function(){
+        $('.tipsy').remove();
       }
     })
   ;

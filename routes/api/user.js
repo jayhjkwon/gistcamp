@@ -75,4 +75,91 @@ exports.getAllFollowings = function(req, res, accessToken, callback){
 	});
 };
 
+var sendData = function(data, req, res){
+  console.log('sendData');
+  var github = service.getGitHubApi(req);
+
+  async.series(
+  	[
+	    function(callback){
+	      callback(null);
+	    },
+
+	    function(callback){
+	      res.send({
+	        data: data, 
+	        hasNextPage: github.hasNextPage(data),
+	        linkHeader: data.meta ? data.meta.link ? data.meta.link : null : null
+	      });     
+	      callback(null);
+	    }
+    ]);
+};
+
+var getNextPage = function(linkHeader, req, res){
+  var github = service.getGitHubApi(req);
+
+  github.getNextPage(linkHeader,
+    function(err, data){        
+      if (data) sendData(data, req, res);         
+    }
+  );      
+};
+
+exports.getFollowing = function(req, res){
+  var self = this;    
+  var github = service.getGitHubApi(req);
+
+  console.log('getFollowing');
+  var linkHeader = req.param('linkHeader');   
+
+  if (!linkHeader){
+    github.user.getFollowing({per_page: 20},
+      function(err, data){
+        if (data) {
+          sendData(data, req, res);
+        }
+      }
+    );
+  }else{
+    getNextPage(linkHeader, req, res);
+  }
+};
+
+exports.getFollowers = function(req, res) {
+  var self = this;    
+  var github = service.getGitHubApi(req);
+  var loginName = service.getLoginName(req);
+
+  console.log('getFollowers');
+  console.log('loginName=' + loginName);
+  var linkHeader = req.param('linkHeader');   
+
+  if (!linkHeader){
+    github.user.getFollowers({user: loginName, per_page: 20},
+      function(err, data){
+        if (data) {
+          sendData(data, req, res);
+        }
+      }
+    );
+  }else{
+    getNextPage(linkHeader, req, res);
+  }
+};
+
+exports.getWatch = function(req, res){
+
+};
+
+exports.addWatch = function(req, res){
+
+};
+
+exports.deleteWatch = function(req, res){
+
+};
+
+
+
 
