@@ -32,7 +32,7 @@ define(function(require){
         this.collection = new Friends();  
         this.spinner = new Spinner();
         this.on('itemview:close', self.removeCardView);
-        this.subscription = postalWrapper.subscribe(constants.REMOVE_FROM_WATCH, this.addCardView);    
+        // this.subscription = postalWrapper.subscribe(constants.REMOVE_FROM_WATCH, this.addCardView);    
       },
 
       events: {
@@ -131,7 +131,7 @@ define(function(require){
       },
 
       onClose: function(){
-        this.subscription.unsubscribe();
+        // this.subscription.unsubscribe();
       }
     })
   ;

@@ -17,6 +17,7 @@ define(function(require){
     Friends      = require('models/friends'),    
     jqueryui     = require('jqueryui'),
     postalWrapper= require('postalWrapper'),    
+    Application  = require('application'),
     
     FriendsItemListView = Marionette.CollectionView.extend({
       className: 'friends-item-container',
@@ -25,7 +26,7 @@ define(function(require){
       initialize: function(){   
         _.bindAll(this, 'getWatchingList', 'addWatch', 'removeItemView');
         this.collection = new Friends;      
-        this.subscription = postalWrapper.subscribe(constants.ADD_TO_WATCH, this.addWatch);    
+        Application.reqres.setHandler(constants.ADD_TO_WATCH, this.addWatch)
         this.on('itemview:close', this.removeItemView);
       },
 
@@ -35,12 +36,18 @@ define(function(require){
       },
 
       getWatchingList: function(){
-        this.collection.add([{}, {}, {}, {}]);
+        // this.collection.add([{}, {}, {}, {}]);
       },
 
       addWatch: function(model){
         this.isAddedFromFriends = true;
-        this.collection.add(model);
+        var beforeLength = this.collection.length;
+        var after = this.collection.add(model);
+        if(beforeLength !== after.length){
+          return true;
+        }else{
+          return false;
+        }
       },
 
       onAfterItemAdded: function(itemView){
@@ -69,7 +76,7 @@ define(function(require){
       },
 
       onClose: function(){
-        this.subscription.unsubscribe();
+        Application.reqres.removeHandler(constants.ADD_TO_WATCH);
       }
     })
   ;

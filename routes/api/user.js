@@ -4,9 +4,9 @@ var
 	request   = require('request'),
 	_         = require('lodash'),
 	moment    = require('moment'),
-    async     = require('async'),
-    service   = require('../../infra/service'),
-    User      = require('../../models/user')
+  async     = require('async'),
+  service   = require('../../infra/service'),
+  User      = require('../../models/user')
 ;
 
 exports.getAuthUser = function(req, res){
@@ -75,6 +75,28 @@ exports.getAllFollowings = function(req, res, accessToken, callback){
 	});
 };
 
+var getUserInfo = function(req, data, cb){
+  var github = service.getGitHubApi(req);
+  async.each(
+  	data, 
+  	function(user, callback){
+	    github.user.getFrom({user: user.login}, function(err, u){
+	      user.name = u.name;
+	      user.following    = u.following;
+	      user.followers    = u.followers;
+	      user.public_gists = u.public_gists;
+	      user.blog         = u.blog;
+	      user.html_url     = u.html_url;
+		    callback(null);
+		  });
+  	},
+  	function(err){
+  		cb(null);
+  	}
+  );
+  
+};
+
 var sendData = function(data, req, res){
   console.log('sendData');
   var github = service.getGitHubApi(req);
@@ -82,7 +104,19 @@ var sendData = function(data, req, res){
   async.series(
   	[
 	    function(callback){
-	      callback(null);
+	    	async.parallel(
+	    		[
+		        /*function(cb){
+		          setIsFollowing(req, data, cb);
+		        },*/
+		        function(cb){
+		          getUserInfo(req, data, cb);
+		        }
+		      ],
+	        function(err, results){
+	          callback(null);
+	        }
+        )
 	    },
 
 	    function(callback){

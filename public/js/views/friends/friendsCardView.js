@@ -24,8 +24,8 @@ define(function(require){
 
       plus: function(e){
         this.trigger('close', this.model);  // parent view (friendsSearchView) listen this event
-        postalWrapper.publish(constants.ADD_TO_WATCH, this.model);
-        this.close();
+        var ack = Application.request(constants.ADD_TO_WATCH, this.model);
+        // if (ack) this.close();
       },
 
       onRender: function(){
@@ -34,7 +34,7 @@ define(function(require){
       },
 
       onClose: function(){
-        $('.tipsy').remove();
+        if ($('.tipsy')) $('.tipsy').remove();
       }
     })
   ;
