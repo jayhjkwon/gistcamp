@@ -7,7 +7,7 @@
 
 .friends-item-container {
 	.row-fluid {
-		cursor: move;
+		cursor: pointer;
 		border-bottom: solid 1px darken(#d8d8d8, 10%);
 		padding:5px 0;
 		.row-fluid-bg();
@@ -53,7 +53,6 @@
 }
 
 .friends-item {
-	// cursor:pointer;
 	margin-bottom:15px;
 	height: 100%;
 	position:relative;
@@ -61,6 +60,7 @@
 	.left {
 		width: 65px;
 		img { 
+			cursor: move;
 			width:60px !important;
 			height:64px !important;
 			max-width:60px !important;

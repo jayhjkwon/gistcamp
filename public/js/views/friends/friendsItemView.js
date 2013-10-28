@@ -17,11 +17,19 @@ define(function(require){
       className : 'row-fluid',
 
       initialize : function(){
-        _.bindAll(this, 'minus');
+        _.bindAll(this, 'minus', 'viewClicked');
+        // this.on('click', this.viewClicked);
       },
 
       events: {
-        'click .minus' : 'minus'
+        'click .minus' : 'minus',
+        'click' : 'viewClicked'
+      },
+
+      viewClicked: function(e){
+        $('.friends-item-container .row-fluid').removeClass('selected');
+        this.$el.addClass('selected');
+        postalWrapper.publish(constants.WATCH_ITEM_CLICK, this.model);
       },
 
       minus: function(){

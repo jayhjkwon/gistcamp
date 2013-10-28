@@ -15,6 +15,7 @@ define(function(require){
   service         = require('service'),
   File            = require('models/file'),
   nicescroll      = require('nicescroll'),
+  postalWrapper   = require('postalWrapper'),
   
   GistItemListView = Marionette.CollectionView.extend({
     className: 'gist-item-container',
@@ -23,20 +24,26 @@ define(function(require){
     xhrs : [],    
 
     initialize: function(){       
+      var self = this;
       _.bindAll(this, 'getGistList', 'onRender', 'onScroll', 'handleGist', 'setFileContent', 'onClose');
       this.isLoading = false;
       this.xhrs.length = 0;
       this.spinner = new Spinner();
-      util.loadSpinner(true);
+      this.subscribe = postalWrapper.subscribe(constants.WATCH_ITEM_CLICK, function(model){
+        self.lastPage = self.linkHeader = null;
+        self.getGistListByUser(model.get('login'));
+      });
     },
 
-    getGistList: function(mode, tagId){
+    getGistList: function(mode, options){
       var self = this;
+      var options = options || {};
       
       if (self.isLoading) return;
       self.isLoading = true;
+      util.loadSpinner(true);
 
-      var gistItemList = new GistItemList({'gistDataMode': mode, tagId: tagId });
+      var gistItemList = new GistItemList({'gistDataMode': mode, tagId: options.tagId, userId: options.userId });
       gistItemList.fetch({data: {linkHeader: self.linkHeader}})
       .done(function(res){
         if (!self.linkHeader){
@@ -85,7 +92,8 @@ define(function(require){
         if (s === 'pending') {
             xhr.abort();  // abort ajax requests those are not completed
           }
-        });
+      });
+      this.subscribe.unsubscribe();
     },
     
     getSharedGistList:function(){
@@ -94,8 +102,8 @@ define(function(require){
     getPublicGistList: function(){
       this.getGistList(constants.GIST_PUBLIC);
     },
-    getGistListByUser: function(){
-      this.getGistList(constants.GIST_LIST_BY_USER);
+    getGistListByUser: function(userId){
+      this.getGistList(constants.GIST_LIST_BY_USER, {userId: userId});
     },  
     getStarredGistList: function(){
       this.getGistList(constants.GIST_STARRED);
@@ -104,7 +112,7 @@ define(function(require){
       this.getGistList(constants.GIST_FRIENDS_GISTS);
     },    
     getTaggedGistList: function(tagId, tagUrl){
-      this.getGistList(constants.GIST_TAGGED_GISTS, tagId);
+      this.getGistList(constants.GIST_TAGGED_GISTS, {tagId: tagId});
     },
     setFirstItemSelected: function(){
       $('.gist-item').first().trigger('click');
@@ -116,7 +124,7 @@ define(function(require){
       },
     onScroll : function(){
       var w = $('.gist-list');
-      // console.log(w.scrollTop() + ', ' + w.height() + ', ' + w.scrollTop() + w.height() + ', ' + $('.gist-item-container').height());
+      console.log(w.scrollTop() + ', ' + w.height() + ', ' + (parseInt(w.scrollTop()) + parseInt(w.height())) + ', ' + $('.gist-item-container').height());
       if(w.scrollTop() + w.height() >= $('.gist-item-container').height()) {
         this.loadMore();
       }

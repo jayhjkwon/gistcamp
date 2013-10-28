@@ -105,10 +105,16 @@ define(function(require){
         var gistListView = new GistListView();
         shellView.main.show(gistListView);
         shellView.showFooterRegion();
+        shellView.showWatchRegion();
+
+        // watch list on the left region
+        var friendsItemListView = new FriendsItemListView;
+        gistListView.friendsItemList.show(friendsItemListView);
+        friendsItemListView.getWatchingList();
 
         // Gist Item on the left region
         var gistItemListView = new GistItemListView;
-        gistItemListView.getFriendsGistList();              
+        // gistItemListView.getGistListByUser();              
         gistListView.gistItemList.show(gistItemListView);
 
         // Gist Files on the center region

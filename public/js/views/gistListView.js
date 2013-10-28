@@ -29,6 +29,7 @@ define(function(require){
     template : gistListTemplate,
 
     regions : {
+      friendsItemList : '#friends-item-list',
       gistItemList    : '#gist-item-list',
       filesWrapper    : '#files-wrapper',
       commentsWrapper : '#comments-wrapper'

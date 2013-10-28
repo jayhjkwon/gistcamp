@@ -24,7 +24,7 @@ define(function(require){
       itemView: FriendsItemView,      
 
       initialize: function(){   
-        _.bindAll(this, 'getWatchingList', 'addWatch', 'removeItemView');
+        _.bindAll(this, 'getWatchingList', 'addWatch', 'removeItemView', 'onDomRefresh');
         this.collection = new Friends;      
         Application.reqres.setHandler(constants.ADD_TO_WATCH, this.addWatch)
         this.on('itemview:close', this.removeItemView);
@@ -32,7 +32,7 @@ define(function(require){
 
       removeItemView: function(childView, model){
         this.collection.remove(model);
-        console.log(this.collection.length);
+        console.log('collection length=' + this.collection.length);
       },
 
       getWatchingList: function(){
@@ -41,7 +41,16 @@ define(function(require){
         var friends = new Friends({mode: 'watch'});
         friends.fetch().done(function(res){
           self.collection.set(res);
+          self.setFirstItemSelect();
         });
+      },
+
+      setFirstItemSelect: function(){
+        var self = this;
+        // self.$el.find('.row-fluid').first().trigger('click');
+        if (self.collection.length > 0) {
+          this.children.findByModel(self.collection.at(0)).viewClicked(self.collection.at(0));
+        }
       },
 
       addWatch: function(model){
@@ -65,13 +74,22 @@ define(function(require){
       },
 
       onDomRefresh: function(){
+        var self = this;
+        var firstIndex, updateIndex;
+
         $('.friends-item-container' ).sortable({
           delay: 100, 
           distance: 15, 
           tolerance: 'pointer',
           revert: 'invalid',
           placeholder: 'placeholder',
-          forceHelperSize: true
+          forceHelperSize: true,
+          update: function(event, ui){
+            var index = self.$el.find('.row-fluid').index(self.$el.find('.row-fluid.selected'));
+            console.log('update=' + index);
+            var loginId = self.$el.find('.row-fluid.selected .friends-item').attr('data-login');
+            console.log('loginId=' + loginId);
+          }
         });
         $('.friends-item-container' ).disableSelection();
       },

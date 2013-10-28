@@ -225,8 +225,10 @@ app.get('/api/evernote/is_authenticated', ensureAuthenticated, evernote.isEverno
 app.get('/api/friends/watch', ensureAuthenticated, user.getWatch);
 app.post('/api/friends/watch/:login_id', ensureAuthenticated, user.addWatch);
 app.delete('/api/friends/watch/:login_id', ensureAuthenticated, user.deleteWatch);
+app.post('/api/friends/watch/sort/:login_id/:new_index', ensureAuthenticated, user.sortWatch);
 app.get('/api/friends/following', ensureAuthenticated, user.getFollowing);
 app.get('/api/friends/followers', ensureAuthenticated, user.getFollowers);
+
 
 
 var server = http.createServer(app);

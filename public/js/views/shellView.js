@@ -21,6 +21,11 @@ define(function(require){
       showFooterRegion: function(){
         $('#main .main-content').css("bottom", "70px");
         $('#footer').show();
+      },
+      showWatchRegion: function(){
+        // $('.gist-list .gist-item img').css({'display':'none !important'});
+        $('.gist-list').css({'left': '171px'});        
+        $('.files-wrapper').css({'left' : '472px'});
       }
     })
   ;

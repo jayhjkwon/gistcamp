@@ -236,6 +236,13 @@ exports.deleteWatch = function(req, res){
 
 };
 
+exports.sortWatch = function(req, res){
+  var github = service.getGitHubApi(req);  
+  var userId = service.getUserId(req);
+  var login = req.params.login_id;
+  var newIndex = req.params.new_index;
 
+  
+};
 
 
