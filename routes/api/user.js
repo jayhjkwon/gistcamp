@@ -81,14 +81,15 @@ var getUserInfo = function(req, data, cb){
   	data, 
   	function(user, callback){
 	    github.user.getFrom({user: user.login}, function(err, u){
-	      user.name = u.name;
+	      /*user.name = u.name;
 	      user.following    = u.following;
 	      user.followers    = u.followers;
 	      user.public_gists = u.public_gists;
 	      user.blog         = u.blog;
-	      user.html_url     = u.html_url;
-		    callback(null);
-		  });
+	      user.html_url     = u.html_url;*/
+	      _.extend(user, u);
+	      callback(null);
+	    });
   	},
   	function(err){
   		cb(null);
@@ -183,14 +184,55 @@ exports.getFollowers = function(req, res) {
 };
 
 exports.getWatch = function(req, res){
+  var github = service.getGitHubApi(req);
+	var userId = service.getUserId(req);
 
+	User.find({id: userId}).select('watch').lean().exec(function(err, docs){
+		res.send(docs[0].watch);
+	});
 };
 
 exports.addWatch = function(req, res){
+	var github = service.getGitHubApi(req);
+	var login = req.params.login_id;
+	var userId = service.getUserId(req);
 
+	github.user.getFrom({user: login}, function(err, userInfo){
+		User.update({id:userId}, {$pull: {watch: {login: login}}}, {}, function(err, numberAffected){
+		  console.dir(userInfo);
+		  var save = {};
+		  _.extend(save, { 
+		  	login        : userInfo.login,
+		  	id           : userInfo.id,
+		  	avatar_url   : userInfo.avatar_url,
+		  	url          : userInfo.url,
+		  	html_url     : userInfo.html_url,
+		  	type         : userInfo.type,
+		  	name         : userInfo.name,
+		  	company      : userInfo.company,
+		  	blog         : userInfo.blog,
+		  	location     : userInfo.location,
+		  	email        : userInfo.email,
+		  	followers    : userInfo.followers,
+		  	following    : userInfo.following,
+		  	public_gists : userInfo.public_gists
+		  });
+	    User.update({id:userId}, {$addToSet:{watch:save}}, {}, function(err, numberAffected, raw){
+				res.send(userInfo);	
+			});		
+		});		
+	});
+	
 };
 
 exports.deleteWatch = function(req, res){
+	var github = service.getGitHubApi(req);
+	var login = req.params.login_id;
+	var userId = service.getUserId(req);
+
+	User.update({id:userId}, {$pull: {watch: {login: login}}}, {}, function(err, numberAffected){
+	  res.send({login: login});	
+	});		
 
 };
 

@@ -9,6 +9,7 @@ define(function(require){
     postalWrapper   = require('postalWrapper'),
     friendsCardTemplate= require('hbs!templates/friends/friendsCardTemplate'),
     tipsy           = require('tipsy'),
+    Friend          = require('models/friend'),
     
     FriendsCardView = Marionette.ItemView.extend({
       template : friendsCardTemplate,
@@ -23,9 +24,16 @@ define(function(require){
       },
 
       plus: function(e){
-        this.trigger('close', this.model);  // parent view (friendsSearchView) listen this event
-        var ack = Application.request(constants.ADD_TO_WATCH, this.model);
-        // if (ack) this.close();
+        // note that notify first then save it backend
+        // TODO: remove watch from the list on the left when error occurs
+        var self = this;
+        var ack = Application.request(constants.ADD_TO_WATCH, self.model);
+        if (ack) {
+          var friend = new Friend({mode: 'add_watch', loginId:this.model.get('login')});
+          friend.save().done(function(data){
+            self.trigger('close', self.model);  // parent view (friendsSearchView) listen this event
+          });
+        }
       },
 
       onRender: function(){

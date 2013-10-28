@@ -36,7 +36,12 @@ define(function(require){
       },
 
       getWatchingList: function(){
+        var self = this;
         // this.collection.add([{}, {}, {}, {}]);
+        var friends = new Friends({mode: 'watch'});
+        friends.fetch().done(function(res){
+          self.collection.set(res);
+        });
       },
 
       addWatch: function(model){
