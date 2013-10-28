@@ -18,6 +18,7 @@ define(function(require){
     jqueryui     = require('jqueryui'),
     postalWrapper= require('postalWrapper'),    
     Application  = require('application'),
+    Friend       = require('models/friend'),
     
     FriendsItemListView = Marionette.CollectionView.extend({
       className: 'friends-item-container',
@@ -89,6 +90,11 @@ define(function(require){
             console.log('update=' + index);
             var loginId = self.$el.find('.row-fluid.selected .friends-item').attr('data-login');
             console.log('loginId=' + loginId);
+
+            var friend = new Friend({mode: 'sort', loginId: loginId, newIndex: index});
+            friend.save().done(function(res){
+
+            });
           }
         });
         $('.friends-item-container' ).disableSelection();

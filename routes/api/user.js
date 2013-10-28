@@ -242,7 +242,19 @@ exports.sortWatch = function(req, res){
   var login = req.params.login_id;
   var newIndex = req.params.new_index;
 
-  
+  User.find({id: userId}).select('watch').lean().exec(function(err, docs){
+		var oldWatch = docs[0].watch;
+		var watchToMove = _.find(oldWatch, function(w){
+			return w.login === login;
+		});
+		var oldWatchWithout = _.reject(oldWatch, function(w){
+			return w.login === login;
+		});
+		oldWatchWithout.splice(parseInt(newIndex), 0, watchToMove);
+		User.update({id:userId}, {$set: {watch: oldWatchWithout}}, {}, function(err, numberAffected){
+		  res.send({login: login});	
+		});				
+	});
 };
 
 

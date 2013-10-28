@@ -7,7 +7,7 @@ define(function(require){
   	model: Friend,
     initialize: function(options){
       this.id = options ? options.id || null : null;
-      this.mode = options ? options.mode || null : null;
+      this.mode = options ? options.mode || null : null;      
     },
     url: function(){
     	if (this.mode === 'following')
@@ -15,7 +15,7 @@ define(function(require){
       else if (this.mode === 'followers')
         return '/api/friends/followers'
       else if (this.mode === 'watch')
-        return '/api/friends/watch'
+        return '/api/friends/watch'      
     }     
   })
   ;

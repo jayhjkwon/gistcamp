@@ -114,7 +114,6 @@ define(function(require){
 
         // Gist Item on the left region
         var gistItemListView = new GistItemListView;
-        // gistItemListView.getGistListByUser();              
         gistListView.gistItemList.show(gistItemListView);
 
         // Gist Files on the center region
@@ -124,6 +123,8 @@ define(function(require){
         // Comments on the right region
         var commentsWrapperView = new CommentsWrapperView;
         gistListView.commentsWrapper.show(commentsWrapperView);
+
+
 
         Application.execute(constants.MENU_SELECTED,'friends');
       },
