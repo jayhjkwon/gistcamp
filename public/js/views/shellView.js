@@ -25,8 +25,8 @@ define(function(require){
       showWatchRegion: function(){
         // $('.gist-list .gist-item img').css({'display':'none !important'});
         // $('.gist-item-container .row-fluid .gist-item .span3').hide();
-        $('.gist-list').addClass('watch-list-mode').css({'left': '171px'});        
-        $('.files-wrapper').css({'left' : '472px'});
+        $('.gist-list').css({'left': '174px'});        
+        $('.files-wrapper').css({'left' : '476px'});
       }
     })
   ;

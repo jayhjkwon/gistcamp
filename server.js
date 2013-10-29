@@ -23,9 +23,10 @@ var
 var app = express();
 
 // TODO : Remove uncaughtexception
-/*process.on('uncaughtException', function(err){
-  console.error('Caught exception: ' + err);
-});*/
+process.on('uncaughtException', function(err){
+  console.error('Uncaught exception: ' + err.stack);
+  process.exit(1);
+});
 
 var GITHUB_CLIENT_ID;
 var GITHUB_CLIENT_SECRET;

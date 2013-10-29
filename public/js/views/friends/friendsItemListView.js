@@ -29,6 +29,7 @@ define(function(require){
         this.collection = new Friends;      
         Application.reqres.setHandler(constants.ADD_TO_WATCH, this.addWatch)
         this.on('itemview:close', this.removeItemView);
+        $('.friends-item-list').show();
       },
 
       removeItemView: function(childView, model){
@@ -36,21 +37,37 @@ define(function(require){
         console.log('collection length=' + this.collection.length);
       },
 
-      getWatchingList: function(){
+      getWatchingList: function(loginId){
         var self = this;
         // this.collection.add([{}, {}, {}, {}]);
         var friends = new Friends({mode: 'watch'});
         friends.fetch().done(function(res){
           self.collection.set(res);
-          self.setFirstItemSelect();
+          if(loginId)
+            self.setItemSelect(loginId);
+          else
+            if (window.location.hash.indexOf('#friends/gists') > -1)
+              self.setFirstItemSelect();          
         });
+      },
+
+      setItemSelect: function(loginId){
+        var self = this;
+        if (self.collection.length > 0){
+          var selectedModel = self.collection.findWhere({login: loginId});
+          if (selectedModel){
+            self.children.findByModel(selectedModel).selectThisView(selectedModel);
+          }
+        }
       },
 
       setFirstItemSelect: function(){
         var self = this;
         // self.$el.find('.row-fluid').first().trigger('click');
         if (self.collection.length > 0) {
-          this.children.findByModel(self.collection.at(0)).viewClicked(self.collection.at(0));
+          // this.children.findByModel(self.collection.at(0)).selectThisView(self.collection.at(0));
+          // self.setItemSelect(self.collection.at(0).get('login'));
+          window.location.hash='friends/gists/' + self.collection.at(0).get('login');
         }
       },
 

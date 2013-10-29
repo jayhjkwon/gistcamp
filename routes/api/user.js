@@ -188,7 +188,10 @@ exports.getWatch = function(req, res){
 	var userId = service.getUserId(req);
 
 	User.find({id: userId}).select('watch').lean().exec(function(err, docs){
-		res.send(docs[0].watch);
+		var watch = _.filter(docs[0].watch, function(w){
+			return w;	// check if content is null
+		});
+		res.send(watch);
 	});
 };
 
@@ -242,8 +245,17 @@ exports.sortWatch = function(req, res){
   var login = req.params.login_id;
   var newIndex = req.params.new_index;
 
+  console.log('login=' + login);
+  console.log('newIndex=' + newIndex);
+
+  if (!login || !newIndex)
+  	res.send(404);
+
   User.find({id: userId}).select('watch').lean().exec(function(err, docs){
-		var oldWatch = docs[0].watch;
+		// var oldWatch = docs[0].watch;
+		var oldWatch = _.filter(docs[0].watch, function(w){
+			return w;	// check if content is null
+		});
 		var watchToMove = _.find(oldWatch, function(w){
 			return w.login === login;
 		});

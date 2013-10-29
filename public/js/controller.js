@@ -100,7 +100,7 @@ define(function(require){
         Application.execute(constants.MENU_SELECTED,'friends');
       },
 
-      friendsGists : function(){
+      friendsGists : function(loginId){
         // LayoutView with regions
         var gistListView = new GistListView();
         shellView.main.show(gistListView);
@@ -110,7 +110,7 @@ define(function(require){
         // watch list on the left region
         var friendsItemListView = new FriendsItemListView;
         gistListView.friendsItemList.show(friendsItemListView);
-        friendsItemListView.getWatchingList();
+        friendsItemListView.getWatchingList(loginId);
 
         // Gist Item on the left region
         var gistItemListView = new GistItemListView;

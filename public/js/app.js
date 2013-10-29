@@ -128,7 +128,7 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 			var moveToGist = function(moveUp){
 				var nextGist ;
 				var gistList = $('.gist-item-container .row-fluid');
-	    		var selectedGist = $('.row-fluid.selected');
+	    		var selectedGist = $('.gist-item-container .row-fluid.selected');
 	    		var selectedGistIndex = gistList.index(selectedGist);
 
 				if (moveUp){

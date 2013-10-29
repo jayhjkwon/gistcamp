@@ -17,8 +17,7 @@ define(function(require){
       className : 'row-fluid',
 
       initialize : function(){
-        _.bindAll(this, 'minus', 'viewClicked');
-        // this.on('click', this.viewClicked);
+        _.bindAll(this, 'minus', 'viewClicked', 'selectThisView', 'setSelectedClass');
       },
 
       events: {
@@ -27,12 +26,24 @@ define(function(require){
       },
 
       viewClicked: function(e){
-        $('.friends-item-container .row-fluid').removeClass('selected');
-        this.$el.addClass('selected');
+        if(window.location.hash.indexOf('#friends/gists') > -1){
+          window.location.hash='friends/gists/' + this.model.get('login');          
+        }
+        this.setSelectedClass();
+      },
+
+      selectThisView: function(){
+        this.setSelectedClass();
         postalWrapper.publish(constants.WATCH_ITEM_CLICK, this.model);
       },
 
-      minus: function(){
+      setSelectedClass: function(){
+        $('.friends-item-container .row-fluid').removeClass('selected');
+        this.$el.addClass('selected');
+      },
+
+      minus: function(e){
+        e.stopImmediatePropagation();
         var self = this;
         var friend = new Friend({mode: 'remove_watch', id: this.model.get('id'), loginId:this.model.get('login')});
         friend.destroy().done(function(data){
