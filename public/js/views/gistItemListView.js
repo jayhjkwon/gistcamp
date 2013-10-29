@@ -31,7 +31,17 @@ define(function(require){
       this.spinner = new Spinner();
       this.subscribe = postalWrapper.subscribe(constants.WATCH_ITEM_CLICK, function(model){
         self.lastPage = self.linkHeader = null;
+        self.abortXHRs();
         self.getGistListByUser(model.get('login'));
+      });
+    },
+
+    abortXHRs: function(){
+      _.each(self.xhrs, function(xhr){
+        var s = xhr.state();
+        if (s === 'pending') {
+            xhr.abort();  // abort ajax requests those are not completed
+        }
       });
     },
 
@@ -86,13 +96,14 @@ define(function(require){
     },
 
     onClose: function(){
-      var self = this;
+      /*var self = this;
       _.each(self.xhrs, function(xhr){
         var s = xhr.state();
         if (s === 'pending') {
             xhr.abort();  // abort ajax requests those are not completed
           }
-      });
+      });*/
+      this.abortXHRs();
       this.subscribe.unsubscribe();
     },
     
