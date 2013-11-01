@@ -59,11 +59,11 @@ define(function(require){
       onRender: function(){
         // $('.plus').tipsy({gravity: 's', fade: true});
         
-        if (window.location.hash.indexOf('friends/gists') > -1){
+        /*if (window.location.hash.indexOf('friends/gists') > -1){
           $('.minus').hide();
         }else{
           $('.minus').tipsy({gravity: 's', fade: true});  
-        }
+        }*/
       },
 
       onClose: function(){

@@ -19,9 +19,15 @@ define(function(require){
     postalWrapper= require('postalWrapper'),    
     Application  = require('application'),
     Friend       = require('models/friend'),
+    friendsItemListTemplate = require('hbs!templates/friends/friendsItemListTemplate'),
+    tipsy        = require('tipsy'),
     
-    FriendsItemListView = Marionette.CollectionView.extend({
+    FriendsItemListView = Marionette.CompositeView.extend({
+      template: friendsItemListTemplate,
       className: 'friends-item-container',
+      itemViewContainer: function(){
+        return this.$el.find('.friends-item-list-sub-container');
+      },
       itemView: FriendsItemView,      
 
       initialize: function(){   
@@ -88,13 +94,18 @@ define(function(require){
           list.scrollTop = list.scrollHeight;
           this.isAddedFromFriends = false;
         }
+        if (window.location.hash.indexOf('friends/gists') > -1){
+          $('.minus').hide();
+        }else{
+          $('.minus').tipsy({gravity: 's', fade: true});  
+        }
       },
 
       onDomRefresh: function(){
         var self = this;
         var firstIndex, updateIndex;
 
-        $('.friends-item-container' ).sortable({
+        $('.friends-item-list-sub-container' ).sortable({
           delay: 100, 
           distance: 15, 
           tolerance: 'pointer',
@@ -113,15 +124,24 @@ define(function(require){
             });
           }
         });
-        $('.friends-item-container' ).disableSelection();
+        $('.friends-item-list-sub-container' ).disableSelection();
+
+        if (window.location.hash.indexOf('friends/gists') > -1){
+          $('.friends-settings-link').tipsy({gravity: 'w', fade: true}); 
+        }
+
+        if (window.location.hash.indexOf('friends/list') > -1){
+          $('.friends-settings-link').hide();
+        }
       },
 
       onRender : function(){
-        $('.friends-item-list').niceScroll({cursorcolor: '#eee'});
+        $('.friends-item-list').niceScroll({cursorcolor: '#eee'});         
       },
 
       onClose: function(){
         Application.reqres.removeHandler(constants.ADD_TO_WATCH);
+        if ($('.tipsy')) $('.tipsy').remove();
       }
     })
   ;
