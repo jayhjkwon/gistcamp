@@ -27,7 +27,10 @@ define(function(require){
 
       viewClicked: function(e){
         if(window.location.hash.indexOf('#friends/gists') > -1){
-          window.location.hash='friends/gists/' + this.model.get('login');          
+          var Router = require('router');
+          var router = new Router;
+          router.navigate('friends/gists/' + this.model.get('login'), {trigger: false, replace:true});
+          this.selectThisView();
         }
         this.setSelectedClass();
       },
@@ -54,8 +57,13 @@ define(function(require){
       },
 
       onRender: function(){
-        $('.plus').tipsy({gravity: 's', fade: true});
-        $('.minus').tipsy({gravity: 's', fade: true});
+        // $('.plus').tipsy({gravity: 's', fade: true});
+        
+        if (window.location.hash.indexOf('friends/gists') > -1){
+          $('.minus').hide();
+        }else{
+          $('.minus').tipsy({gravity: 's', fade: true});  
+        }
       },
 
       onClose: function(){

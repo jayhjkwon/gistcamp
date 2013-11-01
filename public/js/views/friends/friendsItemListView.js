@@ -39,14 +39,13 @@ define(function(require){
 
       getWatchingList: function(loginId){
         var self = this;
-        // this.collection.add([{}, {}, {}, {}]);
         var friends = new Friends({mode: 'watch'});
         friends.fetch().done(function(res){
           self.collection.set(res);
           if(loginId)
             self.setItemSelect(loginId);
           else
-            if (window.location.hash.indexOf('#friends/gists') > -1)
+            if (window.location.hash.indexOf('friends/gists') > -1)
               self.setFirstItemSelect();          
         });
       },

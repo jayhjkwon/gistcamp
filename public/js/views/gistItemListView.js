@@ -130,9 +130,10 @@ define(function(require){
     },        
     onRender : function(){
       $('.gist-list').niceScroll({cursorcolor: '#eee'});
-        // register scroll event handler, this shuld be registered after view rendered
-        $('.gist-list').off('scroll').on('scroll', this.onScroll);
-      },
+      // register scroll event handler, this shuld be registered after view rendered
+      $('.gist-list').off('scroll').on('scroll', this.onScroll);
+      
+    },
     onScroll : function(){
       var w = $('.gist-list');
       console.log(w.scrollTop() + ', ' + w.height() + ', ' + (parseInt(w.scrollTop()) + parseInt(w.height())) + ', ' + $('.gist-item-container').height());

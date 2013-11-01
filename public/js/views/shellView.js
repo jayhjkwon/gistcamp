@@ -23,10 +23,8 @@ define(function(require){
         $('#footer').show();
       },
       showWatchRegion: function(){
-        // $('.gist-list .gist-item img').css({'display':'none !important'});
-        // $('.gist-item-container .row-fluid .gist-item .span3').hide();
-        $('.gist-list').css({'left': '174px'});        
-        $('.files-wrapper').css({'left' : '476px'});
+        $('.gist-list').css({'left': '224px', 'width': '220px'});        
+        $('.files-wrapper').css({'left' : '446px'});
       }
     })
   ;
