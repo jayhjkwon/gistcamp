@@ -21,6 +21,7 @@ define(function(require){
       showFooterRegion: function(){
         $('#main .main-content').css("bottom", "70px");
         $('#footer').show();
+        
       }
     })
   ;
