@@ -11,7 +11,7 @@
       <div class="item">
     {{/if}}
     {{#if isMarkdown}}
-      <pre class="prettyprint">{{{file_content}}}</pre>
+      <div class="github-markdown">{{{file_content}}}</div>
     {{else}}
       {{#if isImage}}
         <pre><img src="{{raw_url}}" /></pre>
