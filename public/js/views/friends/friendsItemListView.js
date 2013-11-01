@@ -45,7 +45,7 @@ define(function(require){
           if(loginId)
             self.setItemSelect(loginId);
           else
-            if (window.location.hash.indexOf('friends/gists') > -1)
+            if (window.location.hash.indexOf('friends/list') === -1)
               self.setFirstItemSelect();          
         });
       },
