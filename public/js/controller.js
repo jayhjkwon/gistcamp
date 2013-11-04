@@ -97,7 +97,7 @@ define(function(require){
         followersSearchView.getFriends();
 
         // notify menu selected
-        Application.execute(constants.MENU_SELECTED,'friends');
+        Application.execute(constants.MENU_SELECTED,'friends/list');
       },
 
       friendsGists : function(loginId){
@@ -126,7 +126,7 @@ define(function(require){
 
 
 
-        Application.execute(constants.MENU_SELECTED,'friends');
+        Application.execute(constants.MENU_SELECTED,'friends/gists');
       },
       
       myGists : function(){
