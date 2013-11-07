@@ -17,9 +17,11 @@ var
   evernote = require('./routes/api/evernote'),
   connectDomain = require("connect-domain"),
   moment   = require('moment'),
-  MongoStore = require('connect-mongo')(express)
+  MongoStore = require('connect-mongo')(express),
+  GistcampBookshelf = require('./models/models')
 ;
 
+console.dir(GistcampBookshelf);
 var app = express();
 
 // TODO : Remove uncaughtexception
