@@ -8,12 +8,13 @@ var
 GistcampBookshelf = Bookshelf.initialize({
 	client: 'sqlite3',
 	connection: {
-		filename: path.join(__dirname, '/data/gistcamp.db')			
+		filename: path.join(__dirname, '/data/gistcamp-dev.db')			
 	}
 });
 
 GistcampBookshelf.User = GistcampBookshelf.Model.extend({
-
+	tableName: 'users',
+	hasTimestamps: true
 });
 
 GistcampBookshelf.Tag = GistcampBookshelf.Model.extend({
