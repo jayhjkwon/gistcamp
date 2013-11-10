@@ -23,8 +23,8 @@ define(function(require){
         $('#footer').show();
       },
       showWatchRegion: function(){
-        $('.gist-list').css({'left': '224px', 'width': '220px'});        
-        $('.files-wrapper').css({'left' : '446px'});
+        $('.gist-list').css({'left': '204px', 'width': '220px'});        
+        $('.files-wrapper').css({'left' : '426px'});
       }
     })
   ;
