@@ -21,7 +21,10 @@ define(function(require){
       showFooterRegion: function(){
         $('#main .main-content').css("bottom", "70px");
         $('#footer').show();
-        
+      },
+      showWatchRegion: function(){
+        $('.gist-list').css({'left': '224px', 'width': '220px'});        
+        $('.files-wrapper').css({'left' : '446px'});
       }
     })
   ;

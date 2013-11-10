@@ -23,9 +23,10 @@ var
 var app = express();
 
 // TODO : Remove uncaughtexception
-/*process.on('uncaughtException', function(err){
-  console.error('Caught exception: ' + err);
-});*/
+process.on('uncaughtException', function(err){
+  console.error('Uncaught exception: ' + err.stack);
+  process.exit(1);
+});
 
 var GITHUB_CLIENT_ID;
 var GITHUB_CLIENT_SECRET;
@@ -221,6 +222,15 @@ app.delete('/api/user/following/:login_id', ensureAuthenticated, user.unfollow);
 
 app.post('/api/evernote/save/:gist_id', ensureAuthenticated, evernote.saveNote);
 app.get('/api/evernote/is_authenticated', ensureAuthenticated, evernote.isEvernoteAuthenticated);
+
+app.get('/api/friends/watch', ensureAuthenticated, user.getWatch);
+app.post('/api/friends/watch/:login_id', ensureAuthenticated, user.addWatch);
+app.delete('/api/friends/watch/:login_id', ensureAuthenticated, user.deleteWatch);
+app.post('/api/friends/watch/sort/:login_id/:new_index', ensureAuthenticated, user.sortWatch);
+app.get('/api/friends/following', ensureAuthenticated, user.getFollowing);
+app.get('/api/friends/followers', ensureAuthenticated, user.getFollowers);
+
+
 
 var server = http.createServer(app);
 var io = require('socket.io').listen(server);

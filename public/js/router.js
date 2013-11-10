@@ -5,15 +5,18 @@ define(function(require){
 
   Router = Marionette.AppRouter.extend({
     appRoutes: {
-      ''            : 'friends',
-      'friends'     : 'friends',
-      'mygists'     : 'myGists',
-      'starred'     : 'starred',
+      ''                    : 'friendsGists',
+      'friends(/)'          : 'friends',
+      'mygists(/)'          : 'myGists',
+      'starred(/)'          : 'starred',
       'tagged/:id/:tag_url' : 'tagged',
-      'newgist'     : 'newGist',
-      'chat'        : 'chat',
-      'all'         : 'all',
-      'shared'      : 'shared'
+      'newgist(/)'          : 'newGist',
+      'chat(/)'             : 'chat',
+      'all(/)'              : 'all',
+      'shared(/)'           : 'shared',
+      'friends/list(/)'     : 'friendsList',
+      'friends/gists(/)'    : 'friendsGists',
+      'friends/gists/:login_id': 'friendsGists'
     },
 
     controller: new Controller

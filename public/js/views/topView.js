@@ -58,11 +58,11 @@ define(function(require){
 
     activateMenu: function(menu){
       this.removeActiveClass();           
-      $('.nav li a[href="#' + menu + '"]').parent().addClass('active');
+      $('header .nav li a[href="#' + menu + '"]').parent().addClass('active');
     },
 
     removeActiveClass: function(){
-      $('.nav li').removeClass('active');
+      $('header .nav li').removeClass('active');
     },
 
     onClose: function(){

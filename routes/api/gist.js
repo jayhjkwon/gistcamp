@@ -110,43 +110,42 @@ var setIsFollowing = function(req, gists, cb){
 
   async.series(
     [
-    function(callback){
-      User.find({'id':userId}).select('followings').lean().exec(function(error, docs){
-        followings = docs[0].followings;
-        callback(null);
-      });
-    },
-
-    function(callback){
-      async.each(
-        gists, 
-        function(gist, cb){                 
-          if (!gist) {
-            console.dir(gists);
-            cb(null);
-          }
-
-          var exist = _.find(followings, function(login){
-            return login === gist.user.login;
-          });
-
-          if (exist){
-            gist.user.is_following_this_user = true;
-          }else{
-            gist.user.is_following_this_user = false;
-          }
-
-          cb(null);               
-        }, 
-        function(){
+      function(callback){
+        User.find({'id':userId}).select('followings').lean().exec(function(error, docs){
+          followings = docs[0].followings;
           callback(null);
-        }
-        );  
-    },
+        });
+      },
 
-    function(callback){
-      cb(null);
-    }
+      function(callback){
+        async.each(
+          gists, 
+          function(gist, cb){                 
+            if (!gist) {
+              cb(null);
+            }
+
+            var exist = _.find(followings, function(login){
+              return login === gist.user.login;
+            });
+
+            if (exist){
+              gist.user.is_following_this_user = true;
+            }else{
+              gist.user.is_following_this_user = false;
+            }
+
+            cb(null);               
+          }, 
+          function(){
+            callback(null);
+          }
+        );  
+      },
+
+      function(callback){
+        cb(null);
+      }
     ]);
 };
 

@@ -48,7 +48,8 @@ var userSchema = new mongoose.Schema({
       }                  
     ],
   followings        : [],  // element of array is "login" property of user 
-  starred_gists     : []   // starred gists, element of array is gist's id
+  starred_gists     : [],  // starred gists, element of array is gist's id
+  watch             : []  // full user information
 });
 
 module.exports = db.model('User', userSchema);

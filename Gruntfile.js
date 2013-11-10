@@ -86,35 +86,36 @@ module.exports = function (grunt) {
           './public/vendor/bootstrap/docs/assets/css/bootstrap.css',
           './public/vendor/font-awesome/css/font-awesome.css', 
           './public/vendor/toastr/toastr.css',
-                './public/vendor/select2/select2.css'/*,
-                './public/vendor/fancybox/source/jquery.fancybox.css'*/
-                ],
-                './public/styles/welcome-thirdparty.min.css': 
-                [
-                './public/vendor/bootstrap/docs/assets/css/bootstrap.css',
-                './public/vendor/font-awesome/css/font-awesome.css'
-                ]
-              }
-            }
-          },
+          './public/vendor/select2/select2.css',
+          './public/vendor/tipsy/src/stylesheets/tipsy.css'
+          /*'./public/vendor/fancybox/source/jquery.fancybox.css'*/
+          ],
+          './public/styles/welcome-thirdparty.min.css': 
+          [
+          './public/vendor/bootstrap/docs/assets/css/bootstrap.css',
+          './public/vendor/font-awesome/css/font-awesome.css'
+          ]
+        }
+      }
+    },
 
-          jshint: {
-            options: {
-              smarttabs : true,
-              '-W099': true, 
-              '-W058': true,
-              curly: false,
-              eqeqeq: true,
-              eqnull: true,
-              browser: true,
-              globals: {
-                jQuery: true
-              },
-              ignores: ['public/js/**/*.min.js']
-            },
-            files: ['public/js/**/*.js']
-          },
-        });
+    jshint: {
+      options: {
+        smarttabs : true,
+        '-W099': true, 
+        '-W058': true,
+        curly: false,
+        eqeqeq: true,
+        eqnull: true,
+        browser: true,
+        globals: {
+          jQuery: true
+        },
+        ignores: ['public/js/**/*.min.js']
+      },
+      files: ['public/js/**/*.js']
+    },
+  });
 
     // Load tasks from NPM
     grunt.loadNpmTasks('grunt-contrib-qunit');

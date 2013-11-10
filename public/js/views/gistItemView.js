@@ -36,6 +36,14 @@ define(function(require){
       btnFollow : '.follow-user'
     },
 
+    onRender: function(){
+      if (window.location.hash.indexOf('friends/gists') > -1){
+        this.$el.find('.gist-item .span3').addClass('hide-span3');
+        this.$el.find('.gist-item .span9').removeClass('span9').addClass('span12');
+        this.$el.find('.login-id').hide();
+      }
+    },
+
     onUserFollowChanged: function(user){
       if (this.model.toJSON().user.id === user.id){
         this.model.toJSON().user.is_following_this_user = user.is_following_this_user;

@@ -42,102 +42,102 @@ define(function(require){
         return { gistItem: this.selectedGistItem }; // gistItem will be passed to the itemView
       },
 
-      onDomRefresh: function(){
-        $('.loggedin-user-avatar').attr('src', global.user.avatar);       
-        $('.comments-wrapper').niceScroll({cursorcolor:'#fff'});
-        $('#comment-input').autoGrow();
-      },
+    onDomRefresh: function(){
+      $('.loggedin-user-avatar').attr('src', global.user.avatar);       
+      $('.comments-wrapper').niceScroll({cursorcolor:'#fff'});
+      $('#comment-input').autoGrow();
+    },
 
-      onCommentInputKeypress : function(e){
-        var self = this;
-        var keyCode = e.keyCode || e.which;
-        if (keyCode === 13 && !self.saving){
-          self.saving = true;
-          self.loading(true);
-          $(e.target).attr('disabled', 'disabled');
-          var text = $('#comment-input').val();
-          var comment = new CommentItem({gistId: this.selectedGistItem.id, commentText: text});
-          comment.save()
-          .done(function(data){
-            if (self.collection){
-              self.collection.add(data);
-            }else{
-              data.gistId = self.selectedGistItem.id;
-              self.collection = new CommentItemList(data);
-                // self.collection.add(data);
-              }
-              self.render();
-
-              postalWrapper.publish(constants.COMMENT_ADD, data);
-
-              // send a notification
-              if (self.selectedGistItem.user.id !== global.user.id){
-                var msg = global.user.name + ' just commented on your gist(' + self.selectedGistItem.description + ') ';
-                msg = msg + '</br>';
-                msg = text.length > 50 ? msg + '"' + text.substring(0,50) + '.."' : msg + '"' + text + '"';
-                global.socket.emit('sendalarm', self.selectedGistItem.user.id, msg);
-              }
-            })
-          .always(function(){
-            self.saving = false;
-            $(e.target).removeAttr('disabled');
-            self.loading(false);  
-            $('#comment-input').focus();
-          });
-        }
-      },
-
-      onItemSelected: function(gistItem){
-        var self = this;
-        console.log('onItemSelected in CommentsWrapperView');
-        console.dir(gistItem);        
-
-        if (self.xhr.state && self.xhr.state() === 'pending') {
-          self.xhr.abort();
-        }
-
-        self.selectedGistItem = gistItem;
-
-        if (gistItem.comments == 0){
+    onCommentInputKeypress : function(e){
+      var self = this;
+      var keyCode = e.keyCode || e.which;
+      if (keyCode === 13 && !self.saving){
+        self.saving = true;
+        self.loading(true);
+        $(e.target).attr('disabled', 'disabled');
+        var text = $('#comment-input').val();
+        var comment = new CommentItem({gistId: this.selectedGistItem.id, commentText: text});
+        comment.save()
+        .done(function(data){
           if (self.collection){
-            self.collection.reset();
+            self.collection.add(data);
+          }else{
+            data.gistId = self.selectedGistItem.id;
+            self.collection = new CommentItemList(data);
+              // self.collection.add(data);
+            }
             self.render();
-          }
-        }else{
-          self.loading(true);
-          self.collection = new CommentItemList({gistId: gistItem.id});
-          self.xhr = self.collection.fetch();
-          self.xhr.done(function(res){
-              // self.collection.set(res);
-              self.render();
-            })
-          .always(function(){
-            self.loading(false);
-          });
-        }
-      },
 
-      onCommentDeleted: function(commentId){
-        var self = this;
-        self.collection.remove(self.collection.get(commentId));
-        self.render();
-      },
+            postalWrapper.publish(constants.COMMENT_ADD, data);
 
-      onClose: function(){
-        var self = this;
-        self.subscription.unsubscribe();
-        self.subscriptionDeleteComment.unsubscribe();
-      },
-
-      loading: function(showSpinner){
-        if (showSpinner){
-          var target = $('.comment-input-wrapper')[0];
-          this.spinner.spin(target);
-        }else{          
-          this.spinner.stop();          
-        }
+            // send a notification
+            if (self.selectedGistItem.user.id !== global.user.id){
+              var msg = global.user.name + ' just commented on your gist(' + self.selectedGistItem.description + ') ';
+              msg = msg + '</br>';
+              msg = text.length > 50 ? msg + '"' + text.substring(0,50) + '.."' : msg + '"' + text + '"';
+              global.socket.emit('sendalarm', self.selectedGistItem.user.id, msg);
+            }
+          })
+        .always(function(){
+          self.saving = false;
+          $(e.target).removeAttr('disabled');
+          self.loading(false);  
+          $('#comment-input').focus();
+        });
       }
-    })
+    },
+
+    onItemSelected: function(gistItem){
+      var self = this;
+      console.log('onItemSelected in CommentsWrapperView');
+      console.dir(gistItem);        
+
+      if (self.xhr.state && self.xhr.state() === 'pending') {
+        self.xhr.abort();
+      }
+
+      self.selectedGistItem = gistItem;
+
+      if (gistItem.comments == 0){
+        if (self.collection){
+          self.collection.reset();
+          self.render();
+        }
+      }else{
+        self.loading(true);
+        self.collection = new CommentItemList({gistId: gistItem.id});
+        self.xhr = self.collection.fetch();
+        self.xhr.done(function(res){
+            // self.collection.set(res);
+            self.render();
+          })
+        .always(function(){
+          self.loading(false);
+        });
+      }
+    },
+
+    onCommentDeleted: function(commentId){
+      var self = this;
+      self.collection.remove(self.collection.get(commentId));
+      self.render();
+    },
+
+    onClose: function(){
+      var self = this;
+      self.subscription.unsubscribe();
+      self.subscriptionDeleteComment.unsubscribe();
+    },
+
+    loading: function(showSpinner){
+      if (showSpinner){
+        var target = $('.comment-input-wrapper')[0];
+        this.spinner.spin(target);
+      }else{          
+        this.spinner.stop();          
+      }
+    }
+  })
 ;
 
 return CommentsWrapperView;
