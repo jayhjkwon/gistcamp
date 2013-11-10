@@ -173,7 +173,7 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 
 			mousetrap.bind('g f', function(){
 				var router = new Router;
-				router.navigate('friends', {trigger: true});
+				router.navigate('friends/gists', {trigger: true});
 			});
 
 			mousetrap.bind('g m', function(){

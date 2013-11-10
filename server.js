@@ -186,7 +186,7 @@ app.get('/api/gist/public', ensureAuthenticated, gist.getPublicGists);
 app.get('/api/gist/user/:login_name', ensureAuthenticated, gist.getGistListByUser);
 
 app.get('/api/gists/:gistId', gist.getGistById);
-app.get('/api/gist/friends', ensureAuthenticated, gist.getFriendsGist);
+// app.get('/api/gist/friends', ensureAuthenticated, gist.getFriendsGist);
 app.get('/api/gist/starred', ensureAuthenticated, gist.getStarredGists);
 
 app.get('/api/gist/shared/:login_name', ensureAuthenticated, gist.getSharedGists);
