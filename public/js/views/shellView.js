@@ -24,7 +24,7 @@ define(function(require){
       },
       showWatchRegion: function(){
         $('.gist-list').css({'left': '204px', 'width': '220px'});        
-        $('.files-wrapper').css({'left' : '426px'});
+        $('.files-wrapper').css({'left' : '427px'});
       }
     })
   ;
