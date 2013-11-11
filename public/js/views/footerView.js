@@ -317,12 +317,12 @@ define(function(require){
         $('.btn-delete-gist').hide();
       }
 
-
       this.model = new GistItem(gistItem);
+
       if (gistItem && gistItem.comments > 0){
-        $('.comments-badge').text(gistItem.comments).show();
+        $('.comments-badge').addClass('show-comments-badge').text(gistItem.comments);
       }else{
-        $('.comments-badge').text('').hide();
+        $('.comments-badge').removeClass('show-comments-badge').text('');
       }
 
       // force refreshing tag popup contents
