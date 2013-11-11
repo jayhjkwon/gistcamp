@@ -106,6 +106,7 @@ define(function(require){
         shellView.main.show(gistListView);
         shellView.showFooterRegion();
         shellView.showWatchRegion();
+        shellView.hideCommentRegion();
 
         // watch list on the left region
         var friendsItemListView = new FriendsItemListView;
@@ -123,8 +124,6 @@ define(function(require){
         // Comments on the right region
         var commentsWrapperView = new CommentsWrapperView;
         gistListView.commentsWrapper.show(commentsWrapperView);
-
-
 
         Application.execute(constants.MENU_SELECTED,'friends/gists');
       },
