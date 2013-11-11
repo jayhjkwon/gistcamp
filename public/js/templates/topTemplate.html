@@ -9,13 +9,12 @@
     <li><a href="#starred"><i class="icon-star"></i>&nbsp;Starred</a></li>
     <li class="dropdown">
       <a href="#tagged" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-tag"></i>&nbsp;Tagged <b class="caret"></b></a>
-      <ul class="dropdown-menu">
+      <ul class="dropdown-menu tags">
         {{#unless items}}
         <li><a href="#">No tag yet, You can crate tag using the tag button on the bottom</a></li>        
         {{/unless}}
         {{#each items}}        
         <li><a href="#tagged/{{_id}}/{{tag_url}}"><span class="pull-left">{{tag_name}}</span><span class="badge badge-inverse pull-right">{{countGists gists}}</span></a></li>        
-        <!-- <li class="divider"></li> -->
         {{/each}}
       </ul>
     </li>
@@ -24,91 +23,94 @@
     <li><a href="#newgist"><i class="icon-plus"></i>&nbsp;New</a></li>
  </ul>
  
- <ul class="nav pull-right ">
-   <li><a href="#" id="loggedin-user-name"></a></li>
-   <li class="dropdown">
-    <a href="#" class="gravatar-img dropdown-toggle" data-toggle="dropdown"><img class="loggedin-user-avatar" ></a>
-    <ul class="dropdown-menu profile">
-      <li><a href="#friends/list"><i class="icon-user"></i>&nbsp;&nbsp;&nbsp;Friends Settings</a></li>
-      <li><a href="#" class="loggedin-user-url"><i class="icon-github"></i>&nbsp;&nbsp;Github Profile</a></li>
-      <li><a href="/logout"><i class="icon-signout"></i>&nbsp;&nbsp;Signout</a></li>
-      
-      <li class="divider"></li>
-      <li class="nav-header"><i class="icon-keyboard"></i>&nbsp;Shortcuts</li>
-      <li>
-        <a>
-          <span class="pull-left">Up</span>
-          <span class="pull-right shortcut-desc">Move to the upper gist</span>
-        </a>
-      </li>        
-      <li>
-        <a>
-          <span class="pull-left">Down</span>
-          <span class="pull-right shortcut-desc">Move to the lower gist</span>
-        </a>
-      </li>        
-      <li>
-        <a>
-          <span class="pull-left">Left</span>
-          <span class="pull-right shortcut-desc">Move to the left file</span>
-        </a>
-      </li>        
-      <li>
-        <a>
-          <span class="pull-left">Right</span>
-          <span class="pull-right shortcut-desc">Move to the right file</span>
-        </a>
-      </li>        
-      <li>
-        <a>
-          <span class="pull-left">G + F</span>
-          <span class="pull-right shortcut-desc">Move to the [Friends] menu</span>
-        </a>
-      </li>        
-      <li>
-        <a>
-          <span class="pull-left">G + M</span>
-          <span class="pull-right shortcut-desc">Move to the [My Gists] menu</span>
-        </a>
-      </li>        
-      <li>
-        <a>
-          <span class="pull-left">G + S</span>
-          <span class="pull-right shortcut-desc">Move to the [Starred] menu</span>
-        </a>
-      </li>        
-      <li>
-        <a>
-          <span class="pull-left">G + A</span>
-          <span class="pull-right shortcut-desc">Move to the [All] menu</span>
-        </a>
-      </li>        
-      <li>
-        <a>
-          <span class="pull-left">G + N</span>
-          <span class="pull-right shortcut-desc">Move to the [New Gist] menu</span>
-        </a>
-      </li>        
-      <li>
-        <a>
-          <span class="pull-left">G + C</span>
-          <span class="pull-right shortcut-desc">Move to the [Chats] menu</span>
-        </a>
-      </li>
-      <li>
-        <a>
-          <span class="pull-left">G + H</span>
-          <span class="pull-right shortcut-desc">Move to the [Shared] menu</span>
-        </a>
-      </li>        
-      <li>
-        <a>
-          <span class="pull-left">G + X</span>
-          <span class="pull-right shortcut-desc">Star/Unstar</span>
-        </a>
-      </li>        
-    </ul>
-  </li>
- </ul>
+  <ul class="nav pull-right ">
+    <!-- <li class="sync" >
+        <a href="#" rel="tooltip" original-title="Synchronize with GitHub"><i class="icon-refresh"></i>&nbsp;Sync</a>        
+    </li> -->
+    <li><a id="loggedin-user-name"></a></li>
+    <li class="dropdown">
+      <a href="#" class="gravatar-img dropdown-toggle" data-toggle="dropdown"><img class="loggedin-user-avatar" ></a>
+      <ul class="dropdown-menu profile">
+        <li><a href="#friends/list"><i class="icon-user"></i>&nbsp;&nbsp;&nbsp;Friends Settings</a></li>
+        <li><a href="#" class="loggedin-user-url"><i class="icon-github"></i>&nbsp;&nbsp;Github Profile</a></li>
+        <li><a href="/logout"><i class="icon-signout"></i>&nbsp;&nbsp;Signout</a></li>
+        
+        <li class="divider"></li>
+        <li class="nav-header"><i class="icon-keyboard"></i>&nbsp;Shortcuts</li>
+        <li>
+          <a>
+            <span class="pull-left">Up</span>
+            <span class="pull-right shortcut-desc">Move to the upper gist</span>
+          </a>
+        </li>        
+        <li>
+          <a>
+            <span class="pull-left">Down</span>
+            <span class="pull-right shortcut-desc">Move to the lower gist</span>
+          </a>
+        </li>        
+        <li>
+          <a>
+            <span class="pull-left">Left</span>
+            <span class="pull-right shortcut-desc">Move to the left file</span>
+          </a>
+        </li>        
+        <li>
+          <a>
+            <span class="pull-left">Right</span>
+            <span class="pull-right shortcut-desc">Move to the right file</span>
+          </a>
+        </li>        
+        <li>
+          <a>
+            <span class="pull-left">G + F</span>
+            <span class="pull-right shortcut-desc">Move to the [Friends] menu</span>
+          </a>
+        </li>        
+        <li>
+          <a>
+            <span class="pull-left">G + M</span>
+            <span class="pull-right shortcut-desc">Move to the [My Gists] menu</span>
+          </a>
+        </li>        
+        <li>
+          <a>
+            <span class="pull-left">G + S</span>
+            <span class="pull-right shortcut-desc">Move to the [Starred] menu</span>
+          </a>
+        </li>        
+        <li>
+          <a>
+            <span class="pull-left">G + A</span>
+            <span class="pull-right shortcut-desc">Move to the [All] menu</span>
+          </a>
+        </li>        
+        <li>
+          <a>
+            <span class="pull-left">G + N</span>
+            <span class="pull-right shortcut-desc">Move to the [New Gist] menu</span>
+          </a>
+        </li>        
+        <li>
+          <a>
+            <span class="pull-left">G + C</span>
+            <span class="pull-right shortcut-desc">Move to the [Chats] menu</span>
+          </a>
+        </li>
+        <li>
+          <a>
+            <span class="pull-left">G + H</span>
+            <span class="pull-right shortcut-desc">Move to the [Shared] menu</span>
+          </a>
+        </li>        
+        <li>
+          <a>
+            <span class="pull-left">G + X</span>
+            <span class="pull-right shortcut-desc">Star/Unstar</span>
+          </a>
+        </li>        
+      </ul>
+    </li>
+  </ul>
 </div>
 </div>

@@ -9,31 +9,48 @@ define(function(require){
   global        = require('global'),
   TagItemList   = require('models/tagItemList'),
   postalWrapper = require('postalWrapper'),   
+  tipsy         = require('tipsy'),
 
   TopView = Marionette.ItemView.extend({
     className: 'navbar-inner',
     template: topTemplate,
 
     initialize: function(){
-      console.log('TopView initialized');
       var self = this;
-      _.bindAll(this, 'activateMenu', 'showTagInfo', 'onTagChanged');
+      _.bindAll(this, 'onCollectionChanged', 'onSyncClick', 'sync', 'activateMenu', 'showTagInfo', 'onTagChanged');
 
       Application.commands.setHandler(constants.MENU_SELECTED, function(menu){
         self.activateMenu(menu);
       });       
 
       this.showTagInfo();
-
       this.subscription = postalWrapper.subscribe(constants.TAG_CHANGED, this.onTagChanged);
+
+      if(this.collection){
+        this.listenTo(this.collection, 'reset', this.onCollectionChanged);
+      }
     },
 
     events: {
-      'click #btn-refresh' : 'onRefreshClick'
+      'click #btn-refresh' : 'onRefreshClick',
+      'click .sync a': 'onSyncClick'
     },
 
     onRender: function(){
+      var self = this;
       this.showUserInfo();
+      $('.sync a').tipsy({fade: true});
+    },
+
+    onSyncClick: function(e){
+      e.preventDefault();
+      this.sync();
+    },
+
+    sync: function(e){      
+      this.syncInProgress = true;
+      this.$el.find('i.icon-refresh').addClass('icon-spin');
+      this.syncInProgress = false;
     },
 
     showTagInfo: function(){
@@ -43,7 +60,16 @@ define(function(require){
 
     onTagChanged: function(tags){
       this.collection.reset(tags);
-      this.render();
+    },
+
+    onCollectionChanged: function(tags){
+      var html = '';
+
+      _.each(tags.models, function(tag){
+        html = html + '<li><a href="#tagged/' + tag.get('_id') + '/' + tag.get('tag_url') + '"><span class="pull-left">' + tag.get('tag_name') + '</span><span class="badge badge-inverse pull-right">' + tag.get('gists').length + '</span></a></li>';
+      });
+
+      document.querySelector('#top .tags').innerHTML = html;
     },
 
     showUserInfo: function(){
@@ -67,6 +93,7 @@ define(function(require){
 
     onClose: function(){
       this.subscription.unsubscribe();
+      if ($('.tipsy')) $('.tipsy').remove();
     }
 
   })
