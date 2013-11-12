@@ -23,10 +23,10 @@ var
 var app = express();
 
 // TODO : Remove uncaughtexception
-process.on('uncaughtException', function(err){
+/*process.on('uncaughtException', function(err){
   console.error('Uncaught exception: ' + err.stack);
   process.exit(1);
-});
+});*/
 
 var GITHUB_CLIENT_ID;
 var GITHUB_CLIENT_SECRET;
@@ -45,7 +45,7 @@ if (config.options.env === 'development'){
   cookieParserSecret = 'gistcamp';
   app.set('port', 3000);
   cookieMaxAge = 1000 * 60 * 60 * 24 * 30;
-  app.use(express.errorHandler());  // development only
+  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 }else{
   var github   = require('./githubInfo');
   GITHUB_CLIENT_ID = github.info.GITHUB_CLIENT_ID; 
@@ -55,7 +55,14 @@ if (config.options.env === 'development'){
   cookieParserSecret = github.info.COOKIE_PARSET_SECRET;
   app.set('port', 80);
   cookieMaxAge = github.info.COOKIE_MAX_AGE;
+  app.use(express.errorHandler());
 }
+
+var gistampLocals = function(req, res, next) {
+    res.locals = res.locals || {};
+    res.locals.csrfToken = req.session._csrf;
+    next();
+};
 
 var checkRateLimit = function(req, res, next){
   var accessToken = service.getAccessToken(req);
@@ -75,13 +82,14 @@ var checkRateLimit = function(req, res, next){
 
 var ensureAuthenticated = function (req, res, next) {
   if (req.isAuthenticated()) { 
-    // checkRateLimit(req);
-    return next(); 
-  }
-  res.redirect('/welcome');
+    next(); 
+  }else{
+    res.redirect('/welcome');  
+  }  
 };
 
-// all environments
+
+/* middlewares */
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.use(express.favicon());
@@ -98,12 +106,10 @@ app.use(passport.initialize());
 app.use(passport.session());  
 // app.use(checkRateLimit);
 app.use(app.router);
+app.use(express.csrf());
+app.use(gistampLocals);
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(connectDomain());
-app.use(function(err, req, res, next) { // error handler middleware should be placed at the bottom of the 'use'
-  console.error('Error Occurred: ' + err.stack);
-  res.end(500, err.message);
-});
+
 
 /* passport */
 passport.serializeUser(function(user, done) {
