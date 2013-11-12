@@ -15,7 +15,6 @@ var
   async    = require('async'),
   chat     = require('./routes/chat'),
   evernote = require('./routes/api/evernote'),
-  connectDomain = require("connect-domain"),
   moment   = require('moment'),
   MongoStore = require('connect-mongo')(express)
 ;
