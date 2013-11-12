@@ -90,10 +90,9 @@ app.use(express.compress());
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.cookieParser());
-app.use(express.session({
+app.use(express.cookieSession({
   secret: cookieParserSecret,
-  cookie: { maxAge : cookieMaxAge },
-  store: new MongoStore({ url: mongoUrl, auto_reconnect: true })
+  cookie: { maxAge : cookieMaxAge }
 }));
 app.use(passport.initialize());
 app.use(passport.session());  
