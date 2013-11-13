@@ -106,7 +106,6 @@ define(function(require){
         shellView.main.show(gistListView);
         shellView.showFooterRegion();
         shellView.showWatchRegion();
-        shellView.hideCommentRegion();
 
         // watch list on the left region
         var friendsItemListView = new FriendsItemListView;

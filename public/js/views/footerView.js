@@ -308,8 +308,7 @@ define(function(require){
     },
 
     onItemSelected : function(gistItem){
-      console.log('onSelected');
-      console.log(gistItem);
+      this.model = new GistItem(gistItem);
 
       if(gistItem.user.id === global.user.id){
         $('.btn-delete-gist').show();
@@ -317,12 +316,12 @@ define(function(require){
         $('.btn-delete-gist').hide();
       }
 
-      this.model = new GistItem(gistItem);
-
       if (gistItem && gistItem.comments > 0){
         $('.comments-badge').addClass('show-comments-badge').text(gistItem.comments);
+        this.showCommentRegion();
       }else{
         $('.comments-badge').removeClass('show-comments-badge').text('');
+        this.hideCommentRegion();
       }
 
       // force refreshing tag popup contents
