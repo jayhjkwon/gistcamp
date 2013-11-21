@@ -33,6 +33,7 @@ var callbackURL;
 var mongoUrl;
 var cookieParserSecret;
 var db;
+var cookieMaxAge;
 
 app.set('env', config.options.env);
 
