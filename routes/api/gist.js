@@ -534,7 +534,7 @@ exports.getComments = function(req, res){
     // TODO : apply cache using etag or last-modified for avoiding rate-limit
     var setUserName = function(comment, callback){
       var url = config.options.githubHost + '/users/' + comment.user.login + '?access_token=' + accessToken; 
-      request.get({url:url}, function(err, response, data){
+      request.get({url:url, headers: { 'user-agent': 'gistcamp'}}, function(err, response, data){
         if(data){
           var user = JSON.parse(data);
           comment.user.user_name = user.name;
@@ -544,7 +544,8 @@ exports.getComments = function(req, res){
     };
 
     request.get({
-      url: config.options.githubHost + '/gists/' + gistId + '/comments?access_token=' + accessToken
+      url: config.options.githubHost + '/gists/' + gistId + '/comments?access_token=' + accessToken,
+      headers: { 'user-agent': 'gistcamp'}
     },
     function(error, response, body){
       res.send(body);         
