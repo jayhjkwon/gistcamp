@@ -30,14 +30,12 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 
 		var connectSocketIO = function(callback){
 			var socket;
-			if (global.server.options.env === 'development')
-				socket = socketio.connect('http://localhost:3000');
+			if (global.server.options.env === 'production')
+				socket = socketio.connect('http://gistcamp.com');
 			else
-				socket = socketio.connect('http://gistcamp.nodejitsu.com');
-			global.socket = socket;
-			console.log('server options :' + global.server.options.env);
+				socket = socketio.connect('http://localhost:3000');
 
-			
+			global.socket = socket;
 
 			// on connection to server, ask for user's name with an anonymous callback
 			global.socket.on('connect', function(){

@@ -3,10 +3,8 @@ var
   pages    = require('./routes/pages'),
   user     = require('./routes/api/user'), 
   http     = require('http'), 
-  path     = require('path'), 
-  config   = require('./infra/config'), 
+  path     = require('path'),   
   gist     = require('./routes/api/gist'),
-  constants= require('./infra/constants').constants,
   passport = require('passport'),
   GitHubStrategy = require('passport-github').Strategy,
   User     = require('./models/user'), 
@@ -16,7 +14,8 @@ var
   chat     = require('./routes/chat'),
   evernote = require('./routes/api/evernote'),
   moment   = require('moment'),
-  MongoStore = require('connect-mongo')(express)
+  MongoStore = require('connect-mongo')(express),
+  config
 ;
 
 var app = express();
@@ -27,35 +26,13 @@ var app = express();
   process.exit(1);
 });*/
 
-var GITHUB_CLIENT_ID;
-var GITHUB_CLIENT_SECRET;
-var callbackURL;
-var mongoUrl;
-var cookieParserSecret;
-var db;
-var cookieMaxAge;
 
-app.set('env', config.options.env);
-
-if (config.options.env === 'development'){
-  GITHUB_CLIENT_ID = constants.GITHUB_CLIENT_ID; 
-  GITHUB_CLIENT_SECRET = constants.GITHUB_CLIENT_SECRET;
-  callbackURL = 'http://localhost:3000/auth/github/callback';
-  mongoUrl = 'mongodb://localhost/gistcamp';
-  cookieParserSecret = 'gistcamp';
-  app.set('port', 3000);
-  cookieMaxAge = 1000 * 60 * 60 * 24 * 30;
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-}else{
-  var github   = require('./githubInfo');
-  GITHUB_CLIENT_ID = github.info.GITHUB_CLIENT_ID; 
-  GITHUB_CLIENT_SECRET = github.info.GITHUB_CLIENT_SECRET;
-  callbackURL = github.info.CALLBACK_URL;
-  mongoUrl = github.info.MONGO_URL;
-  cookieParserSecret = github.info.COOKIE_PARSET_SECRET;
-  app.set('port', 80);
-  cookieMaxAge = github.info.COOKIE_MAX_AGE;
+if (process.env.NODE_ENV === 'production'){
+  config = require('./infra/config'), 
   app.use(express.errorHandler());
+}else{
+  config = require('./infra/config-dev'), 
+  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));  
 }
 
 var gistampLocals = function(req, res, next) {
@@ -68,7 +45,7 @@ var checkRateLimit = function(req, res, next){
   var accessToken = service.getAccessToken(req);
   if(accessToken){
     request.get({
-      url: config.options.githubHost + '/rate_limit?access_token=' + accessToken,
+      url: config.githubHost + '/rate_limit?access_token=' + accessToken,
     }, function(error, response, body){ 
       console.log('*******************************************');
       console.log('Rate Limit Checking');
@@ -99,8 +76,8 @@ app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.cookieParser());
 app.use(express.cookieSession({
-  secret: cookieParserSecret,
-  cookie: { maxAge : cookieMaxAge }
+  secret: config.COOKIE_PARSET_SECRET,
+  cookie: { maxAge : config.COOKIE_MAX_AGE }
 }));
 app.use(passport.initialize());
 app.use(passport.session());  
@@ -121,9 +98,9 @@ passport.deserializeUser(function(obj, done) {
 });
 
 passport.use(new GitHubStrategy({
-  clientID: GITHUB_CLIENT_ID,
-  clientSecret: GITHUB_CLIENT_SECRET,
-  callbackURL: callbackURL
+  clientID    : config.GITHUB_CLIENT_ID,
+  clientSecret: config.GITHUB_CLIENT_SECRET,
+  callbackURL : config.callbackURL
 },
 function(accessToken, refreshToken, profile, done) {
   process.nextTick(function () {
@@ -186,7 +163,7 @@ app.get('/auth/evernote/callback', evernote.authCallback);
 
 
 /* restful services */
-app.get('/api/server/options', ensureAuthenticated, function(req, res){ res.send(config.options);});
+app.get('/api/server/options', ensureAuthenticated, function(req, res){ res.send({env: config.env});});
 app.get('/api/gist/public', ensureAuthenticated, gist.getPublicGists);
 app.get('/api/gist/user/:login_name', ensureAuthenticated, gist.getGistListByUser);
 
@@ -240,6 +217,6 @@ app.get('/api/friends/followers', ensureAuthenticated, user.getFollowers);
 var server = http.createServer(app);
 var io = require('socket.io').listen(server);
 chat.start(io);
-server.listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
+server.listen(config.PORT, function(){
+  console.log('Express server listening on port ' + config.PORT);
 });

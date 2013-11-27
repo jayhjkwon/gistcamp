@@ -1,16 +1,23 @@
 var 
-config    = require('../../infra/config'),
-request   = require('request'),
-_         = require('lodash'),
-moment    = require('moment'),
-async     = require('async'),
-service   = require('../../infra/service'),
-util      = require('../../infra/util'),
-User      = require('../../models/user'),
-ChatContent = require('../../models/chatContent'),
-SharedGist  = require('../../models/sharedGist'),
-mongoose  = require('mongoose')
+  request   = require('request'),
+  _         = require('lodash'),
+  moment    = require('moment'),
+  async     = require('async'),
+  service   = require('../../infra/service'),
+  util      = require('../../infra/util'),
+  User      = require('../../models/user'),
+  ChatContent = require('../../models/chatContent'),
+  SharedGist  = require('../../models/sharedGist'),
+  mongoose  = require('mongoose'),
+  config
 ;
+
+if (process.env.NODE_ENV === 'production'){
+  config = require('../../infra/config');
+}else{
+  config = require('../../infra/config-dev');
+}
+
 var cacheSeconds = 60 * 60 * 1 // 1 hour    
 var cacheEnabled = true;            
 
@@ -215,7 +222,7 @@ exports.getGistListByUser = function(req, res){
   if (!linkHeader){
     github.gists.getFromUser({
       user: req.param('login_name'), 
-      per_page: config.options.perPage || 30
+      per_page: config.perPage || 30
     }, 
     function(err, data){        
       if (data) sendData(data, req, res);
@@ -533,7 +540,7 @@ exports.getComments = function(req, res){
 
     // TODO : apply cache using etag or last-modified for avoiding rate-limit
     var setUserName = function(comment, callback){
-      var url = config.options.githubHost + '/users/' + comment.user.login + '?access_token=' + accessToken; 
+      var url = config.githubHost + '/users/' + comment.user.login + '?access_token=' + accessToken; 
       request.get({url:url, headers: { 'user-agent': 'gistcamp'}}, function(err, response, data){
         if(data){
           var user = JSON.parse(data);
@@ -544,7 +551,7 @@ exports.getComments = function(req, res){
     };
 
     request.get({
-      url: config.options.githubHost + '/gists/' + gistId + '/comments?access_token=' + accessToken,
+      url: config.githubHost + '/gists/' + gistId + '/comments?access_token=' + accessToken,
       headers: { 'user-agent': 'gistcamp'}
     },
     function(error, response, body){
@@ -558,7 +565,7 @@ exports.getComments = function(req, res){
     var accessToken = service.getAccessToken(req);
 
     request.post({
-      url: config.options.githubHost + '/gists/' + gistId + '/comments?access_token=' + accessToken, 
+      url: config.githubHost + '/gists/' + gistId + '/comments?access_token=' + accessToken, 
       body: JSON.stringify({body: commentText})
     },
     function(error, response, body){
@@ -574,7 +581,7 @@ exports.getComments = function(req, res){
     var accessToken = service.getAccessToken(req);
 
     request.patch({
-      url: config.options.githubHost + '/gists/' + gistId + '/comments/' + id + '?access_token=' + accessToken, 
+      url: config.githubHost + '/gists/' + gistId + '/comments/' + id + '?access_token=' + accessToken, 
       body: JSON.stringify({body: commentText})
     },
     function(error, response, body){
@@ -589,7 +596,7 @@ exports.getComments = function(req, res){
     var accessToken = service.getAccessToken(req);
 
     request.del({
-      url: config.options.githubHost + '/gists/' + gistId + '/comments/' + id + '?access_token=' + accessToken
+      url: config.githubHost + '/gists/' + gistId + '/comments/' + id + '?access_token=' + accessToken
     },
     function(error, response, body){
       res.send({});

@@ -1,21 +1,24 @@
-var config   = require('./config');
-var mongoose = require('mongoose');
+var 
+  mongoose = require('mongoose'),
+  config
+;
+
+if (process.env.NODE_ENV === 'production'){
+  config = require('./config'); 
+}else{
+  config = require('./config-dev'); 
+}
 
 exports.getMongoConnection = function(){
-  var db;
+  
   var opts = {
     server: { 
       auto_reconnect: true,
       poolSize: 10
     }
-  }
+  };
 
-  if (config.options.env === 'development'){
-    db = mongoose.createConnection('mongodb://localhost/gistcamp', opts);
-  }else{
-    var github   = require('../githubInfo');
-    db = mongoose.createConnection(github.info.MONGO_URL, opts);
-  }
+  var db = mongoose.createConnection(config.MONGO_URL, opts);
 
   return db;
 }

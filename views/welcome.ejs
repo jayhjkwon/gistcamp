@@ -11,13 +11,13 @@
     <title>The Best Open Web Interface for Gist</title>
     <link rel="shortcut icon" href="images/logo_black.png"/> 
     <link rel="image_src" href="images/logo_black.png"/>   
-    <% if (devMode === 'development') { %>
-      <link rel="stylesheet" href="vendor/bootstrap/docs/assets/css/bootstrap.css">
-      <link rel='stylesheet' href="vendor/font-awesome/css/font-awesome.min.css">
-      <link rel='stylesheet' href='styles/welcome.min.css?modified_time=<%= (new Date()).getTime() %>' />
-    <% }else{ %> 
+    <% if (devMode === 'production') { %>
       <link rel='stylesheet' href='styles/welcome-thirdparty.min.css?v=<%= appVersion %>' />
       <link rel='stylesheet' href='styles/welcome.min.css?v=<%= appVersion %>' />
+    <% }else{ %> 
+      <link rel="stylesheet" href="vendor/bootstrap/docs/assets/css/bootstrap.css">
+      <link rel='stylesheet' href="vendor/font-awesome/css/font-awesome.min.css">
+      <link rel='stylesheet' href='styles/welcome.min.css?modified_time=<%= (new Date()).getTime() %>' />      
     <% } %>
     <script src="vendor/modernizr/modernizr.js"></script>
   </head>
@@ -266,15 +266,14 @@
     </section>
   </div>
 
-  <% if (devMode === 'development') { %>
-      <script src="vendor/jquery/jquery.min.js"></script> 
-      <script src="vendor/jquery.scrollTo/jquery.scrollTo.min.js"></script>
-      <script src="vendor/jquery-nicescroll/jquery.nicescroll.min.js"></script>
-        
-      <script src="js/welcome.js?modified_time=<%= (new Date()).getTime() %>"></script>
-      <script src="http://localhost:35729/livereload.js"></script>
-    <% }else{ %> 
-      <script src="js/welcome.min.js?v=<%= appVersion %>"></script>
-    <% } %>
+  <% if (devMode === 'production') { %>
+    <script src="js/welcome.min.js?v=<%= appVersion %>"></script>
+  <% }else{ %> 
+    <script src="vendor/jquery/jquery.min.js"></script> 
+    <script src="vendor/jquery.scrollTo/jquery.scrollTo.min.js"></script>
+    <script src="vendor/jquery-nicescroll/jquery.nicescroll.min.js"></script>
+    <script src="js/welcome.js?modified_time=<%= (new Date()).getTime() %>"></script>
+    <script src="http://localhost:35729/livereload.js"></script>    
+  <% } %>
   </body>
 </html> 

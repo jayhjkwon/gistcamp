@@ -1,13 +1,19 @@
 var 
 	GitHubApi = require('github'),
-	config    = require('../../infra/config'),
 	request   = require('request'),
 	_         = require('lodash'),
 	moment    = require('moment'),
   async     = require('async'),
   service   = require('../../infra/service'),
-  User      = require('../../models/user')
+  User      = require('../../models/user'),
+  config
 ;
+
+if (process.env.NODE_ENV === 'production'){
+  config = require('../../infra/config'); 
+}else{
+  config = require('../../infra/config-dev'); 
+}
 
 exports.getAuthUser = function(req, res){
 	var github = service.getGitHubApi(req);

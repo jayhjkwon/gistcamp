@@ -10,7 +10,11 @@
     <title>The Best Open Web Interface for Gist</title>
     <link rel="shortcut icon" href="images/logo_black.png">
     <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
-    <% if (devMode === 'development') { %>
+    <% if (devMode === 'production') { %>
+      <link rel="stylesheet" type="text/css" href="vendor/fancybox/source/jquery.fancybox.css" media="screen" />
+      <link rel='stylesheet' href='styles/app-thirdparty.min.css?v=<%= appVersion %>' />
+      <link rel='stylesheet' href='styles/app.min.css?v=<%= appVersion %>' />
+    <% }else{ %>       
       <link rel="stylesheet" href="vendor/bootstrap/docs/assets/css/bootstrap.css">
       <link rel='stylesheet' href="vendor/font-awesome/css/font-awesome.min.css">
       <link rel="stylesheet" href="vendor/toastr/toastr.css" />
@@ -18,23 +22,11 @@
       <link rel="stylesheet" type="text/css" href="vendor/fancybox/source/jquery.fancybox.css" media="screen" />
       <link rel='stylesheet' href="vendor/tipsy/src/stylesheets/tipsy.css" />
       <link rel='stylesheet' href='styles/app.min.css?modified_time=<%= (new Date()).getTime() %>' />
-    <% }else{ %> 
-      <link rel="stylesheet" type="text/css" href="vendor/fancybox/source/jquery.fancybox.css" media="screen" />
-      <link rel='stylesheet' href='styles/app-thirdparty.min.css?v=<%= appVersion %>' />
-      <link rel='stylesheet' href='styles/app.min.css?v=<%= appVersion %>' />
     <% } %>
     <script src="vendor/modernizr/modernizr.js"></script>
   </head>
   <body>  
-    <% if (devMode === 'development') { %>
-      <script src="vendor/requirejs/require.js"></script>  
-      <script type="text/javascript">
-          require(['js/require-config'], function (config) {
-              require(['app']);
-          });
-      </script>
-      <script src="http://localhost:35729/livereload.js"></script>
-    <% }else{ %> 
+    <% if (devMode === 'production') { %>
       <script src="js/app.min.js?v=<%= appVersion %>"></script>
       <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -44,6 +36,14 @@
         ga('create', 'UA-42964821-1', 'gistcamp.com');
         ga('send', 'pageview');
       </script>
+    <% }else{ %> 
+      <script src="vendor/requirejs/require.js"></script>  
+      <script type="text/javascript">
+          require(['js/require-config'], function (config) {
+              require(['app']);
+          });
+      </script>
+      <script src="http://localhost:35729/livereload.js"></script>      
     <% } %>
   </body>
 </html>

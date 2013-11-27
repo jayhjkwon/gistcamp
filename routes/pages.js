@@ -1,11 +1,17 @@
 var 
-	config = require('../infra/config'),
+	config,
 	packageJson = require('../package.json')
 ;
 
+if (process.env.NODE_ENV === 'production'){
+  config = require('../infra/config'); 
+}else{
+  config = require('../infra/config-dev');
+}
+
 exports.index = function(req, res){
   res.render('index', { 
-  	devMode: config.options.env,
+  	devMode: config.env,
   	appVersion: packageJson.version,
     user : req.user
   });
@@ -13,7 +19,7 @@ exports.index = function(req, res){
 
 exports.welcome = function(req, res){
   res.render('welcome', { 
-  	devMode: config.options.env,
+  	devMode: config.env,
   	appVersion: packageJson.version
   });
 };

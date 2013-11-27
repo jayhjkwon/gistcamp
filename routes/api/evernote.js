@@ -1,6 +1,5 @@
 var 
 	GitHubApi = require('github'),
-	config    = require('../../infra/config'),
 	request   = require('request'),
 	_         = require('lodash'),
 	moment    = require('moment'),
@@ -9,18 +8,25 @@ var
     User      = require('../../models/user'),
     Evernote  = require('evernote').Evernote,
     crypto    = require('crypto'),
-    constants = require('../../infra/constants').constants
+    config
 ;
+
+if (process.env.NODE_ENV === 'production'){
+  config = require('../../infra/config'); 
+}else{
+  config = require('../../infra/config-dev');
+}
+
 var getEvernoteInfo = function(){
-	if (config.options.env === 'development'){
-		return {
-			API_CONSUMER_KEY    : constants.API_CONSUMER_KEY,
-		    API_CONSUMER_SECRET : constants.API_CONSUMER_SECRET,
-		    SANDBOX             : constants.SANDBOX,
-		    CALLBACK_URL        : constants.CALLBACK_URL
-		};
+	if (process.env.NODE_ENV === 'production'){
+		return require('../../evernoteInfo').info;		
 	}else{
-		return require('../../evernoteInfo').info;
+		return {
+			API_CONSUMER_KEY    : config.API_CONSUMER_KEY,
+		    API_CONSUMER_SECRET : config.API_CONSUMER_SECRET,
+		    SANDBOX             : config.SANDBOX,
+		    CALLBACK_URL        : config.CALLBACK_URL
+		};
 	}
 };
 
