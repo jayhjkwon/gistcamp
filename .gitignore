@@ -1,5 +1,4 @@
-githubInfo.js
-evernoteInfo.js
+infra/config.js
 
 ### minified files ###
 public/js/app.min.js
