@@ -4,7 +4,7 @@
 ![GistCamp](https://dl.dropboxusercontent.com/u/51695292/gistcamp.png)
 
 ## Features
-* The GistCamp is an web interface for GitHub's Gist service, but more focuses on sharing your gists with your followings/followers of your GitHub account or any GitHubers.
+* GistCamp is an web interface for GitHub's Gist service, but more focuses on sharing your gists with your followings/followers of your GitHub account or any GitHubers.
 * You can organize your gists by tagging and starring.
 * You can find your followings and followers' gists. 
 * You can share the gists on Facebook, Twitter, Google+ and LinkedIn.
@@ -36,7 +36,7 @@ node server
 
 Then go to `http://localhost:3000` in your browser.
 
-##### **If you do not want to install the gistcamp on your machine, just come to [gistcamp.com](http://gistcamp.com)**
+##### **If you do not want to install gistcamp on your machine, just come to [gistcamp.com](http://gistcamp.com)**
 
 ## License
 
