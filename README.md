@@ -1,7 +1,7 @@
 # GistCamp #
 #### [GistCamp](http://gistcamp.com) is an web app that helps organize and share your gists.
 
-![GistCamp](https://dl.dropboxusercontent.com/u/51695292/gistcamp.png)
+![GistCamp](https://dl.dropboxusercontent.com/u/51695292/gistcamp1.PNG)
 
 ## Features
 * GistCamp is an web interface for GitHub's Gist service, but more focuses on sharing your gists with your followings/followers of your GitHub account or any GitHubers.
