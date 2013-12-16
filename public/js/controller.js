@@ -8,7 +8,7 @@ define(function(require){
     shellView               = require('views/shellView'),       
     constants               = require('constants'),
     FilesWrapperView        = require('views/filesWrapperView'),
-    CommentsWrapperView     = require('views/CommentsWrapperView'),
+    CommentsWrapperView     = require('views/commentsWrapperView'),
     CreateGistView          = require('views/createGistView'),
     ChatView                = require('views/chatView'),
     ChatItemListView        = require('views/chatItemListView'),
