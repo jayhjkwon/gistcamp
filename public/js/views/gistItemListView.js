@@ -7,7 +7,7 @@ define(function(require){
   Handlebars      = require('handlebars'),
   Spinner         = require('spin'),
   GistItemView  = require('./gistItemView'),
-  NoItemsView   = require('./NoItemsView'),
+  NoItemsView   = require('./noItemsView'),
   GistItemList  = require('models/gistItemList'),
   constants       = require('constants'),
   util            = require('util'),
