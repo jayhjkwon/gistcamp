@@ -7,7 +7,7 @@ define(function(require){
 		Handlebars      = require('handlebars'),
 		Spinner         = require('spin'),
 		ChatItemView	= require('./chatItemView'),
-		NoItemsView		= require('./NoItemsView'),
+		NoItemsView		= require('./noItemsView'),
 		constants       = require('constants'),
 		util            = require('util'),
 		async           = require('async'),
