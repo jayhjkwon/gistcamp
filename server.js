@@ -30,6 +30,7 @@ var app = express();
 if (process.env.NODE_ENV === 'production'){
   config = require('./infra/config'), 
   app.use(express.errorHandler());
+  app.use(forceHttps);
 }else{
   config = require('./infra/config-dev'), 
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));  
@@ -63,6 +64,16 @@ var ensureAuthenticated = function (req, res, next) {
   }else{
     res.redirect('/welcome');  
   }  
+};
+
+var forceHttps = function(req, res, next){
+  res.setHeader('Strict-Transport-Security', 'max-age=8640000; includeSubDomains');
+
+  if (req.headers['x-forwarded-proto'] !== 'https') {
+    return res.redirect(301, 'https://' + req.headers.host + '/');
+  }
+
+  next();
 };
 
 
