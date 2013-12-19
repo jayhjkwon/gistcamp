@@ -1,5 +1,5 @@
 # GistCamp #
-#### [GistCamp](http://gistcamp.com) is an web app that helps organize and share your gists.
+#### [GistCamp](https://gistcamp.com) is an web app that helps organize and share your gists.
 
 ![GistCamp](https://dl.dropboxusercontent.com/u/51695292/gistcamp1.PNG)
 
@@ -36,7 +36,7 @@ node server
 
 Then go to `http://localhost:3000` in your browser.
 
-##### **If you do not want to install gistcamp on your machine, just come to [gistcamp.com](http://gistcamp.com)**
+##### **If you do not want to install gistcamp on your machine, just come to [gistcamp.com](https://gistcamp.com)**
 
 ## License
 
