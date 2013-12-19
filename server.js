@@ -30,7 +30,6 @@ var app = express();
 if (process.env.NODE_ENV === 'production'){
   config = require('./infra/config'), 
   app.use(express.errorHandler());
-  app.use(forceHttps);
 }else{
   config = require('./infra/config-dev'), 
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));  
@@ -67,9 +66,10 @@ var ensureAuthenticated = function (req, res, next) {
 };
 
 var forceHttps = function(req, res, next){
-  res.setHeader('Strict-Transport-Security', 'max-age=8640000; includeSubDomains');
+  // res.setHeader('Strict-Transport-Security', 'max-age=8640000; includeSubDomains');
 
   if (req.headers['x-forwarded-proto'] !== 'https') {
+    console.log('************ forcing https ***********');
     return res.redirect(301, 'https://' + req.headers.host + '/');
   }
 
@@ -80,6 +80,10 @@ var forceHttps = function(req, res, next){
 /* middlewares */
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
+
+if (process.env.NODE_ENV === 'production'){
+  app.use(forceHttps);
+}
 app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.compress());
@@ -97,6 +101,7 @@ app.use(app.router);
 app.use(express.csrf());
 app.use(gistampLocals);
 app.use(express.static(path.join(__dirname, 'public')));
+
 
 
 /* passport */

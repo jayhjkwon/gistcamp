@@ -31,7 +31,7 @@ require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
 		var connectSocketIO = function(callback){
 			var socket;
 			if (global.server.options.env === 'production')
-				socket = socketio.connect('http://gistcamp.com');
+				socket = socketio.connect('https://gistcamp.com');
 			else
 				socket = socketio.connect('http://localhost:3000');
 
