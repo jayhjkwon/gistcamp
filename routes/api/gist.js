@@ -566,6 +566,7 @@ exports.getComments = function(req, res){
 
     request.post({
       url: config.githubHost + '/gists/' + gistId + '/comments?access_token=' + accessToken, 
+      headers: { 'user-agent': 'gistcamp'},
       body: JSON.stringify({body: commentText})
     },
     function(error, response, body){
@@ -582,6 +583,7 @@ exports.getComments = function(req, res){
 
     request.patch({
       url: config.githubHost + '/gists/' + gistId + '/comments/' + id + '?access_token=' + accessToken, 
+      headers: { 'user-agent': 'gistcamp'},
       body: JSON.stringify({body: commentText})
     },
     function(error, response, body){
@@ -596,7 +598,8 @@ exports.getComments = function(req, res){
     var accessToken = service.getAccessToken(req);
 
     request.del({
-      url: config.githubHost + '/gists/' + gistId + '/comments/' + id + '?access_token=' + accessToken
+      url: config.githubHost + '/gists/' + gistId + '/comments/' + id + '?access_token=' + accessToken,
+      headers: { 'user-agent': 'gistcamp'}
     },
     function(error, response, body){
       res.send({});
