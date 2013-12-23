@@ -21,7 +21,7 @@ Prerequistes
 * [Grunt](http://gruntjs.com)
 * [MongoDB](http://www.mongodb.org)
 * [Application ID and Secret](http://developer.github.com/guides/basics-of-authentication/#registering-your-app)
- - Get your application ID and Secret from GitHub Account Settings page, then replace ID/Secret values in infra/constants.js with yours.
+ - Get your application ID and Secret from GitHub Account Settings page, then replace ID/Secret values in infra/config-dev.js with yours.
 
 In CLI:
 ```bash
