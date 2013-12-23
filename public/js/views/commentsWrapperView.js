@@ -89,8 +89,6 @@ define(function(require){
 
     onItemSelected: function(gistItem){
       var self = this;
-      console.log('onItemSelected in CommentsWrapperView');
-      console.dir(gistItem);        
 
       if (self.xhr.state && self.xhr.state() === 'pending') {
         self.xhr.abort();

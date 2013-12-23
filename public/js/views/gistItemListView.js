@@ -136,13 +136,12 @@ define(function(require){
     },
     onScroll : function(){
       var w = $('.gist-list');
-      console.log(w.scrollTop() + ', ' + w.height() + ', ' + (parseInt(w.scrollTop()) + parseInt(w.height())) + ', ' + $('.gist-item-container').height());
+      // console.log(w.scrollTop() + ', ' + w.height() + ', ' + (parseInt(w.scrollTop()) + parseInt(w.height())) + ', ' + $('.gist-item-container').height());
       if(w.scrollTop() + w.height() >= $('.gist-item-container').height()) {
         this.loadMore();
       }
     },
     loadMore: function(){
-      console.log('loadMore');
       if(this.lastPage) return;
       this.loading(true);
       this.getGistList();

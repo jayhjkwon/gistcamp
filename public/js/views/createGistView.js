@@ -73,7 +73,7 @@ define(function(require){
         var self = this;
         var item = new NewGistItem();
         self.collection.add(item);
-        console.log($(item));
+        
         this.addSelect2($(item).find('.file-extension-name'));
         // $(item).find('.file-extension-name').select2();
         self.addEditor();

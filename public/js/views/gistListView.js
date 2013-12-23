@@ -15,13 +15,9 @@ define(function(require){
 
     initialize: function(menu){
       var self = this;
-      console.log('GistListView initialized');
 
       if (this.options.currentSelectedMenu)
         self.currentSelectedMenu = this.options.currentSelectedMenu;
-      console.log('currentSelectedMenu= ' + self.currentSelectedMenu);
-      if (this.options.tag)
-        console.log('tag= ' + this.options.tag);  
     },
 
     className: 'main-content',
@@ -43,10 +39,6 @@ define(function(require){
       e.preventDefault();
       $('.pivot-headers a').removeClass('active');
       $(e.currentTarget).addClass('active');
-    },
-
-    onMenuChanged: function(){
-      console.log('onMenuChanged');
     },
 
     // check if elem is visible
