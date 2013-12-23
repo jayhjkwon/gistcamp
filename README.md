@@ -34,7 +34,7 @@ grunt
 node server
 ```
 
-Then go to `http://localhost:3000` in your browser.
+Then open `http://localhost:3000` in your browser.
 
 ##### **If you do not want to install gistcamp on your machine, just come to [gistcamp.com](https://gistcamp.com)**
 
