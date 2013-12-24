@@ -115,6 +115,31 @@ module.exports = function (grunt) {
       },
       files: ['public/js/**/*.js']
     },
+
+    jsbeautifier : {
+      files : ['public/js/**/*.js', 'infra/**/*.js', 'models/**/*.js', 'routes**/*.js', 'server.js'],
+      options : {
+        js: {
+          braceStyle: "collapse",
+          breakChainedMethods: false,
+          e4x: false,
+          evalCode: false,
+          indentChar: " ",
+          indentLevel: 0,
+          indentSize: 2,
+          indentWithTabs: false,
+          jslintHappy: false,
+          keepArrayIndentation: false,
+          keepFunctionIndentation: false,
+          maxPreserveNewlines: 10,
+          preserveNewlines: true,
+          spaceBeforeConditional: true,
+          spaceInParen: false,
+          unescapeStrings: false,
+          wrapLineLength: 80
+        }
+      }
+    }
   });
 
     // Load tasks from NPM
@@ -125,7 +150,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-jsbeautifier');
 
     // register task.
-    grunt.registerTask('default', ['requirejs', 'less:production', 'cssmin', 'uglify']);
+    grunt.registerTask('default', ['jsbeautifier', 'requirejs', 'less:production', 'cssmin', 'uglify']);
   };

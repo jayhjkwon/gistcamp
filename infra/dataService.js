@@ -1,18 +1,17 @@
-var 
-  mongoose = require('mongoose'),
-  config
-;
+var
+mongoose = require('mongoose'),
+  config;
 
-if (process.env.NODE_ENV === 'production'){
-  config = require('./config'); 
-}else{
-  config = require('./config-dev'); 
+if (process.env.NODE_ENV === 'production') {
+  config = require('./config');
+} else {
+  config = require('./config-dev');
 }
 
-exports.getMongoConnection = function(){
-  
+exports.getMongoConnection = function() {
+
   var opts = {
-    server: { 
+    server: {
       auto_reconnect: true,
       poolSize: 10
     }

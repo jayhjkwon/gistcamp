@@ -1,10 +1,9 @@
-define(function(require){
-	var 
-		Handlebars = require('handlebars'),
-		_          = require('underscore')
-	;
+define(function(require) {
+  var
+  Handlebars = require('handlebars'),
+    _ = require('underscore');
 
-	Handlebars.registerHelper('isViewing', function(user, options){
-		return '<button class="btn btn-danger file-content" style="display:none">Files</button>';
-	});
+  Handlebars.registerHelper('isViewing', function(user, options) {
+    return '<button class="btn btn-danger file-content" style="display:none">Files</button>';
+  });
 });

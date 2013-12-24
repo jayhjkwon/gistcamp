@@ -1,229 +1,250 @@
 require(['jquery', 'underscore', 'application', 'router', 'views/shellView',
-	'views/topView', 'views/footerView', 'constants', 'models/user', 'global', 'async',
-	'socketio', 'postalWrapper', 'toastr', 'service', 'mousetrap', 'moment', 
-	'bootstrap', 'prettify', 'nicescroll', 'autoGrow', 'scrollTo', 'fancybox'], 
-	function($, _, Application, Router, shellView, topView, footerView, constants, User, global, async, 
-		socketio, postalWrapper, toastr, service, mousetrap, moment){
-	$(function(){
-		var el = shellView.render().el;
+    'views/topView', 'views/footerView', 'constants', 'models/user', 'global',
+    'async',
+    'socketio', 'postalWrapper', 'toastr', 'service', 'mousetrap', 'moment',
+    'bootstrap', 'prettify', 'nicescroll', 'autoGrow', 'scrollTo', 'fancybox'
+  ],
+  function($, _, Application, Router, shellView, topView, footerView, constants,
+    User, global, async,
+    socketio, postalWrapper, toastr, service, mousetrap, moment) {
+    $(function() {
+      var el = shellView.render().el;
 
-		var getServerOptions = function(callback){
-			service.getServerOptions().done(function(result){
-				global.server.options = result;
+      var getServerOptions = function(callback) {
+        service.getServerOptions().done(function(result) {
+          global.server.options = result;
 
-				callback(null, global.server.options);
-			});
-		};
+          callback(null, global.server.options);
+        });
+      };
 
-		var getLoginUserInfo = function(callback){
-			var user = new User({mode: constants.USER_AUTH});
-			user.fetch().done(function(result){
-				global.user.id     = result.id;
-				global.user.login  = result.login;
-				global.user.name   = result.name;
-				global.user.avatar = result.avatar_url;
-				global.user.url    = result.html_url;
+      var getLoginUserInfo = function(callback) {
+        var user = new User({
+          mode: constants.USER_AUTH
+        });
+        user.fetch().done(function(result) {
+          global.user.id = result.id;
+          global.user.login = result.login;
+          global.user.name = result.name;
+          global.user.avatar = result.avatar_url;
+          global.user.url = result.html_url;
 
-				callback(null, user);
-			});
-		};
+          callback(null, user);
+        });
+      };
 
-		var connectSocketIO = function(callback){
-			var socket;
-			if (global.server.options.env === 'production')
-				socket = socketio.connect('https://gistcamp.com');
-			else
-				socket = socketio.connect('http://localhost:3000');
+      var connectSocketIO = function(callback) {
+        var socket;
+        if (global.server.options.env === 'production')
+          socket = socketio.connect('https://gistcamp.com');
+        else
+          socket = socketio.connect('http://localhost:3000');
 
-			global.socket = socket;
+        global.socket = socket;
 
-			// on connection to server, ask for user's name with an anonymous callback
-			global.socket.on('connect', function(){
-				// call the server-side function 'adduser' and send one parameter (value of prompt)
-				
-				// var id = prompt("What's your name?");
-				// global.user.id = id;
-				// global.user.login = id;
+        // on connection to server, ask for user's name with an anonymous callback
+        global.socket.on('connect', function() {
+          // call the server-side function 'adduser' and send one parameter (value of prompt)
 
-				global.socket.emit('adduser', global.user);
-			});
+          // var id = prompt("What's your name?");
+          // global.user.id = id;
+          // global.user.login = id;
 
-			global.socket.on('updatechat', function (username, data, date) {
-				if (username === 'SERVER') {
+          global.socket.emit('adduser', global.user);
+        });
 
-					var server = '<div class="server">'
-					+ '<span class="message">' + data + '</span>'
-					+ '</div>';
+        global.socket.on('updatechat', function(username, data, date) {
+          if (username === 'SERVER') {
 
-					var right = '<div class="right">'
-					+ '<span class="time">' + moment(date).format('MM/DD/YYYY h:mm:ss A') + '</span>'
-					+ '</div>';
+            var server = '<div class="server">' + '<span class="message">' +
+              data + '</span>' + '</div>';
 
-					$('#conversation').append('<li class="chatli">' + server + right + '</li>');
-				}
-				else {
-					
-					var left = '<div class="left">' 
-					+ '<img class="gravatar" src="' + username.avatar + '" </img>' 
-					+ '<div class="name">' + username.login + '</div>'
-					+ '</div>';
+            var right = '<div class="right">' + '<span class="time">' +
+              moment(date).format('MM/DD/YYYY h:mm:ss A') + '</span>' +
+              '</div>';
 
-					var middle = '<div class="middle">'
-					+ data
-					+ '</div>';
+            $('#conversation').append('<li class="chatli">' + server +
+              right + '</li>');
+          } else {
 
-					var right = '<div class="right">'
-					+ '<span class="time">' + moment(date).format('MM/DD/YYYY h:mm:ss A') + '</span>'
-					+ '</div>';
+            var left = '<div class="left">' + '<img class="gravatar" src="' +
+              username.avatar + '" </img>' + '<div class="name">' +
+              username.login + '</div>' + '</div>';
 
-					$('#conversation').append('<li class="chatli">' + left + middle + right + '</li>');
-				}
-				
-				$('#conversation-content').scrollTop($("#conversation-content")[0].scrollHeight);
-			});
+            var middle = '<div class="middle">' + data + '</div>';
 
-			global.socket.on('updatealarm', function(user, data) {
-				var title = 'GistCamp';
-				toastr.options = {
-				  "positionClass": "toast-bottom-right",
-				  "timeOut": 5000
-				};
-				// data = data.replace(/\n/g, '<br />');
-				toastr.info('From ' + user.login + '<br/>' + data, title);
-			});
+            var right = '<div class="right">' + '<span class="time">' +
+              moment(date).format('MM/DD/YYYY h:mm:ss A') + '</span>' +
+              '</div>';
 
-			global.socket.on('updaterooms', function(rooms) {
-				global.rooms = rooms;
-				postalWrapper.publish(constants.CHAT_UPDATE_ROOM);
-			});
+            $('#conversation').append('<li class="chatli">' + left + middle +
+              right + '</li>');
+          }
 
-			global.socket.on('deleteroom', function(roomname) {
-				postalWrapper.publish(constants.CHAT_DELETE_ROOM, roomname);
-			});
+          $('#conversation-content').scrollTop($("#conversation-content")[0]
+            .scrollHeight);
+        });
 
-			callback(null, socket);
-		};
+        global.socket.on('updatealarm', function(user, data) {
+          var title = 'GistCamp';
+          toastr.options = {
+            "positionClass": "toast-bottom-right",
+            "timeOut": 5000
+          };
+          // data = data.replace(/\n/g, '<br />');
+          toastr.info('From ' + user.login + '<br/>' + data, title);
+        });
 
-		var loadView = function(callback){
-			shellView.top.show(topView);
-			shellView.footer.show(footerView);
-			$('body').html(el);
-			callback(null, shellView);
-		};
+        global.socket.on('updaterooms', function(rooms) {
+          global.rooms = rooms;
+          postalWrapper.publish(constants.CHAT_UPDATE_ROOM);
+        });
 
-		var showUserInfo = function(callback){
-			topView.showUserInfo();
-			callback(null, null);
-		};
+        global.socket.on('deleteroom', function(roomname) {
+          postalWrapper.publish(constants.CHAT_DELETE_ROOM, roomname);
+        });
 
-		var startRouter = function(callback){
-			var router = new Router;
-			Backbone.history.start({pushState: false});
-			callback(null, router);
-		};
+        callback(null, socket);
+      };
 
-		var handleShortcuts = function(callback){
-			var moveToGist = function(moveUp){
-				var nextGist ;
-				var gistList = $('.gist-item-container .row-fluid');
-	    		var selectedGist = $('.gist-item-container .row-fluid.selected');
-	    		var selectedGistIndex = gistList.index(selectedGist);
+      var loadView = function(callback) {
+        shellView.top.show(topView);
+        shellView.footer.show(footerView);
+        $('body').html(el);
+        callback(null, shellView);
+      };
 
-				if (moveUp){
-	    			if (selectedGistIndex === 0) return;
-	    			nextGist = gistList[selectedGistIndex - 1];
-	    		}else{
-	    			nextGist = gistList[selectedGistIndex + 1];
-	    			if (!nextGist) return;
-				}
+      var showUserInfo = function(callback) {
+        topView.showUserInfo();
+        callback(null, null);
+      };
 
-				selectedGist.removeClass('selected');
-	    		$(nextGist).addClass('selected');
-	    		$(nextGist).find('.gist-item').trigger('click');
-	    		var half = $('.gist-list').height() * 0.4;
-	   			$('.gist-list').scrollTo($(nextGist), {offset:-half});	
-			};
+      var startRouter = function(callback) {
+        var router = new Router;
+        Backbone.history.start({
+          pushState: false
+        });
+        callback(null, router);
+      };
 
-			mousetrap.bind('down', function(){
-				moveToGist(false);
-				return false;
-			});
+      var handleShortcuts = function(callback) {
+        var moveToGist = function(moveUp) {
+          var nextGist;
+          var gistList = $('.gist-item-container .row-fluid');
+          var selectedGist = $('.gist-item-container .row-fluid.selected');
+          var selectedGistIndex = gistList.index(selectedGist);
 
-			mousetrap.bind('up', function(){
-				moveToGist(true);
-				return false;
-			});
+          if (moveUp) {
+            if (selectedGistIndex === 0) return;
+            nextGist = gistList[selectedGistIndex - 1];
+          } else {
+            nextGist = gistList[selectedGistIndex + 1];
+            if (!nextGist) return;
+          }
 
-			mousetrap.bind('left', function(){
-				$('.carousel').carousel('prev');
-				return false;
-			});
+          selectedGist.removeClass('selected');
+          $(nextGist).addClass('selected');
+          $(nextGist).find('.gist-item').trigger('click');
+          var half = $('.gist-list').height() * 0.4;
+          $('.gist-list').scrollTo($(nextGist), {
+            offset: -half
+          });
+        };
 
-			mousetrap.bind('right', function(){
-				$('.carousel').carousel('next');
-				return false;
-			});
+        mousetrap.bind('down', function() {
+          moveToGist(false);
+          return false;
+        });
 
-			mousetrap.bind('g n', function(){
-				var router = new Router;
-				router.navigate('newgist', {trigger: true});
-			});
+        mousetrap.bind('up', function() {
+          moveToGist(true);
+          return false;
+        });
 
-			mousetrap.bind('g f', function(){
-				var router = new Router;
-				router.navigate('friends/gists', {trigger: true});
-			});
+        mousetrap.bind('left', function() {
+          $('.carousel').carousel('prev');
+          return false;
+        });
 
-			mousetrap.bind('g m', function(){
-				var router = new Router;
-				router.navigate('mygists', {trigger: true});
-			});
+        mousetrap.bind('right', function() {
+          $('.carousel').carousel('next');
+          return false;
+        });
 
-			mousetrap.bind('g s', function(){
-				var router = new Router;
-				router.navigate('starred', {trigger: true});
-			});
+        mousetrap.bind('g n', function() {
+          var router = new Router;
+          router.navigate('newgist', {
+            trigger: true
+          });
+        });
 
-			mousetrap.bind('g a', function(){
-				var router = new Router;
-				router.navigate('all', {trigger: true});
-			});
+        mousetrap.bind('g f', function() {
+          var router = new Router;
+          router.navigate('friends/gists', {
+            trigger: true
+          });
+        });
 
-			mousetrap.bind('g c', function(){
-				var router = new Router;
-				router.navigate('chat', {trigger: true});
-			});
+        mousetrap.bind('g m', function() {
+          var router = new Router;
+          router.navigate('mygists', {
+            trigger: true
+          });
+        });
 
-			mousetrap.bind('g x', function(){
-				postalWrapper.publish(constants.STAR);
-			});
+        mousetrap.bind('g s', function() {
+          var router = new Router;
+          router.navigate('starred', {
+            trigger: true
+          });
+        });
 
-			mousetrap.bind('g h', function(){
-				var router = new Router;
-				router.navigate('shared', {trigger: true});
-			});
+        mousetrap.bind('g a', function() {
+          var router = new Router;
+          router.navigate('all', {
+            trigger: true
+          });
+        });
 
-			callback(null);
-		};
+        mousetrap.bind('g c', function() {
+          var router = new Router;
+          router.navigate('chat', {
+            trigger: true
+          });
+        });
 
-		Application.addInitializer(function(options){
-			async.series(
-				[
-					getServerOptions,
-					getLoginUserInfo,
-					connectSocketIO,
-					loadView,
-					showUserInfo,
-					startRouter,
-					handleShortcuts,
-					function(err, results){
-						console.log('Application initialization has completed');
-					}
-				]
-			);			
-		});
+        mousetrap.bind('g x', function() {
+          postalWrapper.publish(constants.STAR);
+        });
 
-		Application.start();
-   
-	});
-});
+        mousetrap.bind('g h', function() {
+          var router = new Router;
+          router.navigate('shared', {
+            trigger: true
+          });
+        });
+
+        callback(null);
+      };
+
+      Application.addInitializer(function(options) {
+        async.series(
+          [
+            getServerOptions,
+            getLoginUserInfo,
+            connectSocketIO,
+            loadView,
+            showUserInfo,
+            startRouter,
+            handleShortcuts,
+            function(err, results) {
+              console.log('Application initialization has completed');
+            }
+          ]
+        );
+      });
+
+      Application.start();
+
+    });
+  });

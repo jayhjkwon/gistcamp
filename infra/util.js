@@ -1,7 +1,6 @@
-exports.convertToSlug = function(text){
+exports.convertToSlug = function(text) {
   return text
-  .toLowerCase()
-  .replace(/ /g,'-')
-  .replace(/[^\w-]+/g,'')
-  ;
+    .toLowerCase()
+    .replace(/ /g, '-')
+    .replace(/[^\w-]+/g, '');
 };
