@@ -27,16 +27,7 @@ define(function(require) {
       },
 
       viewClicked: function(e) {
-        if (window.location.hash.indexOf('#friends/gists') > -1) {
-          var Router = require('router');
-          var router = new Router;
-          router.navigate('friends/gists/' + this.model.get('login'), {
-            trigger: false,
-            replace: true
-          });
-          this.selectThisView();
-        }
-        this.setSelectedClass();
+        this.selectThisView();
       },
 
       selectThisView: function() {
@@ -62,16 +53,6 @@ define(function(require) {
           // postalWrapper.publish(constants.REMOVE_FROM_WATCH, this.model);
           self.close();
         });
-      },
-
-      onRender: function() {
-        // $('.plus').tipsy({gravity: 's', fade: true});
-
-        /*if (window.location.hash.indexOf('friends/gists') > -1){
-          $('.minus').hide();
-        }else{
-          $('.minus').tipsy({gravity: 's', fade: true});  
-        }*/
       },
 
       onClose: function() {

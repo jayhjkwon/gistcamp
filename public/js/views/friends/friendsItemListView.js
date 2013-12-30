@@ -45,43 +45,19 @@ define(function(require) {
         console.log('collection length=' + this.collection.length);
       },
 
-      getWatchingList: function(loginId) {
+      getWatchingList: function() {
         var self = this;
         var friends = new Friends({
           mode: 'watch'
         });
         friends.fetch().done(function(res) {
           self.collection.set(res);
-          if (loginId)
-            self.setItemSelect(loginId);
-          else
-          if (window.location.hash.indexOf('friends/list') === -1)
-            self.setFirstItemSelect();
+          self.setFirstItemSelect();
         });
       },
 
-      setItemSelect: function(loginId) {
-        var self = this;
-        if (self.collection.length > 0) {
-          var selectedModel = self.collection.findWhere({
-            login: loginId
-          });
-          if (selectedModel) {
-            self.children.findByModel(selectedModel).selectThisView(
-              selectedModel);
-          }
-        }
-      },
-
       setFirstItemSelect: function() {
-        var self = this;
-        // self.$el.find('.row-fluid').first().trigger('click');
-        if (self.collection.length > 0) {
-          // this.children.findByModel(self.collection.at(0)).selectThisView(self.collection.at(0));
-          // self.setItemSelect(self.collection.at(0).get('login'));
-          window.location.hash = 'friends/gists/' + self.collection.at(0).get(
-            'login');
-        }
+        this.$el.find('.row-fluid').first().trigger('click');
       },
 
       addWatch: function(model) {

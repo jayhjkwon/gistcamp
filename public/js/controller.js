@@ -103,7 +103,11 @@ define(function(require) {
       Application.execute(constants.MENU_SELECTED, 'friends/list');
     },
 
-    friendsGists: function(loginId) {
+    friendsGists: function() {
+      if (window.location.hash.indexOf('friends/gists') < 0) {
+        Backbone.history.navigate('friends/gists', {trigger: false, replace:true});
+      }
+
       // LayoutView with regions
       var gistListView = new GistListView();
       shellView.main.show(gistListView);
@@ -113,7 +117,7 @@ define(function(require) {
       // watch list on the left region
       var friendsItemListView = new FriendsItemListView;
       gistListView.friendsItemList.show(friendsItemListView);
-      friendsItemListView.getWatchingList(loginId);
+      friendsItemListView.getWatchingList();
 
       // Gist Item on the left region
       var gistItemListView = new GistItemListView;

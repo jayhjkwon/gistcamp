@@ -15,8 +15,7 @@ define(function(require) {
         'all(/)': 'all',
         'shared(/)': 'shared',
         'friends/list(/)': 'friendsList',
-        'friends/gists(/)': 'friendsGists',
-        'friends/gists/:login_id': 'friendsGists'
+        'friends/gists(/)': 'friendsGists'
       },
 
       controller: new Controller
