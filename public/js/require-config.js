@@ -28,7 +28,10 @@ require.config({
     select2: '../vendor/select2/select2',
     mousetrap: '../vendor/mousetrap/mousetrap',
     fancybox: '../vendor/fancybox/source/jquery.fancybox.pack',
-    jqueryui: '../vendor/jquery-ui/ui/jquery-ui',
+    jqueryuiCore: '../vendor/jquery-ui/ui/jquery.ui.core',
+    jqueryuiMouse: '../vendor/jquery-ui/ui/jquery.ui.mouse',
+    jqueryuiWidget: '../vendor/jquery-ui/ui/jquery.ui.widget',
+    jqueryuiSortable: '../vendor/jquery-ui/ui/jquery.ui.sortable',
     tipsy: '../vendor/tipsy/src/javascripts/jquery.tipsy'
   },
   shim: {
@@ -67,8 +70,17 @@ require.config({
     fancybox: {
       deps: ['jquery']
     },
-    jqueryui: {
+    jqueryuiCore: {
       deps: ['jquery']
+    },
+    jqueryuiWidget: {
+      deps: ['jquery']
+    },
+    jqueryuiMouse: {
+      deps: ['jquery', 'jqueryuiWidget']
+    },
+    jqueryuiSortable: {
+      deps: ['jquery', 'jqueryuiCore', 'jqueryuiMouse', 'jqueryuiWidget']
     },
     tipsy: {
       deps: ['jquery']

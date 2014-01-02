@@ -15,7 +15,7 @@ define(function(require) {
     nicescroll = require('nicescroll'),
     FriendsItemView = require('./friendsItemView'),
     Friends = require('models/friends'),
-    jqueryui = require('jqueryui'),
+    jqueryuiSortable = require('jqueryuiSortable'),
     postalWrapper = require('postalWrapper'),
     Application = require('application'),
     Friend = require('models/friend'),

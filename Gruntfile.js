@@ -153,5 +153,5 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-jsbeautifier');
 
     // register task.
-    grunt.registerTask('default', ['jsbeautifier', 'requirejs', 'less:production', 'cssmin', 'uglify']);
+    grunt.registerTask('default', ['requirejs', 'less:production', 'cssmin', 'uglify']);
   };

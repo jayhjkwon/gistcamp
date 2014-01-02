@@ -105,7 +105,10 @@ define(function(require) {
 
     friendsGists: function() {
       if (window.location.hash.indexOf('friends/gists') < 0) {
-        Backbone.history.navigate('friends/gists', {trigger: false, replace:true});
+        Backbone.history.navigate('friends/gists', {
+          trigger: false,
+          replace: true
+        });
       }
 
       // LayoutView with regions
