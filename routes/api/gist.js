@@ -341,10 +341,11 @@ exports.getSharedGists = function(req, res){
   var gistList = [];
   var github = service.getGitHubApi(req);
 
-  var getGistById = function(gistId, callback){
-    github.gists.get({id : gistId}, 
+  var getSharedGistById = function(doc, callback){
+    github.gists.get({id : doc['gist_id']}, 
       function(err, data){
         if (data) {
+          data['shared_user_login'] = doc['shared_user_login'];
           gistList.push(data);
         }
         callback(null, data);   
@@ -352,14 +353,15 @@ exports.getSharedGists = function(req, res){
       );
   };
 
-  SharedGist 
-  .where('target_user_login', login_name) 
+  SharedGist
+  .where()
+  .or([{target_user_login:login_name},{shared_user_login:login_name}])
   .select() 
   .lean() 
   .exec(function(err, docs){ 
     if (docs) { 
-      var gistIds = _.pluck(docs, 'gist_id');
-      async.each(gistIds, getGistById, function(error, result){
+      //var gistIds = _.pluck(docs, 'gist_id');
+      async.each(docs, getSharedGistById, function(error, result){
         async.series([
           function(callback){
             async.parallel([
