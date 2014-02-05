@@ -10,7 +10,6 @@ if (process.env.NODE_ENV === 'production') {
 
 exports.index = function(req, res) {
   res.render('index', {
-    devMode: config.env,
     appVersion: packageJson.version,
     user: req.user
   });
@@ -18,7 +17,6 @@ exports.index = function(req, res) {
 
 exports.welcome = function(req, res) {
   res.render('welcome', {
-    devMode: config.env,
     appVersion: packageJson.version
   });
 };

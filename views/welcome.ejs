@@ -11,7 +11,7 @@
     <title>The Best Open Web Interface for Gist</title>
     <link rel="shortcut icon" href="images/logo_black.png"/> 
     <link rel="image_src" href="images/logo_black.png"/>   
-    <% if (devMode === 'production') { %>
+    <% if (process.env.NODE_ENV === 'production') { %>
       <link rel='stylesheet' type="text/css" href='styles/welcome-thirdparty.min.css?v=<%= appVersion %>' />
       <link rel='stylesheet' type="text/css" href='styles/welcome.min.css?v=<%= appVersion %>' />
     <% }else{ %> 
@@ -259,7 +259,7 @@
     </section>
   </div>
 
-  <% if (devMode === 'production') { %>
+  <% if (process.env.NODE_ENV === 'production') { %>
     <script src="js/welcome.min.js?v=<%= appVersion %>"></script>
   <% }else{ %> 
     <script src="vendor/jquery/jquery.min.js"></script> 
