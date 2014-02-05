@@ -9,7 +9,7 @@ var config = {
   "SANDBOX": true,
   "CALLBACK_URL": "http://localhost:3000/auth/evernote/callback",
   "MONGO_URL": "mongodb://localhost/gistcamp",
-  "COOKIE_PARSET_SECRET": "gistcamp",
+  "COOKIE_PARSER_SECRET": "gistcamp",
   "COOKIE_MAX_AGE": 1000 * 60 * 60 * 24 * 30,
   "PORT": process.env.PORT || 3000
 };

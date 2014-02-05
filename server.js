@@ -19,13 +19,6 @@ express = require('express'),
 
 var app = express();
 
-// TODO : Remove uncaughtexception
-/*process.on('uncaughtException', function(err){
-  console.error('Uncaught exception: ' + err.stack);
-  process.exit(1);
-});*/
-
-
 if (process.env.NODE_ENV === 'production') {
   config = require('./infra/config'),
   app.use(express.errorHandler());
@@ -92,11 +85,10 @@ app.use(express.compress());
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.cookieParser());
-app.use(express.cookieSession({
-  secret: config.COOKIE_PARSET_SECRET,
-  cookie: {
-    maxAge: config.COOKIE_MAX_AGE
-  }
+app.use(express.session({
+  secret: config.COOKIE_PARSER_SECRET,
+  cookie: { maxAge: config.COOKIE_MAX_AGE },
+  store: new MongoStore({ url: config.MONGO_URL, auto_reconnect: true})
 }));
 app.use(passport.initialize());
 app.use(passport.session());
