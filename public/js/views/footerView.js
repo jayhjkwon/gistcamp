@@ -69,7 +69,8 @@ define(function(require) {
         'click .share-pocket': 'sharePocket',
         'click .tag': 'onTagButtonClick',
         'click .btn-del-tag': 'deleteTag',
-        'click .btn-delete-gist': 'onDeleteGist'
+        'click .btn-delete-gist': 'onDeleteGist',
+        'click .btn-edit-gist' : 'onEditGist'
       },
 
       ui: {
@@ -357,8 +358,10 @@ define(function(require) {
 
         if (gistItem.user.id === global.user.id) {
           $('.btn-delete-gist').show();
+          $('.btn-edit-gist').show();
         } else {
           $('.btn-delete-gist').hide();
+          $('.btn-edit-gist').hide();
         }
 
         if (gistItem && gistItem.comments > 0) {
@@ -579,6 +582,14 @@ define(function(require) {
         } else {
           util.loadSpinner(false);
         }
+      },
+      onEditGist : function(e){
+          var gistId = this.model.get('id');
+          Backbone.history.navigate('mygist/edit/' + gistId, {
+            trigger: true,
+            replace: true
+          });
+          e.preventDefault();
       },
 
 

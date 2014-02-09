@@ -122,9 +122,12 @@ define(function(require) {
         _.each(items, function(item, idx) {
           var content = editorList[idx].getValue();
           var fileName = $(item).find('.file-name').val();
-          var extension = $(item).find('.file-extension-name').select2(
-            'val');
-          files[fileName + '.' + extension] = {
+          /*var extension = $(item).find('.file-extension-name').select2(
+            'val');*/
+          /*files[fileName + '.' + extension] = {
+            'content': content
+          };*/
+          files[fileName] = {
             'content': content
           };
         });

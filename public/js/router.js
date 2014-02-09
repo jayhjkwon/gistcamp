@@ -8,6 +8,7 @@ define(function(require) {
         '': 'friendsGists',
         'friends(/)': 'friends',
         'mygists(/)': 'myGists',
+        'mygist/edit/:id' : 'editGist',
         'starred(/)': 'starred',
         'tagged/:id/:tag_url': 'tagged',
         'newgist(/)': 'newGist',

@@ -231,7 +231,9 @@ app.post('/api/gist/tags', ensureAuthenticated, gist.createTag);
 app.put('/api/gist/tags/:id', ensureAuthenticated, gist.editTag);
 app.delete('/api/gist/tags/:id', ensureAuthenticated, gist.removeTag);
 
+app.get('/api/gist/newgist/:id', gist.getGist);
 app.post('/api/gist/newgist', ensureAuthenticated, gist.createNewgGist);
+/*app.put('/api/gist/newgist/:id', ensureAuthenticated, gist.editGist);*/
 app.delete('/api/gist/newgist/:id', ensureAuthenticated, gist.deleteGist);
 
 app.get('/api/user/auth', ensureAuthenticated, user.getAuthUser);

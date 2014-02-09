@@ -5,11 +5,13 @@ define(function(require) {
     Application = require('application'),
     GistListView = require('views/gistListView'),
     GistItemListView = require('views/gistItemListView'),
+    GistItem = require('models/gistItem'),
     shellView = require('views/shellView'),
     constants = require('constants'),
     FilesWrapperView = require('views/filesWrapperView'),
     CommentsWrapperView = require('views/commentsWrapperView'),
     CreateGistView = require('views/createGistView'),
+    EditGistView = require('views/editGistView'),
     ChatView = require('views/chatView'),
     ChatItemListView = require('views/chatItemListView'),
     ConversationWrapperView = require('views/conversationWrapperView'),
@@ -155,6 +157,15 @@ define(function(require) {
       // Comments on the right region
       var commentsWrapperView = new CommentsWrapperView;
       gistListView.commentsWrapper.show(commentsWrapperView);
+
+      Application.execute(constants.MENU_SELECTED, 'mygists');
+    },
+
+    editGist:function(id){
+      var editGistView = new EditGistView( { model : new GistItem({ "id" : id }) });
+      /*editGistView.getGist(id);*/
+      shellView.main.show(editGistView);
+      shellView.hideFooterRegion();
 
       Application.execute(constants.MENU_SELECTED, 'mygists');
     },

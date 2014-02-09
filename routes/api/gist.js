@@ -891,4 +891,18 @@ exports.deleteGist = function(req, res){
   github.gists.delete(msg, function(err, data){
     res.send(data);
   });
-}
+};
+
+exports.getGist = function(req, res){
+  var self = this;    
+
+  var gistId = req.param('id');
+  var github = service.getGitHubApi(req);
+
+  github.gists.get({id : gistId}, 
+    function(err, data){    
+      sendData(data, req, res);
+    }
+    );
+};
+
