@@ -122,23 +122,29 @@ define(function(require) {
       },
 
       getSharedGistList: function() {
+        this.collection.reset();
         this.getGistList(constants.GIST_SHARED);
       },
       getPublicGistList: function() {
+        this.collection.reset();
         this.getGistList(constants.GIST_PUBLIC);
       },
       getGistListByUser: function(userId) {
+        this.collection.reset();
         this.getGistList(constants.GIST_LIST_BY_USER, {
           userId: userId
         });
       },
       getStarredGistList: function() {
+        this.collection.reset();
         this.getGistList(constants.GIST_STARRED);
       },
       getFriendsGistList: function() {
+        this.collection.reset();
         this.getGistList(constants.GIST_FRIENDS_GISTS);
       },
       getTaggedGistList: function(tagId, tagUrl) {
+        this.collection.reset();
         this.getGistList(constants.GIST_TAGGED_GISTS, {
           tagId: tagId
         });
