@@ -112,33 +112,28 @@ define(function(require) {
 
       onClose: function() {
         this.abortXHRs();
-        this.subscribe.unsubscribe();        
+        this.subscribe.unsubscribe();    
+        if (this.collection) this.collection.reset();            
       },
 
       getSharedGistList: function() {
-        if (this.collection) this.collection.reset();
         this.getGistList(constants.GIST_SHARED);
       },
       getPublicGistList: function() {
-        if (this.collection) this.collection.reset();
         this.getGistList(constants.GIST_PUBLIC);
       },
       getGistListByUser: function(userId) {
-        if (this.collection) this.collection.reset();
         this.getGistList(constants.GIST_LIST_BY_USER, {
           userId: userId
         });
       },
       getStarredGistList: function() {
-        if (this.collection) this.collection.reset();
         this.getGistList(constants.GIST_STARRED);
       },
       getFriendsGistList: function() {
-        if (this.collection) this.collection.reset();
         this.getGistList(constants.GIST_FRIENDS_GISTS);
       },
       getTaggedGistList: function(tagId, tagUrl) {
-        if (this.collection) this.collection.reset();
         this.getGistList(constants.GIST_TAGGED_GISTS, {
           tagId: tagId
         });
