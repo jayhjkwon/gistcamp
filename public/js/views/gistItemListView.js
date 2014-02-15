@@ -36,6 +36,7 @@ define(function(require) {
             self.abortXHRs();
             self.getGistListByUser(model.get('login'));
           });
+        if (this.collection) this.collection.reset();
       },
 
       abortXHRs: function() {
@@ -64,7 +65,7 @@ define(function(require) {
           data: {
             linkHeader: self.linkHeader
           }
-        })
+          })
           .done(function(res) {
             if (!self.linkHeader) {
               self.collection.set(res.data);
@@ -110,41 +111,29 @@ define(function(require) {
       },
 
       onClose: function() {
-        /*var self = this;
-      _.each(self.xhrs, function(xhr){
-        var s = xhr.state();
-        if (s === 'pending') {
-            xhr.abort();  // abort ajax requests those are not completed
-          }
-      });*/
         this.abortXHRs();
         this.subscribe.unsubscribe();
+        if (this.collection) this.collection.reset(); // clear collection
       },
 
       getSharedGistList: function() {
-        this.collection.reset();
         this.getGistList(constants.GIST_SHARED);
       },
       getPublicGistList: function() {
-        this.collection.reset();
         this.getGistList(constants.GIST_PUBLIC);
       },
       getGistListByUser: function(userId) {
-        this.collection.reset();
         this.getGistList(constants.GIST_LIST_BY_USER, {
           userId: userId
         });
       },
       getStarredGistList: function() {
-        this.collection.reset();
         this.getGistList(constants.GIST_STARRED);
       },
       getFriendsGistList: function() {
-        this.collection.reset();
         this.getGistList(constants.GIST_FRIENDS_GISTS);
       },
       getTaggedGistList: function(tagId, tagUrl) {
-        this.collection.reset();
         this.getGistList(constants.GIST_TAGGED_GISTS, {
           tagId: tagId
         });
