@@ -116,9 +116,6 @@ define(function(require) {
         $(e.currentTarget).parents('.row-fluid').addClass('selected');
         $('.comments-badge').hide().show(300);
 
-        console.log('=========');
-        console.log(this.model);
-        console.log(this.model.toJSON());
         postalWrapper.publish(constants.GIST_ITEM_SELECTED, this.model.toJSON());
         postalWrapper.publish(constants.REMOVE_IS_SELECTED, this); // in order for setting isSelectedGist boolean variable as false in other instances of GistItemView
       },

@@ -21,19 +21,21 @@ define(function(require) {
       editorSeq: 0,
       tagName: 'div',
       className: 'create-gist',
+      model : GistItem,
 
       initialize: function() {
         
-
-        this.model.fetch();
-        console.log(this.model);
-        console.log(this.model.get('data'));
-        console.log(this.model.get('id'));
-        console.log(this.model.toJSON());
-
         var self = this;
 
+        this.model.fetch().done(function(res){
+          self.model.set('description', res.description);
+          console.log(res.description);
+          self.onRender();
+          /*self.model = res;
+          console.log(self.model);
+          self.onRender();*/
 
+        } );
 
         var item = new NewGistItem();
         self.collection = new NewGistItemList();

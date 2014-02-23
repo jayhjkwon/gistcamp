@@ -900,8 +900,9 @@ exports.getGist = function(req, res){
   var github = service.getGitHubApi(req);
 
   github.gists.get({id : gistId}, 
-    function(err, data){    
-      sendData(data, req, res);
+    function(err, data){
+          
+      res.send(data);
     }
     );
 };
