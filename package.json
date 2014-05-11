@@ -9,7 +9,6 @@
     "express": "3.2.4",
     "ejs": "*",
     "underscore": "1.5.1",
-    "github": "~0.1.10",
     "request": "~2.25.0",
     "moment": "~2.1.0",
     "async": "~0.2.9",
@@ -20,7 +19,8 @@
     "passport": "~0.1.17",
     "evernote": "~1.25.0",
     "connect-domain": "~0.5.0",
-    "connect-mongo": "0.3.3"
+    "connect-mongo": "0.3.3",
+    "github": "~0.1.16"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
