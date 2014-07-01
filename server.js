@@ -77,7 +77,8 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
 if (process.env.NODE_ENV === 'production') {
-  app.use(forceHttps);
+  // no more ssl support at this moment, 2014-07-01, KHJ
+  //app.use(forceHttps);
 }
 app.use(express.favicon());
 app.use(express.logger('dev'));
